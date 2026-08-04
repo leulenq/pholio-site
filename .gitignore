@@ -13,3 +13,10 @@ next-env.d.ts
 .DS_Store
 *.log
 .netlify/
+
+# Agent skills, installed per-machine via `npx skills add`.
+# Not vendored: they are third-party, they change upstream, and this repo's own
+# docs/ take precedence over them wherever the two disagree.
+.agents/
+.claude/
+skills-lock.json

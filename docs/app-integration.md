@@ -271,7 +271,7 @@ is a legal problem, not a tone problem.
   change.
 - **`COMPANY_ADDRESS` is deliberately empty.** A postal address must not be
   fabricated in a public legal document. Leave it blank until counsel supplies
-  the service address. Entity: Pholio Studio, Inc., Delaware.
+  the service address. Entity: Pholio Studio.
 
 ---
 

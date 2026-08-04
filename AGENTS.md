@@ -24,8 +24,13 @@ deliberately, and they are already here.
 | Building a scroll-driven section | [`docs/design-language/04-scroll-craft.md`](docs/design-language/04-scroll-craft.md) |
 | Touching auth, cookies, legal constants, `next.config.ts`, or any `/api` call | [`docs/app-integration.md`](docs/app-integration.md) |
 
-Do not skim the ban list. It is 28 specific patterns, most of which are the
-default output for their category, and violating one requires human approval.
+Do not skim the ban list. It is the anti-slop list for a **public site**, not
+the dashboard list — page architecture, hero, section furniture, components,
+colour, type, imagery, motion, copy. Most of the entries are the default output
+for their category, which means they are what you will produce if you do not
+check. Violating one requires human approval.
+
+Its §12 is a mechanical pre-flight. Run it before calling a page done.
 
 ---
 

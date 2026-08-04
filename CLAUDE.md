@@ -13,8 +13,9 @@ codebase.
 1. `AGENTS.md` — boundaries, structure, verification.
 2. The design-language doc matching your task (the table in `AGENTS.md`).
 3. `docs/design-language/03-banned-ui.md` — **always**, before writing any
-   markup. It is 28 patterns, and most of them are the default output for their
-   category, which means they are what you will produce if you do not check.
+   markup, and its §12 pre-flight before calling anything done. It is written
+   against the patterns models converge on, which means it describes what you
+   will produce by default unless you check.
 
 ---
 
@@ -43,16 +44,23 @@ Concretely, when you catch yourself about to:
 
 ## Skills
 
-Several design skills are installed. Two are worth knowing about here:
+Installed per-machine, not vendored (`.agents/` and `.claude/` are gitignored):
 
-- **`design-taste-frontend`** — the general anti-slop frontend skill. Useful for
-  the reasoning about layout diversification, image strategy, and AI tells.
-  **Where it conflicts with this repo's docs, this repo wins** — it is written
-  for generic briefs and will suggest palettes, fonts, and section shapes that
-  are off-brand for Pholio. Notably it bans Inter, which this site uses
-  deliberately as its clerical voice.
-- **`high-end-visual-design`** — useful for spacing and hierarchy instincts,
-  with the same precedence caveat.
+```bash
+npx skills add Leonxlnx/taste-skill
+```
+
+- **`design-taste-frontend`** is the substantial one, and it is the primary
+  source behind `docs/design-language/03-banned-ui.md` — sections 4.7–4.11 and
+  section 9 in particular. Worth reading directly for the reasoning behind
+  layout diversification, image strategy, and the AI-tell catalogue.
+- **`high-end-visual-design`** is useful for spacing and hierarchy instincts.
+
+**Where a skill conflicts with this repo's docs, this repo wins.** The skills
+are written for generic briefs and will confidently propose palettes, fonts, and
+section shapes that are off-brand here. The three known collisions — Inter,
+sections inverting field, and hairlines/grain — are documented with reasoning in
+`03-banned-ui.md` §11. Do not let a skill file talk you out of them.
 
 Do not invoke image-generation skills to produce site imagery without asking.
 Talent imagery on this site has a sanctioned source (`GET /api/public/home`,
