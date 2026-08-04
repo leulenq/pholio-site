@@ -125,18 +125,15 @@ export const MONO = "var(--font-mono)";
  * The nav is not a flat list of pages — it is two audience doors and one
  * product tier, carried on `kind` for any variant that wants to express it.
  *
- * Both lists are filtered to routes that exist (`built` in
- * lib/marketing-nav-links.ts). During the rebuild most entries are unbuilt, so
- * the index legitimately renders short or empty. That is the correct state:
- * an index that lists a page nobody has made is worse than an index with two
- * entries in it.
+ * Both lists render all entries, built or not. The index displays the page
+ * names and routes. Clicking unbuilt pages goes to empty shells.
  */
-export const NAV = PRIMARY_NAV.filter(isBuilt).map((link, i) => ({
+export const NAV = PRIMARY_NAV.map((link, i) => ({
   ...link,
   index: String(i + 1).padStart(2, "0"),
 }));
 
-export const SECONDARY_LINKS = SECONDARY_NAV.filter(isBuilt);
+export const SECONDARY_LINKS = SECONDARY_NAV;
 
 export const LOGIN_HREF = `${APP_URL}/login`;
 export const SIGNUP_HREF = `${APP_URL}/onboarding`;
@@ -551,37 +548,23 @@ export function NavLink({
   };
 
   const content = (
-    <>
-      <span
-        style={{
-          fontFamily: SANS,
-          fontSize: size,
-          fontWeight: 500,
-          letterSpacing: `${tracking}em`,
-          textTransform: "uppercase",
-          lineHeight: 1,
-          color: live
-            ? (activeColor ?? tokens.gold)
-            : (color ?? tokens.textMuted),
-          transition: "color 0.32s cubic-bezier(0.22,1,0.36,1)",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {label}
-      </span>
-      <span
-        aria-hidden
-        style={{
-          position: "absolute",
-          left: 0,
-          bottom: 0,
-          height: 1,
-          width: live ? "100%" : 0,
-          background: activeColor ?? tokens.gold,
-          transition: "width 0.42s cubic-bezier(0.22,1,0.36,1)",
-        }}
-      />
-    </>
+    <span
+      style={{
+        fontFamily: SANS,
+        fontSize: size,
+        fontWeight: 500,
+        letterSpacing: `${tracking}em`,
+        textTransform: "uppercase",
+        lineHeight: 1,
+        color: live
+          ? (activeColor ?? tokens.gold)
+          : (color ?? tokens.textMuted),
+        transition: "color 0.32s cubic-bezier(0.22,1,0.36,1)",
+        whiteSpace: "nowrap",
+      }}
+    >
+      {label}
+    </span>
   );
 
   return external ? (
