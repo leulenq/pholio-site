@@ -6,11 +6,8 @@ export const metadata = {
 
 export default function HomePage() {
   return (
-    <section data-hero-chrome>
-      <main
-        className="min-h-mobile-screen flex flex-col items-start justify-center px-6 md:px-12"
-        style={{ backgroundColor: "#050505" }}
-      >
+    <section data-hero-chrome className="bg-[#050505]">
+      <main className="flex flex-col items-start justify-center min-h-[200vh] px-6 md:px-12 pt-96 pb-40">
         <p
           style={{
             fontFamily: "var(--font-mono)",
