@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PHOLIO PUBLIC SITE — BASE LAYER
+
+   This file is deliberately small. It holds tokens, a reset, and the four
+   utilities the preserved surfaces actually use. It is NOT a component
+   library: no button classes, no card classes, no section classes.
+
+   The previous site's stylesheet grew to 700 lines of named component styles
+   that every new page inherited by accident. If a section needs a look, the
+   section owns it. Add to this file only when a value is genuinely sitewide.
+
+   Token reference: docs/design-language/foundations.md
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ── The palette. Three colours. Adding a fourth is a brand decision,
+        not a styling decision — see docs/design-language/banned-ui.md ── */
+  --color-velvet: #050505; /* the page's ink field */
+  --color-ink: #0f172a; /* type on cream */
+  --color-cream: #faf7f2; /* the page's paper field */
+  --color-cream-warm: #f5f0e8;
+  --color-gold: #c9a55a; /* the state colour, never a surface */
+  --color-gold-light: #d4bc8a;
+  --color-gold-dark: #a8894e; /* gold that holds contrast on cream */
+
+  /* ── Type. Three voices, each with one job.
+        serif = display and verdict · sans = body and clerical · mono = labels ── */
+  --font-serif: var(--font-noto-serif), "Noto Serif Display", Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", "SF Mono", monospace;
+
+  /* ── One ease. Motion is arrival, so everything decelerates the same way. ── */
+  --ease-arrival: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   BASE
+   ══════════════════════════════════════════════════════════════════════════ */
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  background-color: var(--color-velvet);
+
+  /* Fill the mobile visual viewport. `100vh` alone leaves a gap above the iOS
+     Safari toolbar; `-webkit-fill-available` covers older WebKit and `100dvh`
+     tracks chrome show/hide. `viewport-fit=cover` in app/layout.tsx lets this
+     reach the physical edges including the home-indicator band. */
+  height: 100%;
+  min-height: 100%;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-velvet);
+  color: var(--color-cream);
+  overflow-x: hidden;
+  min-height: 100%;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
+}
+
+::selection {
+  background-color: var(--color-gold);
+  color: var(--color-velvet);
+}
+
+/* Anchored headings inside long legal documents clear the fixed header band. */
+:target {
+  scroll-margin-top: 7rem;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   UTILITIES — only these four. Justify any addition.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/** Full mobile viewport height, chrome-aware. */
+.min-h-mobile-screen {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
+}
+
+/** Display serif at headline size: tightened tracking, collapsed leading. */
+.font-editorial {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+/** The verdict word. One per headline, gold, never two. */
+.font-editorial-italic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/**
+ * Photographic grain over a field. Requires `position: relative` on the host.
+ *
+ * This is print texture on a marketing surface, not dashboard ornament — the
+ * distinction matters, because pholio-app bans decorative grain on product
+ * surfaces. Keep it at or below 0.03 opacity: at that strength it reads as
+ * paper stock, above it reads as an effect.
+ */
+.texture-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 150px 150px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   REDUCED MOTION
+
+   A global backstop, not a substitute for handling it in the component. Any
+   scroll-tied sequence must still branch on `useReducedMotion()` and offer a
+   real static composition — a 0.01s version of a scrub is not a fallback.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

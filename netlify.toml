@@ -1,0 +1,10 @@
+[build]
+  command = "npm install && npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NEXT_PUBLIC_APP_URL = "https://app.pholio.studio"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
