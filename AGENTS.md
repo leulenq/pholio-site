@@ -5,28 +5,22 @@ Operating contract for anyone — human or agent — working in this repo.
 This is the **Pholio public site**: `www.pholio.studio`. Marketing surfaces and
 the legal corpus. Nothing else.
 
-It was rebuilt from a clean slate. The previous site is frozen at
-`/Users/lenquanhone/Projects/pholio-landing` as the archive of record. **Do not
-read it for guidance and do not copy code out of it.** It is preserved so
-nothing is lost, not so it can be mined; its accumulated visual decisions are
-precisely what this reset exists to escape. Four surfaces were carried across
-deliberately, and they are already here.
-
 ---
 
 ## Read this before your first edit
 
 | If you are… | Read |
 |---|---|
-| Designing or building any page | [`docs/design-language/01-foundations.md`](docs/design-language/01-foundations.md) |
-| Touching the header, preloader, or legal pages | [`docs/design-language/02-preserved-surfaces.md`](docs/design-language/02-preserved-surfaces.md) |
-| Building anything visual, ever | [`docs/design-language/03-banned-ui.md`](docs/design-language/03-banned-ui.md) |
+| Building anything visual, ever | [`lessons.md`](lessons.md), then [`docs/design-language/03-banned-ui.md`](docs/design-language/03-banned-ui.md) |
 | Building a scroll-driven section | [`docs/design-language/04-scroll-craft.md`](docs/design-language/04-scroll-craft.md) |
 | Touching auth, cookies, legal constants, `next.config.ts`, or any `/api` call | [`docs/app-integration.md`](docs/app-integration.md) |
 
-Do not skim the ban list. It is the anti-slop list for a **public site**, not
-the dashboard list — page architecture, hero, section furniture, components,
-colour, type, imagery, motion, copy. Most of the entries are the default output
+`lessons.md` is corrections the site's owner has already made, in their own
+words. It is short, it is not theory, and every entry exists because an agent
+got that exact thing wrong. Read it first: the ban list tells you what not to
+build, `lessons.md` tells you what has already been built wrong here.
+
+Do not skim the ban list. It is the anti-slop list for a **public site** Most of the entries are the default output
 for their category, which means they are what you will produce if you do not
 check. Violating one requires human approval.
 
@@ -36,11 +30,10 @@ Its §12 is a mechanical pre-flight. Run it before calling a page done.
 
 ## Repo boundaries
 
-- **This repo** (`pholio-site`): public marketing pages and legal documents.
+- **This repo** (`pholio-site`): public site and legal pages
 - **`pholio-app`** (`/Users/lenquanhone/Projects/pholio-app`): the product —
   Express API, React SPA, database, dashboards. Never put marketing or legal
   pages there; never put dashboard or API logic here.
-- **`pholio-landing`**: the frozen archive. Read-only, and not a reference.
 
 This site has **no database, no email sender, no auth UI, and no server routes**
 beyond Next's own. It has exactly one write path to the app

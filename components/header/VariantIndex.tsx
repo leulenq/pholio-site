@@ -54,14 +54,25 @@ export default function VariantIndex({
   preview = false,
   previewState,
 }: HeaderVariantProps) {
-  const { tokens, field, revealed, condensed, paper, pathname, reduceMotion } =
-    useHeaderState({ theme, preview, previewState });
+  const {
+    tokens,
+    field,
+    revealed,
+    heroActive,
+    condensed,
+    paper,
+    pathname,
+    reduceMotion,
+  } = useHeaderState({ theme, preview, previewState });
   const [open, setOpen] = useState(false);
   const T = reduceMotion ? "0s" : `0.5s cubic-bezier(${EASE.join(",")})`;
 
   /* Paper only once the page has moved under the marks. Open, the index owns
      the field and supplies its own. */
-  const onPaper = condensed && !open;
+  const showRegularHeader = pathname !== "/" || !heroActive;
+  const onPaper = condensed && showRegularHeader && !open;
+  const visible = revealed && showRegularHeader;
+  const panelVisible = open && showRegularHeader;
 
   return (
     <FieldProvider tokens={tokens}>
@@ -69,11 +80,11 @@ export default function VariantIndex({
         data-site-header
         className={`${preview ? "absolute" : "fixed"} inset-x-0 top-0 z-[103]`}
         style={{
-          opacity: revealed ? 1 : 0,
-          pointerEvents: revealed ? "auto" : "none",
+          opacity: visible ? 1 : 0,
+          pointerEvents: visible ? "auto" : "none",
           transition: `opacity ${T}`,
         }}
-        aria-hidden={!revealed}
+        aria-hidden={!visible}
       >
         {/* Paper — the exact surface sampled from under the bar, opaque, never
             blurred. The polarity token is only the fallback. */}
@@ -109,7 +120,7 @@ export default function VariantIndex({
           className="pointer-events-none absolute inset-x-0 top-0"
           style={{
             height: 132,
-            opacity: field === "ink" && !open && !condensed ? 1 : 0,
+            opacity: field === "ink" && showRegularHeader && !open && !condensed ? 1 : 0,
             background:
               "linear-gradient(to bottom, rgba(5,5,5,0.55), rgba(5,5,5,0))",
             transition: `opacity ${T}`,
@@ -120,8 +131,6 @@ export default function VariantIndex({
           className="relative mx-auto flex w-full max-w-[1440px] items-center justify-between px-6 md:px-12"
           style={{ paddingTop: 30, paddingBottom: 26 }}
         >
-          {/* The resting state is the wordmark and nothing else — no descriptor,
-              no clerical line. Whatever Pholio is gets said inside the index. */}
           <Link
             href="/"
             aria-label="Pholio — home"
@@ -141,7 +150,7 @@ export default function VariantIndex({
       </header>
 
       <IndexPanel
-        open={open}
+        open={panelVisible}
         onClose={() => setOpen(false)}
         pathname={pathname}
         reduceMotion={reduceMotion}

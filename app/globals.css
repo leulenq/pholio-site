@@ -33,6 +33,8 @@
 
   /* ── One ease. Motion is arrival, so everything decelerates the same way. ── */
   --ease-arrival: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Brought in with the /talent section; used by its solid CTA treatment. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -86,6 +88,13 @@ body {
   min-height: 100dvh;
 }
 
+/** The fixed-height counterpart, for a pinned stage that must not grow. */
+.h-mobile-screen {
+  height: 100vh;
+  height: -webkit-fill-available;
+  height: 100dvh;
+}
+
 /** Display serif at headline size: tightened tracking, collapsed leading. */
 .font-editorial {
   font-family: var(--font-serif);
@@ -119,6 +128,56 @@ body {
   background-size: 150px 150px;
 }
 
+/**
+ * Solid light CTA — brought in with the /talent section's close scene.
+ * Kept as a utility because it is the one button treatment the page uses.
+ */
+.btn-solid-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9375rem 2.75rem;
+  background: #ffffff;
+  color: #050505;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition:
+    background-color 0.3s var(--ease-out-expo),
+    color 0.3s var(--ease-out-expo),
+    opacity 0.3s var(--ease-out-expo);
+}
+
+.btn-solid-white:hover {
+  background: #f5f0e8;
+}
+
+.btn-solid-white:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.28);
+}
+
+.btn-solid-white > * {
+  position: relative;
+  z-index: 1;
+}
+
+/** Micro-label voice for section eyebrows (e.g. THE MANIFESTO) */
+.text-label {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
 /* ══════════════════════════════════════════════════════════════════════════
    REDUCED MOTION
 
@@ -136,4 +195,18 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CUSTOM CURSOR
+   ══════════════════════════════════════════════════════════════════════════ */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+html.has-custom-cursor input,
+html.has-custom-cursor textarea,
+html.has-custom-cursor [contenteditable] {
+  cursor: text !important;
 }

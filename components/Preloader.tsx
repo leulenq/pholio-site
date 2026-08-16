@@ -45,7 +45,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           {/* Ambient gold glow */}
           <div
             className="absolute rounded-full opacity-[0.04]"
-            style={{ width: 1000, height: 1000, background: "radial-gradient(circle, #C9A55A 0%, transparent 55%)" }}
+            style={{ width: 1000, height: 1000, background: "radial-gradient(circle, #C8A96E 0%, transparent 55%)" }}
           />
 
           <div className="relative flex flex-col items-center">
@@ -59,7 +59,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                     fontFamily: "var(--font-serif)",
                     fontWeight: 400,
                     letterSpacing: "0.2em",
-                    color: "#C9A55A",
+                    color: "#C8A96E",
                   }}
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -79,7 +79,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
               className="mt-4 h-[1px] rounded-full"
               style={{
                 background:
-                  "linear-gradient(to right, transparent, #C9A55A, transparent)",
+                  "linear-gradient(to right, transparent, #C8A96E, transparent)",
               }}
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: 120, opacity: 1 }}

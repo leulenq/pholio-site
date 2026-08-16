@@ -171,6 +171,17 @@ edge case, because hairlines are the site's primary organising furniture
   section because the composition felt empty. Emptiness is fixed with spacing
   or with content, never with a line.
 
+> **The home scroll sequence takes none of them.** `lessons.md` §11.3 overrules
+> the "content on both sides" carve-out for the cinematic home surfaces: no
+> hairlines, rules, ticks, bands or leader marks there, at any opacity, however
+> real the data behind them. Structure comes from type scale, position,
+> occlusion and timing. The legal documents and the footer keep the rule above.
+
+**3.9b No vertical stack of short labels beside a subject.** `lessons.md` §11.2.
+A column of classifier terms next to a photograph is a feature grid rotated
+ninety degrees, and it reads as cheap however real the vocabulary is. Product
+terms go at display scale, one at a time, as the composition itself.
+
 **3.10 No `border-t` *and* `border-b` on every row of a list.** Pick one, use
 it sparsely. A ten-row table with a hairline under each row is the laziest
 possible layout — see §4.4.
@@ -310,8 +321,22 @@ line-art figures, isometric scenes. If a section needs a visual, it needs a
 photograph.
 
 **7.3 No generic stock-photo energy.** Smiling people in an office, handshakes,
-laptops on desks. The imagery register is editorial fashion photography:
-grayscale, warm grain, framed rather than cropped.
+laptops on desks. The imagery register is editorial fashion photography: warm
+grain, framed rather than cropped.
+
+> **On grayscale.** This rule used to read "grayscale, warm grain, framed rather
+> than cropped", in a voice that implied the industry works that way. It does
+> not. Every image measured across roughly thirty-five agency, fashion-house,
+> publication and portfolio sites renders in full colour with no filter
+> (`05-industry-reference.md` §6.1). Framing over cropping is an industry norm
+> and stays stated as one. Grayscale is not.
+>
+> **Grayscale remains the register, as a brand decision made deliberately and
+> not inherited from research.** Talent imagery arrives from
+> `GET /api/public/home` in colour, so this is an applied treatment with a cost:
+> it flattens skin tone, and skin tone is information on a site whose subject is
+> people. Anyone proposing to drop it is arguing with a choice rather than
+> correcting a mistake, and should say what changes.
 
 **7.4 Talent imagery has a sanctioned source.** `GET /api/public/home` on
 pholio-app, which gates every row through `isPubliclyExposable()` and therefore

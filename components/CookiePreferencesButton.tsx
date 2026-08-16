@@ -11,6 +11,7 @@ import { clearConsent } from "@/lib/cookie-consent";
  */
 export default function CookiePreferencesButton({
   label = "Cookie preferences",
+  children,
   onClick,
   ...buttonProps
 }: ButtonHTMLAttributes<HTMLButtonElement> & { label?: string }) {
@@ -23,7 +24,11 @@ export default function CookiePreferencesButton({
         onClick?.(event);
       }}
     >
-      {label}
+      {/* `label` is the plain form. Callers that need the control to wear a
+          surface's own type treatment (the footer) pass children instead; the
+          behaviour is identical either way, which is the point of having one
+          component for it. */}
+      {children ?? label}
     </button>
   );
 }

@@ -11,7 +11,19 @@ import next from "eslint-config-next";
  * config; you will get a confusing crash rather than a version error.
  */
 const config = [
-  { ignores: [".next/**", "node_modules/**", "out/**", "next-env.d.ts"] },
+  {
+    ignores: [
+      ".next/**",
+      "node_modules/**",
+      "out/**",
+      "next-env.d.ts",
+      // Standalone Node build tooling, not app code. `eslint-config-next`
+      // does not target .cjs, so linting it here leaves the rule override
+      // below with no `react-hooks` plugin in scope and ESLint aborts.
+      "scripts/**",
+      ".comp-card-build/**",
+    ],
+  },
 
   ...next,
 

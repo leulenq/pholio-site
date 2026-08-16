@@ -20,3 +20,6 @@ next-env.d.ts
 .agents/
 .claude/
 skills-lock.json
+
+# Working dir for scripts/render-comp-cards.cjs (intermediate HTML + fonts).
+.comp-card-build/

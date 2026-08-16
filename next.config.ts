@@ -35,6 +35,10 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "app.pholio.studio" },
       { protocol: "https", hostname: "**.pholio.studio" },
+      // Brought in with the /talent section: stock portraits and placeholder
+      // faces used in the comp-card showcase and photo-intelligence scene.
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "i.pravatar.cc" },
     ],
   },
 
@@ -60,7 +64,7 @@ const nextConfig: NextConfig = {
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.pholio.studio",
+      "img-src 'self' data: blob: https://*.pholio.studio https://images.unsplash.com https://i.pravatar.cc",
       "font-src 'self' data:",
       // Same-origin only: /api/* is a server-side rewrite, not a browser call.
       "connect-src 'self'",
