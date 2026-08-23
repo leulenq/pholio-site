@@ -1,17 +1,20 @@
+// Server component — metadata requires server component
+import TalentFlowPage from "@/components/talent-flow/TalentFlowPage";
+
 export const metadata = {
-  title: "Talent",
+  title: "Talent — Pholio",
+  description:
+    "For models, actors, and creatives: a comp card that composes itself, a book the booker sees on your terms, applications that arrive complete, and honest signal on who leaned in. Free to apply.",
+  openGraph: {
+    title: "Talent — Pholio",
+    description:
+      "A comp card that composes itself. A book on your terms. Applications that arrive complete, and honest signal on who leaned in. Free to apply — never a fee to be seen.",
+    url: "https://www.pholio.studio/talent",
+    siteName: "Pholio",
+    type: "website",
+  },
 };
 
 export default function TalentPage() {
-  return (
-    <main className="min-h-mobile-screen bg-[#050505]">
-      <div className="pt-40 px-6">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="font-editorial text-5xl md:text-7xl text-[#FAF7F2] mb-6">
-            Talent
-          </h1>
-        </div>
-      </div>
-    </main>
-  );
+  return <TalentFlowPage />;
 }

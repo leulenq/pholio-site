@@ -122,7 +122,7 @@ Built from `PHOLIO_APP_ORIGIN` (`lib/pholio-app-origin.ts`).
 | Purpose | Path |
 |---|---|
 | Sign in | `/login` (supports `?next=<path>` and `?force=1`) |
-| Get scouted / sign up | `/onboarding` |
+| Apply free / sign up | `/onboarding` |
 | Studio+ signup | `/signup?plan=studio` → redirects to `/onboarding?plan=studio` |
 | Talent dashboard | `/dashboard/talent` |
 | Agency dashboard | `/dashboard/agency` |

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Noto_Serif_Display, Inter, JetBrains_Mono } from "next/font/google";
 
 import "./globals.css";
+import SiteFooter from "@/components/footer/SiteFooter";
 import HeaderWrapper from "@/components/HeaderWrapper";
 import Providers from "@/components/Providers";
 
@@ -59,6 +60,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+import CustomCursor from "@/components/CustomCursor";
+
 export default function RootLayout({
   children,
 }: {
@@ -71,8 +74,12 @@ export default function RootLayout({
     >
       <body>
         <Providers>
+          <CustomCursor />
           <HeaderWrapper />
-          {children}
+          <main className="relative z-10 min-h-mobile-screen bg-[#050505]">
+            {children}
+          </main>
+          <SiteFooter />
         </Providers>
       </body>
     </html>

@@ -143,34 +143,38 @@ export const SIGNUP_HREF = `${APP_URL}/onboarding`;
    ══════════════════════════════════════════════════════════════════════ */
 
 /**
- * A home hero is expected to carry its own chrome, so the sitewide header stays
- * out of the way until the hero has left the viewport.
+ * A home hero carries its own chrome for its entire life. Once the hero has
+ * left the viewport, the sitewide header takes over and stays available while
+ * the rest of the page moves underneath it.
  *
  * This measures the hero itself: mark the hero's `<section>` by putting
  * `data-hero-chrome` on any element inside it. Without that marker the header
- * falls back to one viewport of scroll — which means a home page that does not
- * scroll never reveals the header at all. That is deliberate, not a bug, but it
- * is also the single easiest way to ship a page with no visible navigation.
- * If the header is missing on `/`, this is the first thing to check.
+ * falls back to one viewport of scroll so a home page still gets navigation.
  */
 const CONDENSE_AT = 96; // px of scroll before the header settles
 
-function homeHeaderRevealed(): boolean {
+function homeHeroActive(): boolean {
   const hero = document
     .querySelector("[data-hero-chrome]")
     ?.closest("section");
   if (hero) {
-    // Revealed once the hero's last frame has largely left the viewport.
-    return hero.getBoundingClientRect().bottom <= window.innerHeight * 0.5;
+    const rect = hero.getBoundingClientRect();
+    // The custom treatment owns the header until the Hero has genuinely left
+    // the viewport. Using the section edge rather than a scroll offset keeps
+    // this correct when the Hero's length changes and when the user reverses
+    // direction at speed.
+    return rect.bottom > 0;
   }
-  return window.scrollY > window.innerHeight;
+  return window.scrollY <= window.innerHeight;
 }
 
 export interface HeaderState {
   field: Field;
   tokens: FieldTokens;
-  /** False while the home hero owns the top of the page. */
+  /** True while the header is allowed to participate in the page chrome. */
   revealed: boolean;
+  /** True while the home hero owns the header treatment. */
+  heroActive: boolean;
   /** True once the page has scrolled past the settle threshold. */
   condensed: boolean;
   /**
@@ -194,7 +198,26 @@ export function useHeaderState({
   const reduceMotion = !!useReducedMotion();
   const { scrollY } = useScroll();
 
-  const [revealed, setRevealed] = useState(preview || !isHome);
+  const [revealed] = useState(true);
+  const [preloaderDone, setPreloaderDone] = useState(!isHome);
+
+  useEffect(() => {
+    if (!isHome) {
+      setPreloaderDone(true);
+      return;
+    }
+    if (typeof window !== "undefined" && (window as any).__preloaderDone) {
+      setPreloaderDone(true);
+    }
+    const onDone = () => setPreloaderDone(true);
+    window.addEventListener("preloader-done", onDone);
+    return () => window.removeEventListener("preloader-done", onDone);
+  }, [isHome]);
+
+  const [heroActive, setHeroActive] = useState(() => {
+    if (preview || typeof window === "undefined") return false;
+    return isHome ? homeHeroActive() : false;
+  });
   const [condensed, setCondensed] = useState(
     preview && previewState === "settled",
   );
@@ -204,17 +227,27 @@ export function useHeaderState({
 
   useEffect(() => {
     if (preview) return;
-    setRevealed(!isHome);
-    setCondensed(false);
+    const frame = window.requestAnimationFrame(() => {
+      const active = isHome ? homeHeroActive() : false;
+      setHeroActive(active);
+      setCondensed(isHome ? !active : window.scrollY > CONDENSE_AT);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [isHome, preview]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (preview) return;
     if (isHome) {
-      setRevealed(homeHeaderRevealed());
+      const active = homeHeroActive();
+      setHeroActive(active);
+      setCondensed(!active);
+    } else {
+      setCondensed(latest > CONDENSE_AT);
     }
-    setCondensed(latest > CONDENSE_AT);
   });
+
+  /* The closing panel takes the screen, and the bar gets out of its way. */
+  const footerOwnsView = useFooterTakeover(!preview);
 
   /* Field polarity: read the paper directly under the bar so the header belongs
      to whatever section it is crossing, instead of being frozen per route. */
@@ -230,12 +263,54 @@ export function useHeaderState({
   return {
     field: preview ? theme : field,
     tokens: TOKENS[preview ? theme : field],
-    revealed,
+    revealed: revealed && !footerOwnsView && preloaderDone,
+    heroActive: preview ? previewState === "rest" : heroActive,
     condensed: preview ? previewState === "settled" : condensed,
     paper: preview ? null : paper,
     pathname,
     reduceMotion,
   };
+}
+
+/**
+ * True once the site's closing panel owns most of the screen.
+ *
+ * The panel is a viewport tall and is meant to read as a destination, so the
+ * header standing down is part of the composition rather than a nicety: a
+ * persistent bar over it makes it a long section instead of an ending.
+ *
+ * `rootMargin` shrinks the observer's root to the **top 40%** of the viewport,
+ * so this reports true exactly when the panel's top edge has risen past that
+ * line and it is the majority of what anyone can see. An IntersectionObserver
+ * rather than a scroll handler: no main-thread work per frame, and the state
+ * change is a callback rather than a setState inside an effect body.
+ *
+ * The header's own opacity transition does the fade, so the takeover is a
+ * half-second dissolve rather than a cut.
+ */
+function useFooterTakeover(enabled: boolean): boolean {
+  const [taken, setTaken] = useState(false);
+  const { scrollY } = useScroll();
+
+  const checkTakeover = useCallback(() => {
+    if (!enabled || typeof window === "undefined") return;
+    const trigger =
+      document.querySelector("[data-footer-trigger]") ||
+      document.querySelector("[data-site-footer]");
+    if (!trigger) return;
+
+    const rect = trigger.getBoundingClientRect();
+    // The panel owns the view if its top is above the 40% mark of the screen
+    setTaken(rect.top < window.innerHeight * 0.4);
+  }, [enabled]);
+
+  useMotionValueEvent(scrollY, "change", checkTakeover);
+
+  useEffect(() => {
+    checkTakeover();
+  }, [checkTakeover]);
+
+  return taken;
 }
 
 const OPAQUE_SKIP = new Set(["rgba(0, 0, 0, 0)", "transparent"]);
@@ -339,10 +414,44 @@ function useFieldPolarity({
 export function useScrollLock(active: boolean) {
   useEffect(() => {
     if (!active || typeof document === "undefined") return;
-    const previous = document.body.style.overflow;
+
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousBodyPaddingRight = document.body.style.paddingRight;
+
     document.body.style.overflow = "hidden";
+
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    const header = document.querySelector(
+      "[data-site-header]",
+    ) as HTMLElement | null;
+    const previousHeaderPaddingRight = header?.style.paddingRight ?? "";
+    if (header && scrollbarWidth > 0) {
+      header.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    const indexPanel = document.querySelector(
+      "[data-index-panel]",
+    ) as HTMLElement | null;
+    const previousPanelPaddingRight = indexPanel?.style.paddingRight ?? "";
+    if (indexPanel && scrollbarWidth > 0) {
+      indexPanel.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
     return () => {
-      document.body.style.overflow = previous;
+      document.body.style.overflow = previousBodyOverflow;
+      document.body.style.paddingRight = previousBodyPaddingRight;
+      if (header) {
+        header.style.paddingRight = previousHeaderPaddingRight;
+      }
+      if (indexPanel) {
+        indexPanel.style.paddingRight = previousPanelPaddingRight;
+      }
     };
   }, [active]);
 }
@@ -631,7 +740,7 @@ export function AccountCluster({
           size={10}
           tracking={0.2}
         />
-        {showAction && <ActionLink href={SIGNUP_HREF} label="Get scouted" />}
+        {showAction && <ActionLink href={SIGNUP_HREF} label="Apply free" />}
       </div>
     );
   }
@@ -1052,6 +1161,7 @@ export function IndexPanel({
 
   return (
     <motion.div
+      data-index-panel
       className={`${contained ? "absolute" : "fixed"} inset-x-0 bottom-0 z-[102] flex flex-col`}
       initial={false}
       animate={{ opacity: open ? 1 : 0, pointerEvents: open ? "auto" : "none" }}
@@ -1105,7 +1215,14 @@ export function IndexPanel({
                       full={full}
                     />
                   </Link>
-                  <Rule color="rgba(250,247,242,0.07)" />
+                  <div
+                    aria-hidden
+                    style={{
+                      height: 1,
+                      width: "100%",
+                      background: "linear-gradient(to right, rgba(250,247,242,0.06), transparent)",
+                    }}
+                  />
                 </motion.div>
               ))}
             </nav>
@@ -1157,7 +1274,7 @@ export function IndexPanel({
                       <>
                         <ActionLink
                           href={SIGNUP_HREF}
-                          label="Get scouted"
+                          label="Apply free"
                           size={11}
                           tracking={0.14}
                           onClick={onClose}
@@ -1217,7 +1334,7 @@ export function IndexPanel({
                         <>
                           <ActionLink
                             href={SIGNUP_HREF}
-                            label="Get scouted"
+                            label="Apply free"
                             size={11}
                             tracking={0.14}
                             onClick={onClose}
@@ -1264,7 +1381,7 @@ export function IndexPanel({
                       />
                       <ActionLink
                         href={SIGNUP_HREF}
-                        label="Get scouted"
+                        label="Apply free"
                         onClick={onClose}
                       />
                     </>
