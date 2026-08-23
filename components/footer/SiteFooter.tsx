@@ -74,7 +74,7 @@ export default function SiteFooter() {
             className="grid gap-x-10 gap-y-8 md:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)_1px_minmax(0,1fr)_1px_minmax(0,1.1fr)]"
             style={{ paddingTop: 32, paddingBottom: 16 }}
           >
-            <Group label={LABEL.product} entries={PRIMARY_NAV} display />
+            <Group label={LABEL.product} entries={PRIMARY_NAV} />
             <ColumnRule className="hidden md:block" />
             <Group label={LABEL.company} entries={SECONDARY_NAV} />
             <ColumnRule className="hidden md:block" />
@@ -86,10 +86,8 @@ export default function SiteFooter() {
 
             <div>
               <GroupLabel>{LABEL.contact}</GroupLabel>
-              <div style={{ marginTop: 16 }}>
+              <div className="mt-5 flex flex-col items-start gap-4">
                 <AddressLink email={CONTACT_EMAIL} />
-              </div>
-              <div style={{ marginTop: 20 }}>
                 <SocialRow />
               </div>
             </div>
@@ -112,12 +110,9 @@ export default function SiteFooter() {
 function Group({
   label,
   entries,
-  display = false,
 }: {
   label: string;
   entries: readonly { label: string; href: string }[];
-  /** The product destinations, in the display voice. */
-  display?: boolean;
 }) {
   return (
     <div>
@@ -127,8 +122,8 @@ function Group({
           <FooterLink
             key={entry.href}
             href={entry.href}
-            label={display ? productLabel(entry.label) : entry.label}
-            tone={display ? "product" : "clerical"}
+            label={productLabel(entry.label)}
+            tone="clerical"
           />
         ))}
       </div>

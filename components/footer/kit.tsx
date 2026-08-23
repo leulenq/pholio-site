@@ -177,7 +177,7 @@ export function FooterMark() {
       <Wordmark
         size="23.4cqi"
         tracking={0.06}
-        color={MUTED}
+        color={GOLD}
         style={{ display: "block", whiteSpace: "nowrap", transition: "none" }}
       />
     </div>
