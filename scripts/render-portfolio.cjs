@@ -28,7 +28,7 @@ const SITE = path.resolve(__dirname, "..");
 const appRequire = (name) => require(path.join(APP, "node_modules", name));
 const ejs = appRequire("ejs");
 
-const { TALENT, PHOTOS } = require("./ola-talent.cjs");
+const { TALENT, PHOTOS, HERO_PHOTO } = require("./ola-talent.cjs");
 
 const { buildCanonicalStats } = require(
   path.join(APP, "src", "shared", "lib", "stats-formatter"),
@@ -87,7 +87,7 @@ function ageBandFor(age) {
 function renderHtml() {
   const profile = {
     ...TALENT,
-    hero_image_path: "/talent/05-editorial-standing.jpg",
+    hero_image_path: `/talent/${HERO_PHOTO}`,
   };
 
   const body = ejs.render(
