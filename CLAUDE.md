@@ -44,7 +44,17 @@ Concretely, when you catch yourself about to:
 
 ## Skills
 
-Installed per-machine, not vendored (`.agents/` and `.claude/` are gitignored):
+**First-party and versioned:** `.claude/skills/pholio-site-language/` is this
+repo's own language system (marketing copy, persuasion, positioning, judging
+existing copy). It is checked in via a `.gitignore` exception and is the
+authority on all user-facing wording here. Its `references/` shared layer
+(foundation, lexicon, banned-language, audience, product-facts, judgment) is
+kept byte-identical with `pholio-app/.claude/skills/pholio-app-language/`;
+edit both copies together. In-app/product copy belongs to the app's skill,
+not this one.
+
+Everything else is installed per-machine, not vendored (`.agents/` and the
+rest of `.claude/` are gitignored):
 
 ```bash
 npx skills add Leonxlnx/taste-skill
