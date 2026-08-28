@@ -1,0 +1,12 @@
+{
+  "engine": "composed-v6.0",
+  "hero": "03-leaning-three-quarter.jpg",
+  "cards": [
+    {
+      "edition": "house-classic",
+      "label": "The Standard",
+      "resolved": null,
+      "heroId": "ola-03"
+    }
+  ]
+}

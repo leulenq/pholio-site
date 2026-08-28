@@ -13,6 +13,7 @@ the legal corpus. Nothing else.
 |---|---|
 | Building anything visual, ever | [`lessons.md`](lessons.md), then [`docs/design-language/03-banned-ui.md`](docs/design-language/03-banned-ui.md) |
 | Building a scroll-driven section | [`docs/design-language/04-scroll-craft.md`](docs/design-language/04-scroll-craft.md) |
+| Studying a reference site, or handed one in a brief | [`docs/design-language/06-reference-capture.md`](docs/design-language/06-reference-capture.md) |
 | Touching auth, cookies, legal constants, `next.config.ts`, or any `/api` call | [`docs/app-integration.md`](docs/app-integration.md) |
 
 `lessons.md` is corrections the site's owner has already made, in their own

@@ -13,9 +13,9 @@ export type CardVariant = {
 /**
  * The three frames the capture beat selects from.
  *
- * An editorial standing frame, a frame out of the intelligence sequence, and
- * a full length. Between them they carry the range a booker scans for and
- * make the continuity explicit: the footage and the book are one person.
+ * An editorial standing frame, a second look in a different wardrobe and
+ * location, and a full length. Between them they carry the range a booker
+ * scans for.
  *
  * The lead is the editorial standing frame, locked as the card's hero via the
  * engine's own `locks.heroId`. A comp-card front is a body shot with the name
@@ -33,11 +33,10 @@ export const SOURCE_FRAMES: SourceFrame[] = [
     src: "/generated/comp-card/source/ola-editorial-standing.jpg",
     objectPosition: "50% 38%",
   },
-  // A frame lifted straight out of the intelligence sequence, composited onto
-  // the stage's own velvet. It is here to make it unmistakable that the
-  // footage and the book are the same person.
+  // A second look, different wardrobe and location from the other two: the
+  // range a booker scans for isn't one outfit shot three ways.
   {
-    src: "/generated/comp-card/source/ola-sequence.jpg",
+    src: "/generated/comp-card/source/ola-night-street.jpg",
     objectPosition: "50% 42%",
   },
   {

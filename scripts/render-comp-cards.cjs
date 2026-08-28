@@ -1,25 +1,15 @@
 #!/usr/bin/env node
 /**
- * Render real comp cards for the home page, through pholio-app's actual engine.
+ * Render a library of real comp cards through pholio-app's composed engine.
  *
  *   node scripts/render-comp-cards.cjs
  *
- * The home page's comp-card beat must show genuine product output, not a
- * mock built from divs (`03-banned-ui.md` §4.6). This drives
- * `composeCompCard` from `pholio-app` directly — the same function the
- * product's PDF route calls — over the real photographs in
- * `01-ola-szkolda/`, with `aiAdvice: false` so the result is deterministic
- * and needs no network, no database and no Groq key.
+ * Drives composeCompCard — the same function the product's PDF route calls —
+ * over 01-ola-szkolda/, with the leaning three-quarter locked as the hero.
+ * Editions that require an alpha matte are skipped (JPEG sources have none).
  *
- * Editions are requested by id rather than drawn, so the caption on the site
- * and the artwork it labels cannot disagree. Labels are read back out of the
- * shipped catalog for the same reason: the spec's catalog and the code's have
- * already drifted once (`fresh-commercial` in the spec is `the-strip` in
- * code), and the site must follow the code.
- *
- * No filter is applied to the photography. The engine's "Never" list starts
- * with photo manipulation, and every edition's paper is white or ivory apart
- * from `ink-noir`; a desaturated card would misrepresent the product.
+ * Writes PNG fronts/backs into this site and copies them to pholio-landing
+ * for the marketing surface.
  */
 
 "use strict";
@@ -27,10 +17,7 @@
 const fs = require("fs");
 const path = require("path");
 
-
 const APP = path.resolve(__dirname, "..", "..", "pholio-app");
-
-// Resolved from pholio-app so this script needs no dependencies of its own.
 const appRequire = (name) => require(path.join(APP, "node_modules", name));
 const ejs = appRequire("ejs");
 const SITE = path.resolve(__dirname, "..");
@@ -49,41 +36,53 @@ const { listEditions } = require(
 );
 
 const TEMPLATE_PATH = path.join(
-  APP, "src", "domains", "pdf", "templates", "compcard-composed.ejs",
+  APP,
+  "src",
+  "domains",
+  "pdf",
+  "templates",
+  "compcard-composed.ejs",
 );
 
-/** 5.5in × 8.5in at CSS 96dpi — the industry card, unchanged. */
+/** 5.5in × 8.5in at CSS 96dpi. */
 const PAGE_W = 528;
 const PAGE_H = 816;
 
 const SOURCE_DIR = path.join(SITE, "01-ola-szkolda");
 const WORK_DIR = path.join(SITE, ".comp-card-build");
 const OUT_DIR = path.join(SITE, "public", "generated", "comp-card");
+const LANDING_OUT = path.resolve(
+  SITE,
+  "..",
+  "pholio-landing",
+  "public",
+  "generated",
+  "comp-card",
+);
 
-// The talent, the photo pool and the locked hero are shared with the Studio+
-// portfolio render so the card and the website on the same page cannot
-// disagree. Measurements are deliberately null there; see the file's header.
 const { TALENT, ARCHETYPE, PHOTOS, HERO_PHOTO } = require("./ola-talent.cjs");
 
-/**
- * The four editions the page shows.
- *
- * These mirror the four directions the earlier comp-card beat used, matched
- * to the shipped catalog after rendering all nine:
- *
- *   house-classic      full bleed photo, name set into the foot
- *   gallery-monograph   photo inset on an ivory mat, name below
- *   editorial-masthead  photo over a cream band carrying the name
- *   ink-noir            the one dark paper, name reversed out
- *
- * `house-classic` is also the card the capture beat morphs into, because a
- * full bleed photo is the only structure a full bleed source plate can
- * become without the crop jumping. A matted card here is what made that
- * transition read as misaligned.
- */
+const SKIP_EDITIONS = new Set(["cover-story", "studio-cutout"]);
 const SHOW = process.env.EDITIONS
   ? process.env.EDITIONS.split(",")
-  : ["house-classic", "gallery-monograph", "editorial-masthead", "ink-noir"];
+  : listEditions()
+      .map((edition) => edition.id)
+      .filter((id) => !SKIP_EDITIONS.has(id));
+
+// Match the Elara/Mara landing artifact: full-bleed photo, name set on the
+// photograph (house-classic + photo-dominant + over).
+const FORCE_STRUCTURE = process.env.FORCE_STRUCTURE || null;
+const FORCE_TREATMENT = process.env.FORCE_TREATMENT || null;
+const OUTPUT_STEM = process.env.OUTPUT_STEM || null;
+const EDITIONS_ON = process.env.EDITIONS_ENABLED !== "0";
+
+const PROFILE = {
+  ...TALENT,
+  first_name: TALENT.first_name,
+  last_name: TALENT.last_name,
+  hair_color: TALENT.hair_color,
+  eye_color: TALENT.eye_color,
+};
 
 async function buildRows() {
   const sharp = appRequire("sharp");
@@ -95,20 +94,23 @@ async function buildRows() {
     if (!fs.existsSync(from)) throw new Error(`missing source photo: ${from}`);
     const id = `ola-${String(index + 1).padStart(2, "0")}`;
     const to = path.join(WORK_DIR, "source", `${id}.jpg`);
-    // Re-encode at a sane working size. No colour operation of any kind.
-    await sharp(from).resize({ width: 1600, withoutEnlargement: true })
-      .jpeg({ quality: 92 }).toFile(to);
+    await sharp(from)
+      .resize({ width: 1600, withoutEnlargement: true })
+      .jpeg({ quality: 92 })
+      .toFile(to);
     const meta = await sharp(to).metadata();
     rows.push({
       id,
-      profile_id: TALENT.id,
+      profile_id: PROFILE.id,
       path: `source/${id}.jpg`,
       label: photo.label,
       sort: index + 1,
       shot_type: photo.shot_type,
+      shot_type: photo.shot_type,
       style_type: null,
       width: meta.width,
       height: meta.height,
+      is_primary: Boolean(photo.is_primary),
       is_primary: Boolean(photo.is_primary),
       usage_rights: "granted",
       created_at: new Date().toISOString(),
@@ -117,7 +119,6 @@ async function buildRows() {
   return rows;
 }
 
-/** Copy the TTFs a plan needs next to the card and point the CSS at them. */
 function vendorFonts(families) {
   const css = fontFaceCss(families);
   if (!css) throw new Error(`no vendored fonts for ${JSON.stringify(families)}`);
@@ -130,6 +131,65 @@ function vendorFonts(families) {
   });
 }
 
+function polishCanonicalFront(htmlPath) {
+  let html = fs.readFileSync(htmlPath, "utf8");
+  if (!html.includes("#front .hero img")) {
+    html = html.replace(
+      `.cell img, .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }`,
+      `.cell img, .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #front .hero img {
+      filter: contrast(1.18) saturate(0.92) brightness(0.97);
+    }`,
+    );
+  }
+  if (!html.includes('data-scrim')) {
+    html = html.replace(
+      `</div>
+        
+      
+    
+      
+        
+        <div class="abs name-block"`,
+      `</div>
+        <div class="abs" data-scrim style="left:0;right:0;bottom:0;height:2.55in;pointer-events:none;z-index:12;background:linear-gradient(to top, rgba(10,9,8,0.62) 0%, rgba(10,9,8,0.34) 38%, rgba(10,9,8,0) 100%);"></div>
+        
+      
+    
+      
+        
+        <div class="abs name-block"`,
+    );
+  }
+  html = html.replace(
+    /white-space: nowrap;">Ola<\/span>/,
+    `white-space: nowrap; text-shadow: 0 1px 12px rgba(10,9,8,0.35);">Ola</span>`,
+  );
+  html = html.replace(
+    /white-space: nowrap;">Szkolda<\/span>/,
+    `white-space: nowrap; text-shadow: 0 1px 10px rgba(10,9,8,0.4);">Szkolda</span>`,
+  );
+  fs.writeFileSync(htmlPath, html);
+}
+
+function copyLibrary(dest) {
+  fs.mkdirSync(dest, { recursive: true });
+  for (const name of fs.readdirSync(OUT_DIR)) {
+    if (!name.startsWith("ola-") && name !== "manifest.json") continue;
+    fs.copyFileSync(path.join(OUT_DIR, name), path.join(dest, name));
+  }
+}
+
 async function main() {
   const catalog = new Map(listEditions().map((e) => [e.id, e.label]));
   for (const id of SHOW) {
@@ -137,13 +197,12 @@ async function main() {
   }
 
   const rows = await buildRows();
-  const heroRow = rows.find(
-    (row, index) => PHOTOS[index].file === HERO_PHOTO,
-  );
+  const heroRow = rows.find((row, index) => PHOTOS[index].file === HERO_PHOTO);
   if (!heroRow) throw new Error(`hero photo not in pool: ${HERO_PHOTO}`);
-  const heroRowId = heroRow.id;
+
   const forensicsById = await forensicsForImages(rows, {
-    fetchBuffer: async (row) => fs.promises.readFile(path.join(WORK_DIR, row.path)),
+    fetchBuffer: async (row) =>
+      fs.promises.readFile(path.join(WORK_DIR, row.path)),
   });
 
   const template = fs.readFileSync(TEMPLATE_PATH, "utf8");
@@ -153,90 +212,100 @@ async function main() {
   const manifest = [];
 
   for (const edition of SHOW) {
-   try {
-    const composed = await composeCompCard({
-      profile: TALENT,
-      images: rows,
-      archetype: ARCHETYPE,
-      options: {
-        seed: `pholio-site-${edition}`,
-        aiAdvice: false,
-        frontEngine: "program",
-        forensicsById,
-        unitsPreference: "dual",
-        mode: "draft",
-        editionsEnabled: true,
+    try {
+      const composed = await composeCompCard({
+        profile: PROFILE,
+        images: rows,
+        archetype: ARCHETYPE,
+        options: {
+          seed: `pholio-landing-ola-${edition}`,
+          aiAdvice: false,
+          frontEngine: "program",
+          forensicsById,
+          unitsPreference: "dual",
+          mode: "draft",
+          editionsEnabled: EDITIONS_ON,
+          edition,
+          locks: { heroId: heroRow.id },
+          forceStructure: FORCE_STRUCTURE,
+          forceTreatment: FORCE_TREATMENT,
+        },
+      });
+
+      const fontsCss = vendorFonts([
+        composed.plan.typography.display,
+        composed.plan.typography.body,
+      ]);
+
+      const html = ejs.render(template, {
+        layout: false,
+        title: `${PROFILE.first_name} ${PROFILE.last_name} - Comp Card`,
+        profile: PROFILE,
+        plan: composed.plan,
+        statsBlock: composed.statsBlock,
+        imagesById,
+        watermark: false,
+        baseUrl: "..",
+        printBleed: false,
+        fontsCss,
+        frontProgram: composed.plan.frontProgram || null,
+      });
+
+      fs.writeFileSync(path.join(WORK_DIR, "cards", `${edition}.html`), html);
+      manifest.push({
         edition,
-        locks: { heroId: heroRowId },
-      },
-    });
-
-    // Fonts follow the plan: the edition chooses its own voices, so the CSS
-    // has to be built per card, with the app's absolute font URLs rewritten
-    // for standalone file:// rendering.
-    const fontsCss = vendorFonts([
-      composed.plan.typography.display,
-      composed.plan.typography.body,
-    ]);
-
-    const html = ejs.render(template, {
-      layout: false,
-      title: `${TALENT.first_name} ${TALENT.last_name} - Comp Card`,
-      profile: TALENT,
-      plan: composed.plan,
-      statsBlock: composed.statsBlock,
-      imagesById,
-      watermark: false,
-      baseUrl: "..",
-      printBleed: false,
-      fontsCss,
-      frontProgram: composed.plan.frontProgram || null,
-    });
-
-    fs.writeFileSync(path.join(WORK_DIR, "cards", `${edition}.html`), html);
-    manifest.push({
-      edition,
-      label: catalog.get(edition),
-      resolved: composed.plan.edition || null,
-    });
-    console.log(`[card] composed ${edition} (${catalog.get(edition)})`);
-   } catch (error) {
-     console.warn(`[card] SKIP ${edition}: ${error.message}`);
-   }
+        label: catalog.get(edition),
+        resolved: composed.plan.edition || null,
+        heroId: composed.plan.front && composed.plan.front.imageId,
+      });
+      console.log(`[card] composed ${edition} (${catalog.get(edition)})`);
+    } catch (error) {
+      console.warn(`[card] SKIP ${edition}: ${error.stack || error.message}`);
+    }
   }
 
-  fs.writeFileSync(
-    path.join(WORK_DIR, "manifest.json"),
-    JSON.stringify({ engine: ENGINE_VERSION, cards: manifest }, null, 2),
-  );
-
-  // ── Rasterise ───────────────────────────────────────────────────────────
   const puppeteer = appRequire("puppeteer");
   const browser = await puppeteer.launch({
     headless: "new",
-    executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    executablePath:
+      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
   });
   const page = await browser.newPage();
-  await page.setViewport({ width: PAGE_W, height: PAGE_H * 2, deviceScaleFactor: 2 });
+  await page.setViewport({
+    width: PAGE_W,
+    height: PAGE_H * 2,
+    deviceScaleFactor: 2,
+  });
   fs.mkdirSync(OUT_DIR, { recursive: true });
 
   for (const { edition } of manifest) {
     const file = path.join(WORK_DIR, "cards", `${edition}.html`);
+    const stem = OUTPUT_STEM || `ola-${edition}`;
+    if (stem === "ola-szkolda") polishCanonicalFront(file);
     await page.goto(`file://${file}`, { waitUntil: "networkidle0" });
     await new Promise((r) => setTimeout(r, 400));
     await page.screenshot({
-      path: path.join(OUT_DIR, `ola-${edition}-front.png`),
+      path: path.join(OUT_DIR, `${stem}-front.png`),
       clip: { x: 0, y: 0, width: PAGE_W, height: PAGE_H },
     });
     await page.screenshot({
-      path: path.join(OUT_DIR, `ola-${edition}-back.png`),
+      path: path.join(OUT_DIR, `${stem}-back.png`),
       clip: { x: 0, y: PAGE_H, width: PAGE_W, height: PAGE_H },
     });
-    console.log(`[card] rendered ${edition}`);
+    console.log(`[card] rendered ${stem}`);
   }
 
   await browser.close();
+
+  fs.writeFileSync(
+    path.join(OUT_DIR, "manifest.json"),
+    JSON.stringify({ engine: ENGINE_VERSION, hero: HERO_PHOTO, cards: manifest }, null, 2),
+  );
+  copyLibrary(LANDING_OUT);
+
   console.log(`\nengine ${ENGINE_VERSION}`);
+  console.log(`wrote ${manifest.length} cards to ${OUT_DIR}`);
+  console.log(`copied library to ${LANDING_OUT}`);
   console.log(JSON.stringify(manifest, null, 2));
 }
 

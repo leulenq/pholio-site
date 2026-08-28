@@ -75,9 +75,9 @@ const ARCHETYPE = {
  * from these, so a wrong label here produces a wrong card.
  */
 const PHOTOS = [
-  { file: "05-editorial-standing.jpg", shot_type: "half_body", is_primary: true, label: "Editorial standing" },
+  { file: "05-editorial-standing.jpg", shot_type: "half_body", label: "Editorial standing" },
   { file: "02-full-body-columns.jpg", shot_type: "full_length", label: "Full length" },
-  { file: "03-leaning-three-quarter.jpg", shot_type: "three_quarter", label: "Three quarter" },
+  { file: "03-leaning-three-quarter.jpg", shot_type: "three_quarter", is_primary: true, label: "Three quarter" },
   { file: "07-studio-closeup-bw.jpg", shot_type: "headshot", label: "Studio headshot" },
   { file: "06-close-jewelry.jpg", shot_type: "detail", label: "Detail" },
   { file: "01-walking-columns.jpg", shot_type: "full_length", label: "Walking" },
@@ -91,6 +91,6 @@ const PHOTOS = [
  * portfolio's hero is the same photograph again, so the book and the site
  * open on one image.
  */
-const HERO_PHOTO = "05-editorial-standing.jpg";
+const HERO_PHOTO = "03-leaning-three-quarter.jpg";
 
 module.exports = { TALENT, ARCHETYPE, PHOTOS, HERO_PHOTO };
