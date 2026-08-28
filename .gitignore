@@ -17,8 +17,13 @@ next-env.d.ts
 # Agent skills, installed per-machine via `npx skills add`.
 # Not vendored: they are third-party, they change upstream, and this repo's own
 # docs/ take precedence over them wherever the two disagree.
+# Exception: .claude/skills/pholio-site-language/ is first-party and versioned
+# (this repo's own language system; its shared layer syncs with pholio-app).
 .agents/
-.claude/
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/pholio-site-language/
 skills-lock.json
 
 # Working dir for scripts/render-comp-cards.cjs (intermediate HTML + fonts).
