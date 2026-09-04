@@ -46,8 +46,7 @@ export const SOURCE_FRAMES: SourceFrame[] = [
 ];
 
 /**
- * Four of the nine editions in the comp-card catalog, rendered through the
- * real engine by `scripts/render-comp-cards.cjs`.
+ * Four directions from the comp-card catalog's nine.
  *
  * Editions are the engine's top-level creative unit: named art directions
  * that own composition, image hierarchy, typography, palette, ornament and
@@ -56,8 +55,13 @@ export const SOURCE_FRAMES: SourceFrame[] = [
  * resolved to New York, Paris, Milan) and has nothing to do with how a card
  * is composed. Labelling cards with cities was the error this replaced.
  *
- * Labels come from the shipped catalog rather than the spec, which has
- * already drifted from it once.
+ * The lead is the engine's own `editorial-masthead` output
+ * (`scripts/render-comp-cards.cjs`). The other three are composed by hand
+ * (`scripts/comp-card-fronts/render.cjs`) to the catalog's directions, each
+ * from a different photograph, on its own field, in its own typographic
+ * voice: the engine's fronts for this talent all resolved to the same frame
+ * with the name moved around it, which is one direction three times. See
+ * `lessons.md` §25. Labels are the shipped catalog's (`editions.js`).
  */
 export const CARD_VARIANTS: CardVariant[] = [
   // The lead. This one is also the two-sided card the flip beat turns over
@@ -66,17 +70,23 @@ export const CARD_VARIANTS: CardVariant[] = [
     src: "/generated/comp-card/ola-editorial-masthead-front.png",
     edition: "The Masthead",
   },
+  // Structural, reversed: ink field, the name run up a spine rail in a bold
+  // grotesque, the walking frame set into a column module.
   {
-    src: "/generated/comp-card/ola-house-classic-front.png",
-    edition: "The Standard",
+    src: "/generated/comp-card/ola-grid-composed.png",
+    edition: "The Grid",
   },
+  // The working commercial card: a full-bleed colour hero over a
+  // three-frame strip along the foot.
   {
-    src: "/generated/comp-card/ola-gallery-monograph-front.png",
-    edition: "The Monograph",
+    src: "/generated/comp-card/ola-strip-composed.png",
+    edition: "The Strip",
   },
+  // Two frames on a hinge: the studio beauty in black and white beside the
+  // full length in colour, an editorial serif name centred beneath.
   {
-    src: "/generated/comp-card/ola-ink-noir-front.png",
-    edition: "The Night Edition",
+    src: "/generated/comp-card/ola-diptych-composed.png",
+    edition: "The Diptych",
   },
 ];
 

@@ -1,0 +1,75 @@
+<meta charset="utf-8" />
+<title>The Grid</title>
+<style>
+  {{FONT_FACES}}
+  :root { --ink: #0f172a; --paper: #faf7f2; --gold: #c9a55a; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: {{PAGE_W}}px; height: {{PAGE_H}}px; background: var(--ink); }
+  .card { position: relative; width: {{PAGE_W}}px; height: {{PAGE_H}}px; background: var(--ink); overflow: hidden; }
+  .cell { position: absolute; overflow: hidden; }
+  .cell img { position: absolute; display: block; }
+
+  /* The spine rail: the name reads bottom-to-top along the left edge. */
+  .spine {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: {{SPINE_W}}px;
+  }
+  .name {
+    position: absolute;
+    left: 50%;
+    bottom: {{M}}px;
+    transform: translateX(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+    font-family: "CardDisplay", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: {{NAME_SIZE}}px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: var(--paper);
+    white-space: nowrap;
+  }
+
+  .rule {
+    position: absolute;
+    left: {{SPINE_W}}px; right: {{M}}px;
+    top: {{RULE_Y}}px;
+    height: 1px;
+    background: rgba(250, 247, 242, 0.32);
+  }
+  .foot {
+    position: absolute;
+    left: {{SPINE_W}}px; right: {{M}}px;
+    top: {{FOOT_Y}}px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .meta {
+    font-family: "CardBody", system-ui, sans-serif;
+    font-weight: 500;
+    font-size: {{FOOT_SIZE}}px;
+    line-height: 1;
+    letter-spacing: 0.22em;
+    color: rgba(250, 247, 242, 0.7);
+  }
+  .meta span + span { margin-left: 2.4em; }
+  .wordmark {
+    font-family: "CardWordmark", Georgia, serif;
+    font-weight: 400;
+    font-size: {{MARK_SIZE}}px;
+    line-height: 1;
+    letter-spacing: 0.2em;
+    margin-right: -0.2em;
+    color: var(--gold);
+  }
+</style>
+<div class="card">
+  {{PHOTO}}
+  <div class="spine"><div class="name">{{NAME}}</div></div>
+  <div class="rule"></div>
+  <div class="foot">
+    <div class="meta"><span>{{CITY}}</span><span>{{HEIGHT}}</span></div>
+    <div class="wordmark">PHOLIO</div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<meta charset="utf-8" />
+<title>The Strip</title>
+<style>
+  {{FONT_FACES}}
+  :root { --ink: #0f172a; --ink-muted: rgba(15, 23, 42, 0.6); --paper: #faf7f2; --gold-dark: #a8894e; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: {{PAGE_W}}px; height: {{PAGE_H}}px; background: var(--paper); }
+  .card { position: relative; width: {{PAGE_W}}px; height: {{PAGE_H}}px; background: var(--paper); overflow: hidden; }
+  .cell { position: absolute; overflow: hidden; background: var(--paper); }
+  .cell img { position: absolute; display: block; }
+
+  .band {
+    position: absolute;
+    left: {{M}}px; right: {{M}}px;
+    top: {{HERO_H}}px;
+    height: {{BAND_H}}px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .name {
+    font-family: "CardDisplay", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: {{NAME_SIZE}}px;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    color: var(--ink);
+  }
+  .wordmark {
+    font-family: "CardWordmark", Georgia, serif;
+    font-weight: 400;
+    font-size: {{MARK_SIZE}}px;
+    line-height: 1;
+    letter-spacing: 0.2em;
+    margin-right: -0.2em;
+    color: var(--gold-dark);
+  }
+</style>
+<div class="card">
+  {{HERO}}
+  <div class="band">
+    <div class="name">{{NAME}}</div>
+    <div class="wordmark">PHOLIO</div>
+  </div>
+  {{STRIP}}
+</div>

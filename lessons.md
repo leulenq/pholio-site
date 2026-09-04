@@ -1230,3 +1230,59 @@ the engine's back program does not yet meet the agency standard described
 above, not because generation is the wrong idea in general. The composed
 back reads the same talent record and the same photographs as the front, so
 it cannot disagree with it.
+
+---
+
+## 25. Directions have to differ in structure, not in the placement of a name
+
+**Date:** 2026-09-04
+**Surface:** the comp-card beat's edition row (`components/comp-card/data.ts`,
+`scripts/comp-card-fronts/`)
+
+**What was wrong.** The row read *"One book. Nine directions."* over four
+engine outputs for the same talent, and three of them were the same
+photograph with the name moved: top band, foot band, foot band on a brown
+mat. The engine's ranking picks one hero for a talent and every edition
+then dresses it, so at row scale the cards said "one direction, three
+finishes".
+
+> "They aren't meaningfully different design directions. Approach the three
+> replacements as genuinely different editorial/art-direction concepts.
+> Don't build it using the in-house comp card engine. Design it on your own
+> manually and critique it."
+
+**What was built.** The Masthead stays the engine's output. The other three
+are composed by hand, from scratch, by `scripts/comp-card-fronts/render.cjs`
+(one template per card, puppeteer at 2x, the same vendored OFL fonts and the
+same talent record as the back), and each one varies on every axis at once:
+
+| Card | Structure | Field | Photograph | Voice |
+| --- | --- | --- | --- | --- |
+| The Grid | spine rail, one column module bleeding top and right | ink, reversed | the walking full-length | Archivo 700, name set vertically |
+| The Strip | full-bleed hero over a three-frame foot strip | cream | the clearest face, then beauty / full-length / detail | Manrope 700 caps |
+| The Diptych | two tall panels on a hinge rule | cream | studio beauty in B&W beside the full length in colour | Playfair Display caps, centred |
+
+Four cards, four photographs leading, two fields, four typefaces, four
+structures. The labels are the shipped catalog's own (`editions.js`: The
+Grid is `swiss-modernist`, whose fields allow dark; The Strip is `the-strip`;
+The Diptych is `duet`), so §21's rule still holds: a label names the axis the
+artwork actually varies on.
+
+**The rule.** When a row claims *directions*, every card must differ from
+its neighbours in structure, field, photograph and voice at the size the row
+is actually seen. Build the row as thumbnails first and judge it there; a
+difference that only reads at full size is not a direction.
+
+**25.1 Where §21.2 now stands.** Generate-not-mock still governs the lead
+card and the flip. The edition row is hand-composed because the engine's
+fronts for one talent do not yet diverge enough to illustrate the catalog,
+not because generation is wrong. The hand-composed cards are design targets
+for those three editions, they read the same talent record and photographs
+the engine would, and the row's caption count (nine) is still the catalog's.
+
+**25.2 Critique the composite, then the crop.** Each card went through two
+passes against a named landmark: the Diptych's face was re-centred after the
+right eye landed against the panel edge; the Grid's figure was scaled up
+until the crown sat near a fifth of the frame with the stride still on the
+floor; the Strip's hero was opened up so the crown had air. A crop is a
+decision recorded as numbers in the script, never a default.
