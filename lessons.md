@@ -1155,3 +1155,76 @@ it states the plan's actual differentiating claim (unlimited, free, no quota
 lift) instead of promising to get the applicant found. `05-industry-reference.md`
 §4.3 is corrected in place to record why, per this repo's own rule that docs
 describe only what is true now.
+
+---
+
+## 24. The back of the card is a document, not a composition
+
+**Date:** 2026-09-04
+**Surface:** the comp-card beat's back face (`components/comp-card/CompCardBack.tsx`,
+`scripts/comp-card-back/`)
+
+**What was built.** The home page's comp card front stays the engine's
+`editorial-masthead` output, per §21.2, which still holds for the front and
+for the editions grid. The engine's *back* for that edition was replaced on
+the home page by a hand-composed back, rendered by
+`scripts/comp-card-back/render.cjs` from the same talent record
+(`scripts/ola-talent.cjs`) and the same photographs (`01-ola-szkolda/`), to
+`public/generated/comp-card/ola-editorial-masthead-back-composed.png`.
+
+**What was wrong.** The engine's back, concretely: four photographs
+centre-cropped into equal near-square cells, so no full-length figure
+survived intact; a jewellery detail shot with no face in it spending one of
+only four slots; a decorative hairline under the name with nothing but
+whitespace beneath it; the HAIR / EYES pair set as label-over-value
+micro-labels that read as eyebrows; and the PHOLIO mark set in a small sans
+rather than the brand's fixed wordmark (the `Wordmark` in
+`components/header/kit.tsx`: "PHOLIO", Noto Serif Display 400, 0.2em
+tracking, dark gold `#A8894E` on cream). The result read as a designer's
+card, not an agency's.
+
+**The rule.** A professional back is a document with pictures in it, the way
+real agency boards (Elite, MUSE, Select, among others) actually build one.
+Four photographs, each doing a different job (beauty, editorial half-body,
+full-length, commercial), in one flat grid of equal portrait cells with a
+uniform paper margin. One stats line in caps, in the fixed agency order
+(height, bust, waist, hips, dress, shoes, hair, eyes), label and value the
+same size and differentiated by ink, not scale. The name repeated small as a
+caption, in the same face as the front. The agency mark small and quiet at
+the foot, the only display-face element on the whole back, with one contact
+line. Nothing a booker cannot act on. Left-aligned. No rules, boxes, eyebrow
+labels, edition numbers, socials, taglines, or a second accent.
+
+**24.1 The hero stays off the back.** The front's photograph
+(`03-leaning-three-quarter.jpg`, locked via `HERO_PHOTO`) is not repeated on
+the back. Note the filename trap:
+`public/generated/comp-card/source/ola-editorial-standing.jpg` is that same
+photograph re-exported under a different name, not
+`05-editorial-standing.jpg` as the filename implies.
+
+**24.2 Missing measurements stay missing.** Height and body measurements in
+the talent record are `null` on purpose, and they are not invented for a
+real, named person. The template carries the full agency order and prints
+only the non-null fields, but it reserves the leading for the full line so
+nothing reflows once the record is completed. Today the line reads
+`HAIR BLONDE   EYES BLUE`.
+
+**24.3 The wordmark is a fixed asset.** Wherever PHOLIO appears as the
+brand, it is the `Wordmark` face, weight, tracking and gold. On cream, that
+gold is the dark gold, `#A8894E`, never the ink-field gold. A product render
+is not exempt from this.
+
+**24.4 The site's UI ban list is about the site.** A 2x2 photo grid on a
+printed comp card is the industry's default, not the banned "card grid" —
+that ban is about marketing sections built from equal boxes with nothing to
+say. What the ban list's "framed not cropped" line does govern here is that
+each photograph is framed deliberately (eye lines aligned across the top
+row, head and feet held inside the frame on the full-length), not
+centre-cropped to fit a cell regardless of what the crop cuts off.
+
+**24.5 Where §21.2 still applies.** Generate-not-mock remains the rule for
+the front and for the editions grid. The back is composed by hand because
+the engine's back program does not yet meet the agency standard described
+above, not because generation is the wrong idea in general. The composed
+back reads the same talent record and the same photographs as the front, so
+it cannot disagree with it.
