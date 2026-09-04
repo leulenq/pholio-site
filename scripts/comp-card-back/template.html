@@ -55,21 +55,11 @@
     bottom: {{MARGIN}}px;
   }
 
-  .name {
-    font-family: "CardDisplay", Georgia, serif;
-    font-weight: 400;
-    font-size: {{NAME_SIZE}}px;
-    line-height: 1;
-    letter-spacing: {{NAME_TRACKING}}em;
-    color: var(--ink);
-    padding-top: {{NAME_TOP}}px;
-  }
-
   /* Two lines of leading are reserved whether or not the record fills them.
      When the measurements land the band does not reflow; today the second
      line simply reads as margin. */
   .stats {
-    margin-top: {{STATS_GAP}}px;
+    padding-top: {{STATS_TOP}}px;
     font-family: "CardBody", system-ui, sans-serif;
     font-weight: 500;
     font-size: {{STATS_SIZE}}px;
@@ -83,9 +73,9 @@
     color: var(--ink-muted);
   }
 
-  .stats .gap {
-    display: inline-block;
-    width: 2em;
+  .stats .pair {
+    white-space: nowrap;
+    margin-right: 2em;
   }
 
   .imprint {
@@ -120,11 +110,10 @@
 <div class="card">
   {{CELLS}}
   <div class="band">
-    <div class="name">{{NAME}}</div>
     <div class="stats">{{STATS}}</div>
     <div class="imprint">
       <span class="wordmark">PHOLIO</span>
-      <span class="contact">pholio.studio</span>
+      <span class="contact">{{PORTFOLIO}}</span>
     </div>
   </div>
 </div>

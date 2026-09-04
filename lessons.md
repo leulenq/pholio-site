@@ -1189,11 +1189,12 @@ Four photographs, each doing a different job (beauty, editorial half-body,
 full-length, commercial), in one flat grid of equal portrait cells with a
 uniform paper margin. One stats line in caps, in the fixed agency order
 (height, bust, waist, hips, dress, shoes, hair, eyes), label and value the
-same size and differentiated by ink, not scale. The name repeated small as a
-caption, in the same face as the front. The agency mark small and quiet at
-the foot, the only display-face element on the whole back, with one contact
-line. Nothing a booker cannot act on. Left-aligned. No rules, boxes, eyebrow
-labels, edition numbers, socials, taglines, or a second accent.
+same size and differentiated by ink, not scale. No name: the front's
+masthead already carries it, and a repeat on the back is a caption with no
+job. The mark small and quiet at the foot, the only display-face element on
+the whole back, with one line beneath it a booker can act on, her portfolio
+address. Nothing else. Left-aligned. No rules, boxes, eyebrow labels,
+edition numbers, socials, taglines, or a second accent.
 
 **24.1 The hero stays off the back.** The front's photograph
 (`03-leaning-three-quarter.jpg`, locked via `HERO_PHOTO`) is not repeated on
@@ -1202,12 +1203,13 @@ the back. Note the filename trap:
 photograph re-exported under a different name, not
 `05-editorial-standing.jpg` as the filename implies.
 
-**24.2 Missing measurements stay missing.** Height and body measurements in
-the talent record are `null` on purpose, and they are not invented for a
-real, named person. The template carries the full agency order and prints
-only the non-null fields, but it reserves the leading for the full line so
-nothing reflows once the record is completed. Today the line reads
-`HAIR BLONDE   EYES BLUE`.
+**24.2 Measurements are published, never derived.** Height and body
+measurements cannot be read off the photographs, so they are taken from what
+the model and her agency publish (`scripts/ola-talent.cjs` cites both
+sources and the date they were checked against each other), never invented
+for a real, named person. The template carries the full agency order and
+prints only the non-null fields; dress size has no published source and
+stays absent. Nothing stands in for a missing field.
 
 **24.3 The wordmark is a fixed asset.** Wherever PHOLIO appears as the
 brand, it is the `Wordmark` face, weight, tracking and gold. On cream, that

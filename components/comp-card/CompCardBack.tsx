@@ -13,12 +13,12 @@ const BACK_OUTPUT =
  *
  * Regenerate with `node scripts/comp-card-back/render.cjs`.
  *
- * The stats print only the fields the talent record actually carries — the
- * template is built for the full agency order (height, bust, waist, hips,
- * dress, shoes, hair, eyes) and prints the non-null prefix of it, today just
- * hair and eyes. Nothing is invented and no placeholder stands in for a
- * missing measurement; the band reserves the leading either way, so the
- * layout does not move when the record is completed.
+ * The stats are the fields the talent record actually carries, in the agency
+ * order (height, bust, waist, hips, dress, shoes, hair, eyes). The record's
+ * measurements are the ones she and her agency publish, cited in
+ * `scripts/ola-talent.cjs`; a field with no published source is null and is
+ * simply not printed. Nothing is invented and no placeholder stands in for a
+ * missing measurement. No name: the front's masthead carries it.
  */
 export default function CompCardBack() {
   const src = useDeferredCardAsset(BACK_OUTPUT);

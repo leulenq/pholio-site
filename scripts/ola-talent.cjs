@@ -8,12 +8,23 @@
  * and a page whose card says one thing and whose website says another fails
  * the standard the rest of this sequence was held to (`lessons.md` §21).
  *
- * MEASUREMENTS ARE UNRESOLVED. They are the one thing here that cannot be
- * derived from the photographs; they have to come from the model or her
- * agency. Every field marked PROVISIONAL below is `null` on purpose: the
- * comp-card engine and the portfolio's stats formatter both omit what they are
+ * MEASUREMENTS ARE PUBLISHED, NOT DERIVED. They cannot be read off the
+ * photographs; they come from the model or her agency. The figures below are
+ * the ones published on her own profile and on her agency's post, checked
+ * against each other on 2026-09-04:
+ *
+ *   height 169 cm, hair blonde, eyes blue
+ *     https://cherrydeck.com/olaszkolda (her profile; Warsaw)
+ *   height 169 cm, bust 77, waist 58, hips 84 cm, shoes EU 38, eyes blue
+ *     https://www.deviantart.com/newclassicagency/art/OLA-SZKOLDA-POLISH-FASHION-TOP-MODEL-1236334814
+ *     (posted by her agency's account, 2025-08-31)
+ *
+ * The height agrees across both, which is what lets the second source carry
+ * the body measurements. Confirm them with her before print. Every field
+ * still marked PROVISIONAL has no published source and stays `null`: the
+ * comp-card back and the portfolio's stats formatter both omit what they are
  * not given, so a null renders as an absent line rather than an invented one.
- * Inventing figures for a real, named person is a misrepresentation of her.
+ * Inventing a figure for a real, named person is a misrepresentation of her.
  */
 
 const TALENT = {
@@ -26,13 +37,13 @@ const TALENT = {
 
   age: null, // PROVISIONAL
   date_of_birth: null, // PROVISIONAL
-  height_cm: null, // PROVISIONAL
-  bust_cm: null, // PROVISIONAL
-  waist_cm: null, // PROVISIONAL
-  hips_cm: null, // PROVISIONAL
+  height_cm: 169,
+  bust_cm: 77,
+  waist_cm: 58,
+  hips_cm: 84,
   dress_size: null, // PROVISIONAL
-  shoe_size: null, // PROVISIONAL
-  city: null, // PROVISIONAL
+  shoe_size: 38, // EU
+  city: "Warsaw",
 
   hair_color: "blonde",
   eye_color: "blue",

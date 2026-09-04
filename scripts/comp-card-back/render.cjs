@@ -52,7 +52,10 @@ const GUTTER = PAGE_W * 0.03; // 15.84 — identical horizontally and vertically
 
 const CONTENT_W = PAGE_W - MARGIN * 2;
 const CELL_W = (CONTENT_W - GUTTER) / 2;
-const CELL_H = CELL_W * 1.35; // portrait cells, 1 : 1.35
+// Portrait cells, 1 : 1.4. With no name on the back (the front's masthead
+// already carries it) the band needs less, and the height goes to the
+// photographs, where the full-length gains the most.
+const CELL_H = CELL_W * 1.4;
 const GRID_H = CELL_H * 2 + GUTTER;
 const BAND_TOP = MARGIN + GRID_H + GUTTER;
 
@@ -104,11 +107,14 @@ const CELLS = [
 
 const caps = (value) => String(value).trim().toUpperCase();
 
+/** Boards write height to the half inch: 169 cm is 5'6½", not 5'7". */
 const cmToFeetInches = (cm) => {
-  const totalInches = Math.round(cm / 2.54);
-  const feet = Math.floor(totalInches / 12);
-  const inches = totalInches - feet * 12;
-  return `${feet}'${inches}"`;
+  const halves = Math.round((cm / 2.54) * 2);
+  const feet = Math.floor(halves / 24);
+  const rest = halves - feet * 24;
+  const inches = Math.floor(rest / 2);
+  const half = rest % 2 ? "\u00bd" : "";
+  return `${feet}'${inches}${half}"`;
 };
 
 const cmToInches = (cm) => Math.round(cm / 2.54);
@@ -180,14 +186,18 @@ function statPairs(talent) {
   })).filter((pair) => pair.value != null && pair.value !== "");
 }
 
-/** Label at 60% ink, value at full ink, same size, a 2em space between pairs. */
+/**
+ * Label at 60% ink, value at full ink, same size. Each pair is one unbreakable
+ * unit carrying its own 2em of trailing space, so the line can wrap only
+ * between pairs and a second line starts flush with the first.
+ */
 function statsHtml(pairs) {
   return pairs
     .map(
       (pair) =>
-        `<span class="label">${pair.label}</span> <span class="value">${pair.value}</span>`,
+        `<span class="pair"><span class="label">${pair.label}</span> <span class="value">${pair.value}</span></span>`,
     )
-    .join('<span class="gap"></span>');
+    .join(" ");
 }
 
 /* -------------------------------------------------------------------- self-check */
@@ -220,6 +230,10 @@ function assertFormatting() {
       );
     }
   });
+  const half = statPairs({ height_cm: 169 });
+  if (half[0].value !== `169 CM / 5'6\u00bd"`) {
+    throw new Error(`stats formatting: half inches, got ${half[0].value}`);
+  }
   const empty = statPairs({});
   if (empty.length !== 0) {
     throw new Error("stats formatting: null fields must not print");
@@ -276,15 +290,13 @@ function buildHtml() {
     MARGIN,
     BAND_TOP,
     CELLS: cells,
-    NAME: `${TALENT.first_name} ${TALENT.last_name}`.toUpperCase(),
-    NAME_SIZE: PAGE_H * 0.023, // 18.77px — a caption, a quarter of the front
-    NAME_TRACKING: 0.13,
-    NAME_TOP: 11,
     STATS: statsHtml(statPairs(TALENT)),
     STATS_SIZE: statsSize,
     STATS_LEADING: statsLeading,
     STATS_BLOCK: statsLeading * 2, // two lines reserved, filled or not
-    STATS_GAP: 13,
+    STATS_TOP: 4,
+    // One line a booker can act on: her portfolio, from the record's slug.
+    PORTFOLIO: `pholio.studio/${TALENT.slug}`,
     MARK_SIZE: PAGE_H * 0.016, // 13.06px
     CONTACT_SIZE: PAGE_H * 0.009, // 7.34px
     CONTACT_GAP: 5,
