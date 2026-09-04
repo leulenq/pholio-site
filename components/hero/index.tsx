@@ -59,7 +59,15 @@ const ROW_H = 46; // px
 /** A frame from the settled standing stretch, for the reduced-motion still. */
 const STILL_FRAME = 97;
 
-export default function Hero({ ready = true }: { ready?: boolean }) {
+export default function Hero({
+  ready = true,
+  onReady,
+}: {
+  ready?: boolean;
+  /** Fires when the opening is honestly ready to be shown. The preloader
+      waits on this rather than on a timer. See components/Preloader.tsx. */
+  onReady?: () => void;
+}) {
   const containerRef = useRef<HTMLElement>(null);
   const [wordIndex, setWordIndex] = useState(0);
 
@@ -68,7 +76,37 @@ export default function Hero({ ready = true }: { ready?: boolean }) {
   const isMobile = useMediaQuery("(max-width: 1023px)");
   const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
-  const { canvasRef, draw, posterReady } = useFrameSequence(FRAMES, frameSrc);
+  const { canvasRef, draw, posterReady, openingReady } = useFrameSequence(
+    FRAMES,
+    frameSrc,
+  );
+
+  // The comp-card beat's ~7MB of plates are held back until the hero's own
+  // opening is in hand, then fetched while the visitor is still reading the
+  // first beat. They are not needed until ~63% of the stage. See
+  // components/comp-card/assets.tsx for the measurements behind this.
+  const [cardAssetsArmed, setCardAssetsArmed] = useState(false);
+
+  useEffect(() => {
+    if (openingReady || prefersReducedMotion) onReady?.();
+  }, [openingReady, prefersReducedMotion, onReady]);
+
+  useEffect(() => {
+    if (cardAssetsArmed) return;
+    if (!openingReady && !prefersReducedMotion) return;
+    const w = window as typeof window & {
+      requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    if (w.requestIdleCallback) {
+      const id = w.requestIdleCallback(() => setCardAssetsArmed(true), {
+        timeout: 2000,
+      });
+      return () => w.cancelIdleCallback?.(id);
+    }
+    const id = window.setTimeout(() => setCardAssetsArmed(true), 600);
+    return () => window.clearTimeout(id);
+  }, [openingReady, prefersReducedMotion, cardAssetsArmed]);
 
   useEffect(() => {
     if (prefersReducedMotion || !ready) return;
@@ -132,6 +170,11 @@ export default function Hero({ ready = true }: { ready?: boolean }) {
   // other is what makes a figure look detached from her own footage.
   useMotionValueEvent(scrollYProgress, "change", (p) => {
     draw(frameIndexAtProgress(p));
+  });
+
+  // Whatever idle does, never let a fast scroller arrive at an unloaded plate.
+  useMotionValueEvent(cardProgress, "change", (p) => {
+    if (p > 0 && !cardAssetsArmed) setCardAssetsArmed(true);
   });
 
   useEffect(() => {
@@ -331,7 +374,7 @@ export default function Hero({ ready = true }: { ready?: boolean }) {
 
         {/* ── The comp-card beat. Same pinned stage, second timeline. ── */}
         <div className="pointer-events-none absolute inset-0 z-30">
-          <CompCardLayers progress={cardTimeline} />
+          <CompCardLayers progress={cardTimeline} assetsArmed={cardAssetsArmed} />
         </div>
 
         {/* ── BEAT 1 — the wordmark, set behind her ── */}

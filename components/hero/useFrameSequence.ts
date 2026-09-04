@@ -12,6 +12,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const CONCURRENCY = 6;
 
+/**
+ * How many leading frames must arrive before the opening is honestly ready.
+ *
+ * Frames 1-12 are the held pose (`motion.ts` HERO_LAST_FRAME): across them the
+ * silhouette does not move, so they are exactly what the visitor sees before
+ * the first scroll. Revealing the stage with fewer than these in hand shows a
+ * figure that cannot scrub.
+ */
+const OPENING_FRAMES = 12;
+
 export function useFrameSequence(
   frames: number[],
   srcFor: (frame: number) => string,
@@ -21,6 +31,7 @@ export function useFrameSequence(
   const loadedRef = useRef<boolean[]>([]);
   const lastDrawnRef = useRef(-1);
   const [posterReady, setPosterReady] = useState(false);
+  const [openingReady, setOpeningReady] = useState(false);
 
   useEffect(() => {
     const images: HTMLImageElement[] = new Array(frames.length);
@@ -31,6 +42,8 @@ export function useFrameSequence(
 
     let cancelled = false;
     let cursor = 0;
+    let openingLoaded = 0;
+    const openingTarget = Math.min(OPENING_FRAMES, frames.length);
 
     const loadAt = (index: number) =>
       new Promise<void>((resolve) => {
@@ -41,10 +54,22 @@ export function useFrameSequence(
           if (!cancelled) {
             loaded[index] = true;
             if (index === 0) setPosterReady(true);
+            if (index < openingTarget) {
+              openingLoaded += 1;
+              if (openingLoaded >= openingTarget) setOpeningReady(true);
+            }
           }
           resolve();
         };
-        image.onerror = () => resolve();
+        // A frame that 404s still counts toward the opening, so one missing
+        // file degrades the scrub instead of pinning the preloader open.
+        image.onerror = () => {
+          if (!cancelled && index < openingTarget) {
+            openingLoaded += 1;
+            if (openingLoaded >= openingTarget) setOpeningReady(true);
+          }
+          resolve();
+        };
         image.src = srcFor(frames[index]);
       });
 
@@ -100,5 +125,5 @@ export function useFrameSequence(
     [frames.length],
   );
 
-  return { canvasRef, draw, posterReady };
+  return { canvasRef, draw, posterReady, openingReady };
 }

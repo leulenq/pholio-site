@@ -1,37 +1,91 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface PreloaderProps {
+  /** True once the hero's opening frames and the fonts are actually in hand. */
+  ready: boolean;
   onComplete: () => void;
 }
 
-export default function Preloader({ onComplete }: PreloaderProps) {
+/*
+ * The veil lifts on the later of two things: the brand beat having played, and
+ * the stage behind it being ready. It is a floor, not a timer.
+ *
+ * It used to be a bare 1800ms setTimeout. Because that timer starts at
+ * hydration, and hydration was starved by the comp-card plates in the SSR
+ * markup, the measured reveal was 2.7s / 6.6s / 13.9s / 25.6s on
+ * unthrottled / Fast 4G / Slow 4G / Fast 3G -- and on the slower three it
+ * uncovered a hero holding 4, 0 and 0 of its 127 frames. A timer cannot know
+ * that. See components/comp-card/assets.tsx for the full measurements.
+ */
+const FLOOR_MS = 1800;
+const FLOOR_REDUCED_MS = 100;
+
+/*
+ * And a ceiling, because a visitor must never be trapped behind the veil by an
+ * asset that never arrives. Past this the stage is shown regardless: a hero
+ * mid-stream is a worse first impression than a black screen, but an endless
+ * black screen is worse than both.
+ */
+const CEILING_MS = 5000;
+const CEILING_REDUCED_MS = 600;
+
+export default function Preloader({ ready, onComplete }: PreloaderProps) {
   const [visible, setVisible] = useState(true);
+  const doneRef = useRef(false);
+  const startRef = useRef(0);
+  const reducedRef = useRef(false);
 
-  useEffect(() => {
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    const timeout = setTimeout(
-      () => {
-        setVisible(false);
-        /* Fire at 400ms (not 700ms end) to overlap with content fade-in */
-        setTimeout(onComplete, 400);
-      },
-      prefersReduced ? 100 : 1800
-    );
-
-    return () => clearTimeout(timeout);
+  /* onComplete fires at 400ms into the 700ms exit so the veil's fade-out
+     overlaps the content's fade-in, leaving no dead zone of pure black. */
+  const finish = useCallback(() => {
+    if (doneRef.current) return;
+    doneRef.current = true;
+    setVisible(false);
+    window.setTimeout(onComplete, 400);
   }, [onComplete]);
 
+  useEffect(() => {
+    startRef.current = performance.now();
+    reducedRef.current = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    const ceiling = window.setTimeout(
+      finish,
+      reducedRef.current ? CEILING_REDUCED_MS : CEILING_MS,
+    );
+    return () => window.clearTimeout(ceiling);
+  }, [finish]);
+
+  useEffect(() => {
+    if (!ready) return;
+    const floor = reducedRef.current ? FLOOR_REDUCED_MS : FLOOR_MS;
+    const remaining = Math.max(0, floor - (performance.now() - startRef.current));
+    const timeout = window.setTimeout(finish, remaining);
+    return () => window.clearTimeout(timeout);
+  }, [ready, finish]);
+
   /*
-   * onComplete fires at 400ms into the exit animation (not 700ms end).
-   * This overlaps the preloader fade-out with the content fade-in so
-   * there is no dead zone of pure black between the two.
+   * Nothing scrolls while the veil is up. The stage behind it is 1130vh and
+   * only transparent, so without this a visitor who scrolls during the wait is
+   * dropped into the middle of a scene when the veil lifts.
    */
+  useEffect(() => {
+    if (!visible) return;
+    const root = document.documentElement;
+    const previousOverflow = root.style.overflow;
+    const previousPadding = document.body.style.paddingRight;
+    /* Classic scrollbars would otherwise take 15px of width with them. */
+    const gutter = window.innerWidth - root.clientWidth;
+    root.style.overflow = "hidden";
+    if (gutter > 0) document.body.style.paddingRight = `${gutter}px`;
+    return () => {
+      root.style.overflow = previousOverflow;
+      document.body.style.paddingRight = previousPadding;
+    };
+  }, [visible]);
 
   return (
     <AnimatePresence>

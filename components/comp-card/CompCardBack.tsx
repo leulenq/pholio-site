@@ -1,3 +1,5 @@
+import { useDeferredCardAsset } from "./assets";
+
 const BACK_OUTPUT = "/generated/comp-card/ola-house-classic-back.png";
 
 /**
@@ -11,10 +13,13 @@ const BACK_OUTPUT = "/generated/comp-card/ola-house-classic-back.png";
  * behaviour to preserve.
  */
 export default function CompCardBack() {
+  const src = useDeferredCardAsset(BACK_OUTPUT);
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={BACK_OUTPUT}
+      src={src}
+      loading="lazy"
+      decoding="async"
       alt="Comp card, back"
       className="block h-full w-full object-cover"
       draggable={false}

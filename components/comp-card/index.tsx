@@ -11,6 +11,7 @@ import {
 import CompCardBack from "./CompCardBack";
 import CompCardFront from "./CompCardFront";
 import { CARD_SHADOW, CardImage, DoubleSidedCard } from "./GeneratedCard";
+import { CompCardAssetsProvider, useDeferredCardAsset } from "./assets";
 import {
   CARD_VARIANTS,
   SOURCE_FRAMES,
@@ -175,6 +176,7 @@ function SourceFrame({
         ? "w-[10.5rem] sm:w-[12.25rem] md:w-[14rem] lg:w-[15.75rem]"
         : "w-[10.25rem] sm:w-[11.5rem] md:w-[13rem] lg:w-[14.5rem]";
   const zClass = index === 0 ? "z-20" : "z-10";
+  const deferredSrc = useDeferredCardAsset(frame.src);
 
   return (
     <motion.figure
@@ -188,7 +190,7 @@ function SourceFrame({
       >
         {isLead ? (
           <motion.img
-            src={frame.src}
+            src={deferredSrc}
             alt=""
             draggable={false}
             className="h-full w-full object-cover"
@@ -203,7 +205,7 @@ function SourceFrame({
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={frame.src}
+            src={deferredSrc}
             alt=""
             draggable={false}
             className="h-full w-full object-cover"
@@ -373,6 +375,8 @@ function ReducedMotionSection() {
                 <img
                   src={frame.src}
                   alt=""
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover"
                   style={{ objectPosition: frame.objectPosition, filter: frame.filter }}
                 />
@@ -428,9 +432,16 @@ export default function SceneCompCard() {
  * unpin between the intelligence sequence and this one: the figure travels
  * out as the plates travel in, on one continuous scroll (`lessons.md` §20).
  */
-export function CompCardLayers({ progress }: { progress: MotionValue<number> }) {
+export function CompCardLayers({
+  progress,
+  assetsArmed = true,
+}: {
+  progress: MotionValue<number>;
+  /** Set once the hero's opening frames are in hand. See ./assets. */
+  assetsArmed?: boolean;
+}) {
   return (
-    <>
+    <CompCardAssetsProvider value={assetsArmed}>
       {SOURCE_FRAMES.map((frame, index) => (
         <SourceFrame
           key={`${frame.src}-${index}`}
@@ -454,6 +465,6 @@ export function CompCardLayers({ progress }: { progress: MotionValue<number> }) 
       {BEATS.map((beat) => (
         <ScrollCaption key={beat.key} beat={beat} progress={progress} />
       ))}
-    </>
+    </CompCardAssetsProvider>
   );
 }

@@ -4,6 +4,7 @@ import type { MotionValue } from "framer-motion";
 import { motion } from "framer-motion";
 import CompCardBack from "./CompCardBack";
 import CompCardFront from "./CompCardFront";
+import { useDeferredCardAsset } from "./assets";
 
 export const CARD_SHADOW =
   "0 50px 110px -30px rgba(0,0,0,0.82), 0 18px 50px -20px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)";
@@ -15,10 +16,13 @@ type CardImageProps = {
 };
 
 export function CardImage({ src, alt = "", className = "" }: CardImageProps) {
+  const deferred = useDeferredCardAsset(src);
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={src}
+      src={deferred}
+      loading="lazy"
+      decoding="async"
       alt={alt}
       draggable={false}
       className={`block h-full w-full object-cover ${className}`}
