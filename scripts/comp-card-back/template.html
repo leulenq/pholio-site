@@ -1,0 +1,130 @@
+<meta charset="utf-8" />
+<title>Comp card back</title>
+<style>
+  {{FONT_FACES}}
+
+  :root {
+    --cream: #faf7f2;
+    --ink: #0f172a;
+    --ink-muted: rgba(15, 23, 42, 0.6);
+    --gold-dark: #a8894e;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: {{PAGE_W}}px;
+    height: {{PAGE_H}}px;
+    background: var(--cream);
+  }
+
+  /* No radius, no border, no shadow: the site's container rounds and shadows
+     the plate. The PNG is the paper, edge to edge. */
+  .card {
+    position: relative;
+    width: {{PAGE_W}}px;
+    height: {{PAGE_H}}px;
+    background: var(--cream);
+    overflow: hidden;
+  }
+
+  .cell {
+    position: absolute;
+    overflow: hidden;
+    background: var(--cream);
+  }
+
+  /* Every photograph is framed, not centre-cropped: each cell carries its own
+     scale and offset so the crop is a decision, not a default. No filter is
+     applied anywhere — the product never manipulates the photograph. */
+  .cell img {
+    position: absolute;
+    display: block;
+  }
+
+  .band {
+    position: absolute;
+    left: {{MARGIN}}px;
+    right: {{MARGIN}}px;
+    top: {{BAND_TOP}}px;
+    bottom: {{MARGIN}}px;
+  }
+
+  .name {
+    font-family: "CardDisplay", Georgia, serif;
+    font-weight: 400;
+    font-size: {{NAME_SIZE}}px;
+    line-height: 1;
+    letter-spacing: {{NAME_TRACKING}}em;
+    color: var(--ink);
+    padding-top: {{NAME_TOP}}px;
+  }
+
+  /* Two lines of leading are reserved whether or not the record fills them.
+     When the measurements land the band does not reflow; today the second
+     line simply reads as margin. */
+  .stats {
+    margin-top: {{STATS_GAP}}px;
+    font-family: "CardBody", system-ui, sans-serif;
+    font-weight: 500;
+    font-size: {{STATS_SIZE}}px;
+    line-height: {{STATS_LEADING}}px;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    min-height: {{STATS_BLOCK}}px;
+  }
+
+  .stats .label {
+    color: var(--ink-muted);
+  }
+
+  .stats .gap {
+    display: inline-block;
+    width: 2em;
+  }
+
+  .imprint {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+
+  .wordmark {
+    display: block;
+    font-family: "CardWordmark", Georgia, serif;
+    font-weight: 400;
+    font-size: {{MARK_SIZE}}px;
+    line-height: 1;
+    letter-spacing: 0.2em;
+    margin-right: -0.2em;
+    color: var(--gold-dark);
+  }
+
+  .contact {
+    display: block;
+    margin-top: {{CONTACT_GAP}}px;
+    font-family: "CardBody", system-ui, sans-serif;
+    font-weight: 400;
+    font-size: {{CONTACT_SIZE}}px;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    color: var(--ink-muted);
+  }
+</style>
+
+<div class="card">
+  {{CELLS}}
+  <div class="band">
+    <div class="name">{{NAME}}</div>
+    <div class="stats">{{STATS}}</div>
+    <div class="imprint">
+      <span class="wordmark">PHOLIO</span>
+      <span class="contact">pholio.studio</span>
+    </div>
+  </div>
+</div>
