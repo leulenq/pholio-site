@@ -70,8 +70,8 @@ export const CARD_VARIANTS: CardVariant[] = [
     src: "/generated/comp-card/ola-editorial-masthead-front.png",
     edition: "The Masthead",
   },
-  // Structural, reversed: ink field, the name run up a spine rail in a bold
-  // grotesque, the walking frame set into a column module.
+  // Structural: white paper, two columns and nothing else. The name runs up
+  // a type rail in a bold grotesque; the walking frame is the other column.
   {
     src: "/generated/comp-card/ola-grid-composed.png",
     edition: "The Grid",

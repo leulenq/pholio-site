@@ -85,10 +85,11 @@ const cmToFeetInches = (cm) => {
 
 const NAME = `${TALENT.first_name} ${TALENT.last_name}`.toUpperCase();
 const CITY = String(TALENT.city || "").toUpperCase();
-const HEIGHT =
-  TALENT.height_cm == null
-    ? ""
-    : `${Math.round(TALENT.height_cm)} CM / ${cmToFeetInches(TALENT.height_cm)}`;
+const HEIGHT_CM =
+  TALENT.height_cm == null ? "" : `${Math.round(TALENT.height_cm)} CM`;
+const HEIGHT_FT =
+  TALENT.height_cm == null ? "" : cmToFeetInches(TALENT.height_cm);
+const HEIGHT = [HEIGHT_CM, HEIGHT_FT].filter(Boolean).join(" / ");
 
 /* ------------------------------------------------------------------- cards */
 
@@ -99,10 +100,14 @@ const HEIGHT =
  */
 const CARDS = {
   /*
-   * THE GRID — structural, reversed. Ink field, the walking frame set into a
-   * column module that bleeds off the top and right edges, the name run up a
-   * spine rail in a bold grotesque, one rule, a two-word foot. Swiss poster
-   * logic: the margin is the design.
+   * THE GRID — structural. White paper, two columns and nothing else: a
+   * type rail on the left carrying the name up the page in a bold
+   * grotesque with the city and height at its head, and the walking frame
+   * as the other column, running off the top, right and foot. No field
+   * colour, no rule, no mark: the colour relationship is the photograph's
+   * own (black outfit, white stone) on white paper, and the type is black.
+   * Swiss poster logic — the margin is the design, the photograph is a
+   * module in it, not a background.
    */
   grid: {
     out: "ola-grid-composed.png",
@@ -110,32 +115,30 @@ const CARDS = {
     fonts: [
       fontFace("CardDisplay", "archivo-700.ttf", 700),
       fontFace("CardBody", "archivo-500.ttf", 500),
-      fontFace("CardWordmark", "noto-serif-display-400.ttf", 400),
     ],
     values() {
-      const SPINE_W = 92;
-      const PHOTO_H = 696;
-      const M = 24;
+      const RAIL_W = 96;
+      const M = 26;
       return {
-        SPINE_W,
-        PHOTO_H,
         M,
-        RULE_Y: PHOTO_H + M,
-        FOOT_Y: PHOTO_H + M + 26,
-        NAME_SIZE: 58,
-        FOOT_SIZE: 9,
-        MARK_SIZE: 13,
-        // The walking frame: stride at the foot of the cell, crown clear of
-        // the top edge, the colonnade running off the right.
+        RAIL_AXIS: RAIL_W / 2,
+        NAME_SIZE: 64,
+        INFO_SIZE: 8,
+        // City and height only. Stacked, because the rail is 96px wide and
+        // a one-line height would not fit at a legible size.
+        INFO: [CITY, HEIGHT_CM, HEIGHT_FT].filter(Boolean).join("<br />"),
+        // The walking frame: crown near a fifth of the page, the stride
+        // held just above the foot, the bag inside the right edge, and the
+        // niche in the colonnade shown whole so it reads as architecture.
         PHOTO: cell({
-          x: SPINE_W,
+          x: RAIL_W,
           y: 0,
-          w: PAGE_W - SPINE_W,
-          h: PHOTO_H,
+          w: PAGE_W - RAIL_W,
+          h: PAGE_H,
           file: "01-walking-columns.jpg",
-          zoom: 1.38,
-          top: 0.16,
-          left: 0.058,
+          zoom: 1.58,
+          top: 0.138,
+          left: 0.107,
         }),
       };
     },

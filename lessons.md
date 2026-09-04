@@ -1258,12 +1258,11 @@ same talent record as the back), and each one varies on every axis at once:
 
 | Card | Structure | Field | Photograph | Voice |
 | --- | --- | --- | --- | --- |
-| The Grid | spine rail, one column module bleeding top and right | ink, reversed | the walking full-length | Archivo 700, name set vertically |
+| The Grid | a type rail and one photograph column bleeding top, right and foot | white paper | the walking full-length | Archivo 700, name set vertically |
 | The Strip | full-bleed hero over a three-frame foot strip | cream | the clearest face, then beauty / full-length / detail | Manrope 700 caps |
 | The Diptych | two tall panels on a hinge rule | cream | studio beauty in B&W beside the full length in colour | Playfair Display caps, centred |
 
-Four cards, four photographs leading, two fields, four typefaces, four
-structures. The labels are the shipped catalog's own (`editions.js`: The
+Four cards, four photographs leading, four typefaces, four structures. The labels are the shipped catalog's own (`editions.js`: The
 Grid is `swiss-modernist`, whose fields allow dark; The Strip is `the-strip`;
 The Diptych is `duet`), so §21's rule still holds: a label names the axis the
 artwork actually varies on.
