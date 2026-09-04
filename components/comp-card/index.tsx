@@ -21,11 +21,48 @@ import {
 
 const glide = cubicBezier(0.65, 0, 0.35, 1);
 
-const LEAD_SOURCE_ALIGNMENT = {
-  scale: 1.01,
-  x: 0.5,
-  y: 0.8,
-  objectOpacity: 0.56,
+/**
+ * The lead plate, expressed as the card's own photograph.
+ *
+ * The Masthead prints its photo into a band that starts 220/1632 down the
+ * card and runs to the bottom edge, filled with this same source file scaled
+ * to the card's width. Measured off `ola-editorial-masthead-front.png`
+ * against `source/ola-editorial-standing.jpg`: the band is rows 44..1456 of
+ * the source at that scale, mean absolute error 0.7 of 255 — the same pixels,
+ * not a lookalike.
+ *
+ * Giving the lead plate that band's aspect, that crop and that offset means
+ * the photograph does not move when the card fades in over it. Only the
+ * masthead and the card's own edges arrive. The plate also rides the card's
+ * `y` and `scale` curves through the dissolve (see `LEAD_CARD_TRACK`), so the
+ * two do not slide past each other while both are on screen.
+ *
+ * Re-measure all three if the lead edition changes: the band geometry is a
+ * property of that edition's layout, not of the engine.
+ */
+const LEAD_PHOTO = {
+  /** The card's photo band: 1056 x 1412 of a 1056 x 1632 card. */
+  aspect: "1056 / 1412",
+  /** Which slice of the source the band shows: rows 44..1456 of 1584. */
+  objectPosition: "50% 25.58%",
+  /**
+   * The band's centre sits below the card's, by 110 of 1056 card-widths.
+   * Written against the band's own height so it scales with the plate.
+   */
+  offsetY: "7.79%",
+};
+
+/**
+ * The lead plate's `y` and `scale`, borrowed from `ContinuousCard` so the two
+ * travel together while they are dissolving into each other. Keyframe
+ * *positions* matter as much as values: sharing 0.105 and 0.22 means both
+ * sides ease identically inside the window where both are visible.
+ */
+const LEAD_CARD_TRACK = {
+  yInput: [0, 0.105, 0.22, 0.35],
+  yOutput: [72, 40, -30, -60],
+  scaleInput: [0, 0.105, 0.22, 0.31],
+  scaleOutput: [1.04, 1.04, 1.02, 0.98],
 };
 
 const BEATS = [
@@ -123,20 +160,29 @@ function SourceFrame({
   const startLefts = ["18%", "50%", "82%"];
   const startLeft = startLefts[index] || "50%";
   const isLead = index === 0;
-  const left = useTransform(progress, [0, 0.065, 0.21], [startLeft, startLeft, "50%"], {
-    ease: glide,
-  });
+  // The lead settles at centre before the card starts fading in at 0.18, so
+  // the two never differ horizontally while both are readable.
+  const left = useTransform(
+    progress,
+    isLead ? [0, 0.065, 0.16] : [0, 0.065, 0.21],
+    [startLeft, startLeft, "50%"],
+    { ease: glide },
+  );
   const opacity = useTransform(
     progress,
     isLead ? [0, 0.045, 0.16, 0.26, 0.33] : [0, 0.02 + index * 0.01, 0.11, 0.185],
     isLead
-      ? [0, 0.94, 0.94, LEAD_SOURCE_ALIGNMENT.objectOpacity, 0]
+      // By 0.26 the card is fully opaque and covers this band exactly, so the
+      // tail here is under it rather than fading over black.
+      ? [0, 0.94, 0.94, 0.56, 0]
       : [0, index === 1 ? 1 : 0.5, index === 1 ? 0.88 : 0.34, 0],
   );
   const y = useTransform(
     progress,
-    isLead ? [0, 0.08, 0.22] : [0, 0.08, 0.21],
-    isLead ? [72, 26, 26] : [index === 1 ? 24 : 36, index === 1 ? -8 : index === 0 ? 8 : 2, -8],
+    isLead ? LEAD_CARD_TRACK.yInput : [0, 0.08, 0.21],
+    isLead
+      ? LEAD_CARD_TRACK.yOutput
+      : [index === 1 ? 24 : 36, index === 1 ? -8 : index === 0 ? 8 : 2, -8],
     { ease: glide },
   );
   const rotateZ = useTransform(
@@ -147,26 +193,10 @@ function SourceFrame({
   );
   const scale = useTransform(
     progress,
-    isLead ? [0, 0.08, 0.22] : [0, 0.08, 0.21],
-    isLead ? [1.04, 1.02, 1.02] : [index === 0 ? 0.96 : 0.94, index === 1 ? 1 : 0.9, index === 1 ? 1.035 : 0.82],
-    { ease: glide },
-  );
-  const leadImageScale = useTransform(
-    progress,
-    [0, 0.08, 0.22],
-    [LEAD_SOURCE_ALIGNMENT.scale, LEAD_SOURCE_ALIGNMENT.scale, LEAD_SOURCE_ALIGNMENT.scale],
-    { ease: glide },
-  );
-  const leadImageY = useTransform(
-    progress,
-    [0, 0.08, 0.22],
-    [LEAD_SOURCE_ALIGNMENT.y, LEAD_SOURCE_ALIGNMENT.y, LEAD_SOURCE_ALIGNMENT.y],
-    { ease: glide },
-  );
-  const leadImageX = useTransform(
-    progress,
-    [0, 0.08, 0.22],
-    [LEAD_SOURCE_ALIGNMENT.x, LEAD_SOURCE_ALIGNMENT.x, LEAD_SOURCE_ALIGNMENT.x],
+    isLead ? LEAD_CARD_TRACK.scaleInput : [0, 0.08, 0.21],
+    isLead
+      ? LEAD_CARD_TRACK.scaleOutput
+      : [index === 0 ? 0.96 : 0.94, index === 1 ? 1 : 0.9, index === 1 ? 1.035 : 0.82],
     { ease: glide },
   );
   const sizeClass =
@@ -186,32 +216,29 @@ function SourceFrame({
     >
       <div
         className="overflow-hidden rounded-[0.35rem]"
-        style={{ aspectRatio: "5.5 / 8.5", boxShadow: CARD_SHADOW }}
+        style={
+          isLead
+            ? {
+                aspectRatio: LEAD_PHOTO.aspect,
+                boxShadow: CARD_SHADOW,
+                // Drops the band from the card's centre onto the card's photo
+                // band. A percentage, so it scales with the plate.
+                transform: `translateY(${LEAD_PHOTO.offsetY})`,
+              }
+            : { aspectRatio: "5.5 / 8.5", boxShadow: CARD_SHADOW }
+        }
       >
-        {isLead ? (
-          <motion.img
-            src={deferredSrc}
-            alt=""
-            draggable={false}
-            className="h-full w-full object-cover"
-            style={{
-              objectPosition: frame.objectPosition,
-              filter: frame.filter,
-              scale: leadImageScale,
-              y: leadImageY,
-              x: leadImageX,
-            }}
-          />
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={deferredSrc}
-            alt=""
-            draggable={false}
-            className="h-full w-full object-cover"
-            style={{ objectPosition: frame.objectPosition, filter: frame.filter }}
-          />
-        )}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={deferredSrc}
+          alt=""
+          draggable={false}
+          className="h-full w-full object-cover"
+          style={{
+            objectPosition: isLead ? LEAD_PHOTO.objectPosition : frame.objectPosition,
+            filter: frame.filter,
+          }}
+        />
       </div>
     </motion.figure>
   );

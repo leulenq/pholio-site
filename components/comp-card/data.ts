@@ -60,6 +60,12 @@ export const SOURCE_FRAMES: SourceFrame[] = [
  * already drifted from it once.
  */
 export const CARD_VARIANTS: CardVariant[] = [
+  // The lead. This one is also the two-sided card the flip beat turns over
+  // (`CompCardFront` / `CompCardBack`), so its front must stay index 0.
+  {
+    src: "/generated/comp-card/ola-editorial-masthead-front.png",
+    edition: "The Masthead",
+  },
   {
     src: "/generated/comp-card/ola-house-classic-front.png",
     edition: "The Standard",
@@ -67,10 +73,6 @@ export const CARD_VARIANTS: CardVariant[] = [
   {
     src: "/generated/comp-card/ola-gallery-monograph-front.png",
     edition: "The Monograph",
-  },
-  {
-    src: "/generated/comp-card/ola-editorial-masthead-front.png",
-    edition: "The Masthead",
   },
   {
     src: "/generated/comp-card/ola-ink-noir-front.png",

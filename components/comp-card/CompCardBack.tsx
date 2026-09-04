@@ -1,10 +1,10 @@
 import { useDeferredCardAsset } from "./assets";
 
-const BACK_OUTPUT = "/generated/comp-card/ola-house-classic-back.png";
+const BACK_OUTPUT = "/generated/comp-card/ola-editorial-masthead-back.png";
 
 /**
  * Page two of the real two-sided card emitted by pholio-app's composed
- * comp-card engine, edition `house-classic` (The Standard).
+ * comp-card engine, edition `editorial-masthead` (The Masthead).
  * Regenerate with `node scripts/render-comp-cards.cjs`.
  *
  * The stats block prints only the fields the profile actually carries. It is
