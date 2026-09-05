@@ -56,7 +56,7 @@ const SRC_RATIO = 1.5;
  */
 const SITE_SOURCE_DIR = path.join(SITE, "public", "generated", "comp-card", "source");
 
-function cell({ x, y, w, h, file, dir, ratio = SRC_RATIO, zoom = 1, top = 0, left = 0, cls = "" }) {
+function cell({ x, y, w, h, file, dir, src: explicitSrc, ratio = SRC_RATIO, zoom = 1, top = 0, left = 0, cls = "" }) {
   const imgW = w * zoom;
   const imgH = imgW * ratio;
   const offX = -left * imgW;
@@ -66,7 +66,7 @@ function cell({ x, y, w, h, file, dir, ratio = SRC_RATIO, zoom = 1, top = 0, lef
       `${file}: framing under-fills its ${w}x${h} cell (img ${imgW.toFixed(1)}x${imgH.toFixed(1)} at ${offX.toFixed(1)},${offY.toFixed(1)})`,
     );
   }
-  const src = `file://${path.join(dir === "site-source" ? SITE_SOURCE_DIR : SOURCE_DIR, file)}`;
+  const src = explicitSrc || `file://${path.join(dir === "site-source" ? SITE_SOURCE_DIR : SOURCE_DIR, file)}`;
   return (
     `<div class="cell ${cls}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px">` +
     `<img src="${src}" alt="" style="width:${imgW}px;height:${imgH}px;left:${offX}px;top:${offY}px" />` +
@@ -94,95 +94,125 @@ const HEIGHT_FT =
 const HEIGHT = [HEIGHT_CM, HEIGHT_FT].filter(Boolean).join(" / ");
 
 
-/* -------------------------------------------------------------- the grid */
+/* --------------------------------------------------------- the cover story */
 
-/** Archivo 700's cap height, measured in Chromium (H, actualBoundingBoxAscent). */
-const ARCHIVO_CAP = 0.686;
-
-const GRID = {
-  M: 24,
-  NAME_MAX: 64,
-  NAME_TRACKING: -0.005,
-  STACK_BELOW: 40,
-  CAP: ARCHIVO_CAP,
-  REP_SIZE: 9,
-  GAP_MIN: 32,
+const COVER = {
+  MARGIN_X: 16,
+  MARGIN_TOP: 16,
+  MARGIN_FOOT: 16,
+  TRACKING: -0.04,
+  SIZE_MAX: 150,
+  // A surname that would have to drop below this to span the width is
+  // broken at its own hyphen or space into lines that each span it.
+  STACK_BELOW: 64,
+  INK_SWITCH: 0.45,
 };
-/** Rail width: cap height of the largest name plus a margin either side. */
-GRID.RAIL_W = Math.round(GRID.M + ARCHIVO_CAP * GRID.NAME_MAX + GRID.M);
-GRID.BASELINE_X = GRID.M + ARCHIVO_CAP * GRID.NAME_MAX;
-/** Two stacked caps and a gap of a fifth of a cap fill the same slot. */
-GRID.STACK_SIZE = (ARCHIVO_CAP * GRID.NAME_MAX) / (2.2 * ARCHIVO_CAP);
+
+const ASSETS_DIR = path.join(__dirname, "assets");
+const CUTOUT_DIR = path.join(WORK_DIR, "cutouts");
 
 /**
- * Who to call. Represented talent: the agency and its office. Independent
- * talent: their own address (portfolio or email). Nothing invented; an
- * empty record yields no line and the rail carries the name alone.
+ * The figure alone: the source photograph with its stored matte
+ * (assets/<name>.matte.png, from matte.cjs) joined back on as alpha, built
+ * into the work dir. Returns null when there is no matte, in which case the
+ * type sits in front of the photograph and the card says so on stdout.
  */
-function representation(talent) {
-  const segments = [];
-  if (talent.agency_name) {
-    segments.push({ text: String(talent.agency_name).toUpperCase(), kind: "caps" });
-    if (talent.agency_city) segments.push({ text: String(talent.agency_city).toUpperCase(), kind: "caps" });
-    return segments;
+async function figureCutout(file, dir) {
+  const name = path.parse(file).name;
+  const matte = path.join(ASSETS_DIR, `${name}.matte.png`);
+  if (!fs.existsSync(matte)) return null;
+  const src = path.join(dir === "site-source" ? SITE_SOURCE_DIR : SOURCE_DIR, file);
+  const out = path.join(CUTOUT_DIR, `${name}.png`);
+  if (!fs.existsSync(out) || fs.statSync(out).mtimeMs < fs.statSync(matte).mtimeMs) {
+    fs.mkdirSync(CUTOUT_DIR, { recursive: true });
+    const sharp = appRequire("sharp");
+    const { data: alpha, info } = await sharp(matte).toColourspace("b-w").raw().toBuffer({ resolveWithObject: true });
+    const { data: rgb, info: rgbInfo } = await sharp(src).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+    if (rgbInfo.width !== info.width || rgbInfo.height !== info.height) {
+      throw new Error(`${file}: matte ${info.width}x${info.height} does not match the photograph ${rgbInfo.width}x${rgbInfo.height}`);
+    }
+    // Interleave RGB + matte into RGBA by hand; sharp's channel join does
+    // not mark the fourth band as alpha for a PNG.
+    const rgba = Buffer.alloc(info.width * info.height * 4);
+    for (let i = 0, j = 0, k = 0; i < rgba.length; i += 4, j += 3, k += 1) {
+      rgba[i] = rgb[j];
+      rgba[i + 1] = rgb[j + 1];
+      rgba[i + 2] = rgb[j + 2];
+      rgba[i + 3] = alpha[k];
+    }
+    await sharp(rgba, { raw: { width: info.width, height: info.height, channels: 4 } }).png().toFile(out);
+    const meta = await sharp(out).metadata();
+    if (!meta.hasAlpha) throw new Error(`${out}: cutout has no alpha channel`);
   }
-  const address = talent.portfolio_url || talent.contact_email || (talent.slug ? `pholio.studio/${talent.slug}` : null);
-  if (address) segments.push({ text: String(address).replace(/^https?:\/\//, ""), kind: "addr" });
-  return segments;
+  return out;
+}
+
+/**
+ * Luminance of the photograph as the card will show it, on a coarse grid
+ * (one cell per LUMA_CELL px of the page), so the page can choose light or
+ * dark ink for each word from what is actually beneath it. Computed here
+ * because a file-served image cannot be read back from a canvas in-page.
+ */
+const LUMA_CELL = 8;
+async function lumaGrid(photo) {
+  const sharp = appRequire("sharp");
+  const { file, dir, ratio = SRC_RATIO, zoom = 1, top = 0, left = 0 } = photo;
+  const src = path.join(dir === "site-source" ? SITE_SOURCE_DIR : SOURCE_DIR, file);
+  const imgW = Math.round(PAGE_W * zoom);
+  const imgH = Math.round(imgW * ratio);
+  const cols = Math.ceil(PAGE_W / LUMA_CELL);
+  const rows = Math.ceil(PAGE_H / LUMA_CELL);
+  // Two pipelines: sharp allows one resize per pipeline.
+  const window = await sharp(src)
+    .resize(imgW, imgH)
+    .extract({ left: Math.round(left * imgW), top: Math.round(top * imgH), width: PAGE_W, height: PAGE_H })
+    .toBuffer();
+  const { data } = await sharp(window)
+    .toColourspace("b-w")
+    .resize(cols, rows, { fit: "fill" })
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  return { cols, rows, cell: LUMA_CELL, data: Array.from(data) };
 }
 
 const escapeXml = (s) =>
   String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-function repHtml(segments) {
-  return segments
-    .map((seg, i) => `<tspan class="${seg.kind}"${i ? ' dx="1.8em"' : ""}>${escapeXml(seg.text)}</tspan>`)
-    .join("");
-}
-
-/** `module`: "bleed" (three edges), "tb" (inset head and foot, bleed right) or "all" (inset on the page margins). */
-function gridValues({ name, rep, photo, module = "bleed" }) {
-  const { M, RAIL_W } = GRID;
-  const insetY = module !== "bleed";
-  const insetR = module === "all";
+async function coverValues({ given, family, photo }) {
+  const cutout = await figureCutout(photo.file, photo.dir);
+  const frame = { x: 0, y: 0, w: PAGE_W, h: PAGE_H, ...photo };
   return {
-    ...GRID,
-    NAME: escapeXml(name),
-    REP: repHtml(rep || []),
-    PHOTO: cell({
-      x: RAIL_W,
-      y: insetY ? M : 0,
-      w: PAGE_W - RAIL_W - (insetR ? M : 0),
-      h: insetY ? PAGE_H - 2 * M : PAGE_H,
-      ...photo,
-    }),
+    ...COVER,
+    LUMA_JSON: JSON.stringify(await lumaGrid(photo)),
+    GIVEN_JSON: JSON.stringify(String(given || "").toUpperCase()),
+    FAMILY_JSON: JSON.stringify(String(family || "").toUpperCase()),
+    PHOTO: cell({ ...frame, cls: "photo" }),
+    FIGURE: cutout ? cell({ ...frame, src: `file://${cutout}`, cls: "figure" }) : "",
+    HAS_FIGURE: Boolean(cutout),
   };
 }
 
 /**
- * The design as a system: the same template over other names, records and
- * photographs. `node render.cjs --grid-tests` writes them to the build dir.
- * These records are fixtures, not people; the names and agencies are invented.
+ * The design as a system: the same template over other names and
+ * photographs. `node render.cjs --cover-tests` writes them to the build dir.
+ * These records are fixtures, not people; the names are invented. Only the
+ * walking frame has a matte, so only it sets the type behind the figure.
  */
-const GRID_FIXTURES = [
-  { id: "long-represented", name: "Aleksandra Wiśniewska-Nowakowska", rep: [{ text: "NORTHLIGHT MANAGEMENT", kind: "caps" }, { text: "WARSAW", kind: "caps" }],
-    photo: { file: "02-full-body-columns.jpg", zoom: 1.5, top: 0.16, left: 0.12 } },
-  { id: "short-independent", name: "Mia Li", rep: [{ text: "mia.li@example.com", kind: "addr" }],
-    photo: { dir: "site-source", file: "mara-voss-red-hero.jpg", zoom: 1.3, top: 0.02, left: 0.13 } },
-  { id: "name-only", name: "Kit Sato", rep: [],
-    photo: { dir: "site-source", file: "mara-voss-profile.jpg", zoom: 1.35, top: 0.0, left: 0.16 } },
-  { id: "very-long", name: "Maria Fernanda de la Cruz Ibarra", rep: [{ text: "HARBOUR MANAGEMENT", kind: "caps" }, { text: "NEW YORK", kind: "caps" }, { text: "+1 212 555 0100", kind: "caps" }],
-    photo: { dir: "site-source", file: "mara-voss-crossed-arm.jpg", ratio: 2087 / 1400, zoom: 1.3, top: 0.02, left: 0.1 } },
-  { id: "diacritics", name: "Zoë Müller-Østergaard", rep: [{ text: "ATELIER MODELS", kind: "caps" }, { text: "PARIS", kind: "caps" }],
-    photo: { file: "05-editorial-standing.jpg", zoom: 1.4, top: 0.02, left: 0.14 } },
-  { id: "dark-frame", name: "Ola Szkolda", rep: [{ text: "pholio.studio/ola-szkolda", kind: "addr" }],
-    photo: { dir: "site-source", file: "ola-night-street.jpg", ratio: 1640 / 970, zoom: 1.15, top: 0.02, left: 0.08 } },
-  { id: "headshot", name: "Ola Szkolda", rep: [{ text: "pholio.studio/ola-szkolda", kind: "addr" }],
-    photo: { file: "07-studio-closeup-bw.jpg", zoom: 1.32, top: 0.02, left: 0.16 } },
-  { id: "module-tb", name: "Ola Szkolda", rep: [{ text: "pholio.studio/ola-szkolda", kind: "addr" }], module: "tb",
-    photo: { file: "01-walking-columns.jpg", zoom: 1.5, top: 0.135, left: 0.1 } },
-  { id: "module-all", name: "Ola Szkolda", rep: [{ text: "pholio.studio/ola-szkolda", kind: "addr" }], module: "all",
-    photo: { file: "01-walking-columns.jpg", zoom: 1.58, top: 0.135, left: 0.1 } },
+const COVER_FIXTURES = [
+  { id: "long-family", given: "Aleksandra", family: "Wiśniewska-Nowakowska",
+    photo: { file: "02-full-body-columns.jpg", zoom: 1.2, top: 0.08, left: 0.1 } },
+  { id: "short", given: "Mia", family: "Li",
+    photo: { dir: "site-source", file: "mara-voss-red-hero.jpg", zoom: 1.1, top: 0.0, left: 0.06 } },
+  { id: "long-given", given: "Maria Fernanda", family: "Ibarra",
+    photo: { dir: "site-source", file: "mara-voss-crossed-arm.jpg", ratio: 2087 / 1400, zoom: 1.1, top: 0.0, left: 0.06 } },
+  { id: "diacritics", given: "Zoë", family: "Østergaard",
+    photo: { file: "05-editorial-standing.jpg", zoom: 1.15, top: 0.02, left: 0.08 } },
+  { id: "dark-frame", given: "Ola", family: "Szkolda",
+    photo: { dir: "site-source", file: "ola-night-street.jpg", ratio: 1640 / 970, zoom: 1.02, top: 0.0, left: 0.01 } },
+  { id: "high-key", given: "Ola", family: "Szkolda",
+    photo: { file: "07-studio-closeup-bw.jpg", zoom: 1.1, top: 0.0, left: 0.05 } },
+  { id: "single-name", given: "", family: "Szkolda",
+    photo: { file: "01-walking-columns.jpg", zoom: 1.2, top: 0.1, left: 0.06 } },
 ];
 
 /* ------------------------------------------------------------------- cards */
@@ -194,52 +224,35 @@ const GRID_FIXTURES = [
  */
 const CARDS = {
   /*
-   * THE GRID — structural. White paper, two columns and nothing else: a
-   * type rail on the left and the photograph as the other column.
+   * THE COVER STORY — the photograph is the whole page and the name is the
+   * only intervention. Display grotesque at trim-to-trim scale, set behind
+   * the figure: the surname across the foot with her stride in front of
+   * it, the given name at the head on the right, the two words bracketing
+   * her. Each word takes light or dark ink from the luminance of the
+   * photograph beneath it. No mark, no metadata.
    *
-   * The photograph sits on the page margins as a module; the rail is the
- * left margin widened to carry the type. One margin system governs both.
- *
- * The rail is one line of type read upward on one shared baseline: the
-   * name in a bold grotesque from the foot margin, the representation (the
-   * agency and its office, or an independent talent's address) to the head
-   * margin, the clear rail between them being the measure of the name. The
-   * rail's width is the name's cap height plus a margin either side, so it
-   * does not move from talent to talent; a long name scales down on the
-   * same baseline rather than widening it. Placement is by ink, in-page,
-   * from the browser's own metrics (grid.html).
-   *
-   * What the front carries: the name and who to call. Measurements are the
-   * back's, in the agency order, and are not repeated here.
+   * The figure layer comes from a stored matte (assets/, matte.cjs); the
+   * words are fitted to the trims by measured ink in-page
+   * (cover-story.html).
    */
-  grid: {
-    out: "ola-grid-composed.png",
-    template: "grid.html",
-    fonts: [
-      fontFace("CardDisplay", "archivo-700.ttf", 700),
-      fontFace("CardBody", "archivo-500.ttf", 500),
-    ],
+  cover: {
+    out: "ola-cover-story-composed.png",
+    template: "cover-story.html",
+    fonts: [fontFace("CardDisplay", "archivo-700.ttf", 700)],
     values: () =>
-      gridValues({
-        name: NAME,
-        rep: representation(TALENT),
-        // The photograph is a module on the page margins, so the rail's
-        // type and the picture start and end on the same lines. It is not
-        // bled: a bleed would leave the rail's margins with nothing to
-        // answer them and the grid would be asserted, not shown.
-        module: "all",
+      coverValues({
+        given: TALENT.first_name,
+        family: TALENT.last_name,
         photo: {
-          // The walking frame: crown near a fifth of the module, the stride
-          // held just above its foot, the bag inside the right edge, and
-          // the niche in the colonnade shown whole so it reads as
-          // architecture.
+          // The walking frame nearly whole: crown near a quarter of the
+          // page, the stride on the foot line where the surname sits.
           file: "01-walking-columns.jpg",
-          zoom: 1.58,
-          top: 0.135,
-          left: 0.1,
+          zoom: 1.2,
+          top: 0.1,
+          left: 0.06,
         },
       }),
-    ready: "__railReady",
+    ready: "__ready",
   },
 
   /*
@@ -336,7 +349,7 @@ const CARDS = {
 
 /* ------------------------------------------------------------------ render */
 
-function buildHtml(card) {
+async function buildHtml(card) {
   const template = fs.readFileSync(path.join(__dirname, card.template), "utf8");
   const values = {
     FONT_FACES: card.fonts.join("\n  "),
@@ -345,7 +358,7 @@ function buildHtml(card) {
     NAME,
     CITY,
     HEIGHT,
-    ...card.values(),
+    ...(await card.values()),
   };
   return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
     if (!(key in values)) throw new Error(`${card.template}: unknown key ${key}`);
@@ -354,7 +367,7 @@ function buildHtml(card) {
 }
 
 async function renderCard(browser, card, htmlPath, outPath) {
-  fs.writeFileSync(htmlPath, buildHtml(card));
+  fs.writeFileSync(htmlPath, await buildHtml(card));
   const page = await browser.newPage();
   await page.setViewport({ width: PAGE_W, height: PAGE_H, deviceScaleFactor: 2 });
   await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle0" });
@@ -362,26 +375,31 @@ async function renderCard(browser, card, htmlPath, outPath) {
   if (card.ready) await page.evaluate((key) => window[key], card.ready);
   await new Promise((resolve) => setTimeout(resolve, 300));
   await page.screenshot({ path: outPath, clip: { x: 0, y: 0, width: PAGE_W, height: PAGE_H } });
-  const rail = await page.evaluate(() => window.__rail || null);
+  const layout = await page.evaluate(() => window.__layout || null);
   await page.close();
-  return rail;
+  return layout;
 }
 
-async function gridTests(browser) {
-  const dir = path.join(WORK_DIR, "grid-tests");
+const describeLayout = (layout) =>
+  layout
+    ? layout.words.map((w) => `${w.text} ${w.size.toFixed(0)}px ${w.fill === "#111111" ? "dark" : "light"} (luma ${w.luma.toFixed(2)})`).join("  ")
+    : "";
+
+async function coverTests(browser) {
+  const dir = path.join(WORK_DIR, "cover-tests");
   fs.mkdirSync(dir, { recursive: true });
-  const grid = CARDS.grid;
-  for (const fx of GRID_FIXTURES) {
-    const card = { ...grid, values: () => gridValues({ name: fx.name.toUpperCase(), rep: fx.rep, photo: fx.photo, module: fx.module }) };
+  const cover = CARDS.cover;
+  for (const fx of COVER_FIXTURES) {
+    const card = { ...cover, values: () => coverValues({ given: fx.given, family: fx.family, photo: fx.photo }) };
     const out = path.join(dir, `${fx.id}.png`);
-    const rail = await renderCard(browser, card, path.join(dir, `${fx.id}.html`), out);
-    console.log(`${path.relative(SITE, out)}  name ${rail.size.toFixed(1)}px${rail.stacked ? " stacked" : ""}  rep ${rail.repLength.toFixed(0)}px`);
+    const layout = await renderCard(browser, card, path.join(dir, `${fx.id}.html`), out);
+    console.log(`${path.relative(SITE, out)}  ${describeLayout(layout)}`);
   }
 }
 
 async function main() {
   const wanted = process.argv.slice(2);
-  const tests = wanted.includes("--grid-tests");
+  const tests = wanted.includes("--cover-tests");
   const ids = tests ? [] : wanted.length ? wanted : Object.keys(CARDS);
   for (const id of ids) if (!CARDS[id]) throw new Error(`unknown card ${id}`);
 
@@ -392,13 +410,13 @@ async function main() {
     args: ["--no-sandbox", "--allow-file-access-from-files"],
   });
   try {
-    if (tests) await gridTests(browser);
+    if (tests) await coverTests(browser);
     for (const id of ids) {
       const card = CARDS[id];
       const htmlPath = path.join(WORK_DIR, `comp-card-front-${id}.html`);
       const outPath = path.join(OUT_DIR, card.out);
       const rail = await renderCard(browser, card, htmlPath, outPath);
-      if (rail) console.log(`rail: name ${rail.size.toFixed(1)}px${rail.stacked ? " stacked" : ""}, representation ${rail.repLength.toFixed(0)}px`);
+      if (rail) console.log(`layout: ${describeLayout(rail)}`);
 
       const dims = execFileSync("sips", ["-g", "pixelWidth", "-g", "pixelHeight", outPath]).toString();
       const width = Number(/pixelWidth:\s*(\d+)/.exec(dims)?.[1]);

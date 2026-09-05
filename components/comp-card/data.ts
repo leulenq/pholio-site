@@ -70,12 +70,12 @@ export const CARD_VARIANTS: CardVariant[] = [
     src: "/generated/comp-card/ola-editorial-masthead-front.png",
     edition: "The Masthead",
   },
-  // Structural: white paper, one margin system. The photograph is a module
-  // on the margins; the left margin widens into a rail carrying the name
-  // and the representation as one line of grotesque type, read upward.
+  // The magazine-cover interlock: the photograph is the whole page and the
+  // name, in display grotesque at trim-to-trim scale, is set behind the
+  // figure. Nothing else is on the front.
   {
-    src: "/generated/comp-card/ola-grid-composed.png",
-    edition: "The Grid",
+    src: "/generated/comp-card/ola-cover-story-composed.png",
+    edition: "The Cover Story",
   },
   // The working commercial card: a full-bleed colour hero over a
   // three-frame strip along the foot.

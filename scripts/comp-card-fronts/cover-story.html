@@ -1,0 +1,114 @@
+<meta charset="utf-8" />
+<title>The Cover Story</title>
+<style>
+  {{FONT_FACES}}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: {{PAGE_W}}px; height: {{PAGE_H}}px; background: #000; }
+  .card { position: relative; width: {{PAGE_W}}px; height: {{PAGE_H}}px; background: #000; overflow: hidden; }
+  .cell { position: absolute; overflow: hidden; }
+  .cell img { position: absolute; display: block; }
+  /* Stack: the photograph, the name, then the figure alone, so the letters
+     sit behind her. Nothing else is on the page. */
+  .cell.photo { z-index: 0; }
+  svg.type { position: absolute; inset: 0; width: {{PAGE_W}}px; height: {{PAGE_H}}px; z-index: 1; overflow: visible; }
+  .cell.figure { z-index: 2; }
+  text { font-family: "CardDisplay", system-ui, sans-serif; font-weight: 700; letter-spacing: {{TRACKING}}em; }
+</style>
+<div class="card">
+  {{PHOTO}}
+  <svg class="type" xmlns="http://www.w3.org/2000/svg"></svg>
+  {{FIGURE}}
+</div>
+<script>
+  // Layout of the name from measured ink. Constants come from render.cjs.
+  const W = {{PAGE_W}}, H = {{PAGE_H}};
+  const MX = {{MARGIN_X}}, MT = {{MARGIN_TOP}}, MF = {{MARGIN_FOOT}};
+  const GIVEN = {{GIVEN_JSON}}, FAMILY = {{FAMILY_JSON}};
+  const TRACKING = {{TRACKING}};
+  const SIZE_MAX = {{SIZE_MAX}};
+  const STACK_BELOW = {{STACK_BELOW}};
+  const INK_LIGHT = "#ffffff", INK_DARK = "#111111";
+  // Above this mean luminance beneath a word, light ink would sit on a
+  // light ground and the word takes dark ink instead.
+  const INK_SWITCH = {{INK_SWITCH}};
+
+  window.__ready = (async () => {
+    await document.fonts.ready;
+    await document.fonts.load(`700 100px CardDisplay`);
+    const svg = document.querySelector("svg.type");
+    const ctx = document.createElement("canvas").getContext("2d");
+    const setFont = (size) => { ctx.font = `700 ${size}px CardDisplay`; ctx.letterSpacing = `${TRACKING}em`; };
+
+    // Ink extents of a word at a size: left edge (from origin), width, ascent, descent.
+    const ink = (word, size) => {
+      setFont(size);
+      const m = ctx.measureText(word);
+      const left = -m.actualBoundingBoxLeft;
+      return { left, width: m.actualBoundingBoxRight - left, ascent: m.actualBoundingBoxAscent, descent: m.actualBoundingBoxDescent };
+    };
+    // The size at which a word's ink spans the width between the side margins.
+    const fit = (word) => Math.min(SIZE_MAX, (100 * (W - 2 * MX)) / ink(word, 100).width);
+
+    // Mean luminance of the photograph under a box, from the grid render.cjs
+    // sampled at the card's own placement.
+    const LUMA = {{LUMA_JSON}};
+    const lumaUnder = (x, y, w, h) => {
+      const c0 = Math.max(0, Math.floor(x / LUMA.cell)), c1 = Math.min(LUMA.cols - 1, Math.floor((x + w) / LUMA.cell));
+      const r0 = Math.max(0, Math.floor(y / LUMA.cell)), r1 = Math.min(LUMA.rows - 1, Math.floor((y + h) / LUMA.cell));
+      let sum = 0, n = 0;
+      for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) { sum += LUMA.data[r * LUMA.cols + c]; n++; }
+      return n ? sum / n / 255 : 0;
+    };
+
+    const place = (word, size, x, baseline) => {
+      const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      t.setAttribute("font-size", size);
+      t.setAttribute("x", x);
+      t.setAttribute("y", baseline);
+      t.textContent = word;
+      svg.appendChild(t);
+      return t;
+    };
+
+    const familySize = fit(FAMILY);
+    const words = [];
+    const foot = (lines, size) => {
+      // Lines stacked at the foot, left, one size, the last line on the
+      // foot margin, a tenth of the size between lines.
+      let baseline = null;
+      for (let i = lines.length - 1; i >= 0; i--) {
+        const k = ink(lines[i], size);
+        baseline = baseline == null ? H - MF - k.descent : baseline - k.ascent - size * 0.1 - k.descent;
+        words.push({ el: place(lines[i], size, MX - k.left, baseline), box: [MX, baseline - k.ascent, k.width, k.ascent + k.descent] });
+      }
+      return size;
+    };
+    const head = (word, cap) => {
+      // The given name at the head on the right, no larger than the surname.
+      const size = Math.min(cap, fit(word));
+      const g = ink(word, size);
+      words.push({ el: place(word, size, W - MX - g.left - g.width, MT + g.ascent), box: [W - MX - g.width, MT, g.width, g.ascent + g.descent] });
+    };
+    let footSize;
+    if (familySize >= STACK_BELOW) {
+      // Surname across the foot, given name at the head on the right: the
+      // two words bracket the figure and the stride crosses the foot line.
+      footSize = foot([FAMILY], familySize);
+    } else {
+      // A long surname. Break it where it breaks itself (a hyphen or a
+      // space) into lines that each span the width, so the scale survives.
+      // A surname with no break point simply sets smaller.
+      const parts = FAMILY.split(/(?<=-)|\s+/).filter(Boolean);
+      const size = Math.min(...parts.map(fit));
+      footSize = foot(parts, size);
+    }
+    if (GIVEN) head(GIVEN, footSize);
+    for (const w of words) {
+      const [x, y, bw, bh] = w.box;
+      const luma = lumaUnder(x, y, bw, bh);
+      w.el.setAttribute("fill", luma > INK_SWITCH ? INK_DARK : INK_LIGHT);
+      w.luma = luma;
+    }
+    window.__layout = { familySize, words: words.map((w) => ({ text: w.el.textContent, size: +w.el.getAttribute("font-size"), luma: w.luma, fill: w.el.getAttribute("fill") })) };
+  })();
+</script>
