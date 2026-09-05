@@ -70,8 +70,9 @@ export const CARD_VARIANTS: CardVariant[] = [
     src: "/generated/comp-card/ola-editorial-masthead-front.png",
     edition: "The Masthead",
   },
-  // Structural: white paper, two columns and nothing else. The name runs up
-  // a type rail in a bold grotesque; the walking frame is the other column.
+  // Structural: white paper, one margin system. The photograph is a module
+  // on the margins; the left margin widens into a rail carrying the name
+  // and the representation as one line of grotesque type, read upward.
   {
     src: "/generated/comp-card/ola-grid-composed.png",
     edition: "The Grid",

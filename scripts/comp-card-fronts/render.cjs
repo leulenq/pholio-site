@@ -54,9 +54,11 @@ const SRC_RATIO = 1.5;
  * top-left corner. Throws if the framing would leave paper showing inside the
  * cell, so a crop can never silently under-fill.
  */
-function cell({ x, y, w, h, file, zoom = 1, top = 0, left = 0, cls = "" }) {
+const SITE_SOURCE_DIR = path.join(SITE, "public", "generated", "comp-card", "source");
+
+function cell({ x, y, w, h, file, dir, ratio = SRC_RATIO, zoom = 1, top = 0, left = 0, cls = "" }) {
   const imgW = w * zoom;
-  const imgH = imgW * SRC_RATIO;
+  const imgH = imgW * ratio;
   const offX = -left * imgW;
   const offY = -top * imgH;
   if (imgW + offX < w - 0.5 || imgH + offY < h - 0.5 || offX > 0 || offY > 0) {
@@ -64,7 +66,7 @@ function cell({ x, y, w, h, file, zoom = 1, top = 0, left = 0, cls = "" }) {
       `${file}: framing under-fills its ${w}x${h} cell (img ${imgW.toFixed(1)}x${imgH.toFixed(1)} at ${offX.toFixed(1)},${offY.toFixed(1)})`,
     );
   }
-  const src = `file://${path.join(SOURCE_DIR, file)}`;
+  const src = `file://${path.join(dir === "site-source" ? SITE_SOURCE_DIR : SOURCE_DIR, file)}`;
   return (
     `<div class="cell ${cls}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px">` +
     `<img src="${src}" alt="" style="width:${imgW}px;height:${imgH}px;left:${offX}px;top:${offY}px" />` +
@@ -91,6 +93,98 @@ const HEIGHT_FT =
   TALENT.height_cm == null ? "" : cmToFeetInches(TALENT.height_cm);
 const HEIGHT = [HEIGHT_CM, HEIGHT_FT].filter(Boolean).join(" / ");
 
+
+/* -------------------------------------------------------------- the grid */
+
+/** Archivo 700's cap height, measured in Chromium (H, actualBoundingBoxAscent). */
+const ARCHIVO_CAP = 0.686;
+
+const GRID = {
+  M: 24,
+  NAME_MAX: 64,
+  NAME_TRACKING: -0.005,
+  STACK_BELOW: 40,
+  CAP: ARCHIVO_CAP,
+  REP_SIZE: 9,
+  GAP_MIN: 32,
+};
+/** Rail width: cap height of the largest name plus a margin either side. */
+GRID.RAIL_W = Math.round(GRID.M + ARCHIVO_CAP * GRID.NAME_MAX + GRID.M);
+GRID.BASELINE_X = GRID.M + ARCHIVO_CAP * GRID.NAME_MAX;
+/** Two stacked caps and a gap of a fifth of a cap fill the same slot. */
+GRID.STACK_SIZE = (ARCHIVO_CAP * GRID.NAME_MAX) / (2.2 * ARCHIVO_CAP);
+
+/**
+ * Who to call. Represented talent: the agency and its office. Independent
+ * talent: their own address (portfolio or email). Nothing invented; an
+ * empty record yields no line and the rail carries the name alone.
+ */
+function representation(talent) {
+  const segments = [];
+  if (talent.agency_name) {
+    segments.push({ text: String(talent.agency_name).toUpperCase(), kind: "caps" });
+    if (talent.agency_city) segments.push({ text: String(talent.agency_city).toUpperCase(), kind: "caps" });
+    return segments;
+  }
+  const address = talent.portfolio_url || talent.contact_email || (talent.slug ? `pholio.studio/${talent.slug}` : null);
+  if (address) segments.push({ text: String(address).replace(/^https?:\/\//, ""), kind: "addr" });
+  return segments;
+}
+
+const escapeXml = (s) =>
+  String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+function repHtml(segments) {
+  return segments
+    .map((seg, i) => `<tspan class="${seg.kind}"${i ? ' dx="1.8em"' : ""}>${escapeXml(seg.text)}</tspan>`)
+    .join("");
+}
+
+/** `module`: "bleed" (three edges), "tb" (inset head and foot, bleed right) or "all" (inset on the page margins). */
+function gridValues({ name, rep, photo, module = "bleed" }) {
+  const { M, RAIL_W } = GRID;
+  const insetY = module !== "bleed";
+  const insetR = module === "all";
+  return {
+    ...GRID,
+    NAME: escapeXml(name),
+    REP: repHtml(rep || []),
+    PHOTO: cell({
+      x: RAIL_W,
+      y: insetY ? M : 0,
+      w: PAGE_W - RAIL_W - (insetR ? M : 0),
+      h: insetY ? PAGE_H - 2 * M : PAGE_H,
+      ...photo,
+    }),
+  };
+}
+
+/**
+ * The design as a system: the same template over other names, records and
+ * photographs. `node render.cjs --grid-tests` writes them to the build dir.
+ * These records are fixtures, not people; the names and agencies are invented.
+ */
+const GRID_FIXTURES = [
+  { id: "long-represented", name: "Aleksandra Wiśniewska-Nowakowska", rep: [{ text: "NORTHLIGHT MANAGEMENT", kind: "caps" }, { text: "WARSAW", kind: "caps" }],
+    photo: { file: "02-full-body-columns.jpg", zoom: 1.5, top: 0.16, left: 0.12 } },
+  { id: "short-independent", name: "Mia Li", rep: [{ text: "mia.li@example.com", kind: "addr" }],
+    photo: { dir: "site-source", file: "mara-voss-red-hero.jpg", zoom: 1.3, top: 0.02, left: 0.13 } },
+  { id: "name-only", name: "Kit Sato", rep: [],
+    photo: { dir: "site-source", file: "mara-voss-profile.jpg", zoom: 1.35, top: 0.0, left: 0.16 } },
+  { id: "very-long", name: "Maria Fernanda de la Cruz Ibarra", rep: [{ text: "HARBOUR MANAGEMENT", kind: "caps" }, { text: "NEW YORK", kind: "caps" }, { text: "+1 212 555 0100", kind: "caps" }],
+    photo: { dir: "site-source", file: "mara-voss-crossed-arm.jpg", ratio: 2087 / 1400, zoom: 1.3, top: 0.02, left: 0.1 } },
+  { id: "diacritics", name: "Zoë Müller-Østergaard", rep: [{ text: "ATELIER MODELS", kind: "caps" }, { text: "PARIS", kind: "caps" }],
+    photo: { file: "05-editorial-standing.jpg", zoom: 1.4, top: 0.02, left: 0.14 } },
+  { id: "dark-frame", name: "Ola Szkolda", rep: [{ text: "pholio.studio/ola-szkolda", kind: "addr" }],
+    photo: { dir: "site-source", file: "ola-night-street.jpg", ratio: 1640 / 970, zoom: 1.15, top: 0.02, left: 0.08 } },
+  { id: "headshot", name: "Ola Szkolda", rep: [{ text: "pholio.studio/ola-szkolda", kind: "addr" }],
+    photo: { file: "07-studio-closeup-bw.jpg", zoom: 1.32, top: 0.02, left: 0.16 } },
+  { id: "module-tb", name: "Ola Szkolda", rep: [{ text: "pholio.studio/ola-szkolda", kind: "addr" }], module: "tb",
+    photo: { file: "01-walking-columns.jpg", zoom: 1.5, top: 0.135, left: 0.1 } },
+  { id: "module-all", name: "Ola Szkolda", rep: [{ text: "pholio.studio/ola-szkolda", kind: "addr" }], module: "all",
+    photo: { file: "01-walking-columns.jpg", zoom: 1.58, top: 0.135, left: 0.1 } },
+];
+
 /* ------------------------------------------------------------------- cards */
 
 /**
@@ -101,13 +195,22 @@ const HEIGHT = [HEIGHT_CM, HEIGHT_FT].filter(Boolean).join(" / ");
 const CARDS = {
   /*
    * THE GRID — structural. White paper, two columns and nothing else: a
-   * type rail on the left carrying the name up the page in a bold
-   * grotesque with the city and height at its head, and the walking frame
-   * as the other column, running off the top, right and foot. No field
-   * colour, no rule, no mark: the colour relationship is the photograph's
-   * own (black outfit, white stone) on white paper, and the type is black.
-   * Swiss poster logic — the margin is the design, the photograph is a
-   * module in it, not a background.
+   * type rail on the left and the photograph as the other column.
+   *
+   * The photograph sits on the page margins as a module; the rail is the
+ * left margin widened to carry the type. One margin system governs both.
+ *
+ * The rail is one line of type read upward on one shared baseline: the
+   * name in a bold grotesque from the foot margin, the representation (the
+   * agency and its office, or an independent talent's address) to the head
+   * margin, the clear rail between them being the measure of the name. The
+   * rail's width is the name's cap height plus a margin either side, so it
+   * does not move from talent to talent; a long name scales down on the
+   * same baseline rather than widening it. Placement is by ink, in-page,
+   * from the browser's own metrics (grid.html).
+   *
+   * What the front carries: the name and who to call. Measurements are the
+   * back's, in the agency order, and are not repeated here.
    */
   grid: {
     out: "ola-grid-composed.png",
@@ -116,32 +219,27 @@ const CARDS = {
       fontFace("CardDisplay", "archivo-700.ttf", 700),
       fontFace("CardBody", "archivo-500.ttf", 500),
     ],
-    values() {
-      const RAIL_W = 96;
-      const M = 26;
-      return {
-        M,
-        RAIL_AXIS: RAIL_W / 2,
-        NAME_SIZE: 64,
-        INFO_SIZE: 8,
-        // City and height only. Stacked, because the rail is 96px wide and
-        // a one-line height would not fit at a legible size.
-        INFO: [CITY, HEIGHT_CM, HEIGHT_FT].filter(Boolean).join("<br />"),
-        // The walking frame: crown near a fifth of the page, the stride
-        // held just above the foot, the bag inside the right edge, and the
-        // niche in the colonnade shown whole so it reads as architecture.
-        PHOTO: cell({
-          x: RAIL_W,
-          y: 0,
-          w: PAGE_W - RAIL_W,
-          h: PAGE_H,
+    values: () =>
+      gridValues({
+        name: NAME,
+        rep: representation(TALENT),
+        // The photograph is a module on the page margins, so the rail's
+        // type and the picture start and end on the same lines. It is not
+        // bled: a bleed would leave the rail's margins with nothing to
+        // answer them and the grid would be asserted, not shown.
+        module: "all",
+        photo: {
+          // The walking frame: crown near a fifth of the module, the stride
+          // held just above its foot, the bag inside the right edge, and
+          // the niche in the colonnade shown whole so it reads as
+          // architecture.
           file: "01-walking-columns.jpg",
           zoom: 1.58,
-          top: 0.138,
-          left: 0.107,
-        }),
-      };
-    },
+          top: 0.135,
+          left: 0.1,
+        },
+      }),
+    ready: "__railReady",
   },
 
   /*
@@ -255,9 +353,36 @@ function buildHtml(card) {
   });
 }
 
+async function renderCard(browser, card, htmlPath, outPath) {
+  fs.writeFileSync(htmlPath, buildHtml(card));
+  const page = await browser.newPage();
+  await page.setViewport({ width: PAGE_W, height: PAGE_H, deviceScaleFactor: 2 });
+  await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle0" });
+  await page.evaluate(() => document.fonts.ready);
+  if (card.ready) await page.evaluate((key) => window[key], card.ready);
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  await page.screenshot({ path: outPath, clip: { x: 0, y: 0, width: PAGE_W, height: PAGE_H } });
+  const rail = await page.evaluate(() => window.__rail || null);
+  await page.close();
+  return rail;
+}
+
+async function gridTests(browser) {
+  const dir = path.join(WORK_DIR, "grid-tests");
+  fs.mkdirSync(dir, { recursive: true });
+  const grid = CARDS.grid;
+  for (const fx of GRID_FIXTURES) {
+    const card = { ...grid, values: () => gridValues({ name: fx.name.toUpperCase(), rep: fx.rep, photo: fx.photo, module: fx.module }) };
+    const out = path.join(dir, `${fx.id}.png`);
+    const rail = await renderCard(browser, card, path.join(dir, `${fx.id}.html`), out);
+    console.log(`${path.relative(SITE, out)}  name ${rail.size.toFixed(1)}px${rail.stacked ? " stacked" : ""}  rep ${rail.repLength.toFixed(0)}px`);
+  }
+}
+
 async function main() {
   const wanted = process.argv.slice(2);
-  const ids = wanted.length ? wanted : Object.keys(CARDS);
+  const tests = wanted.includes("--grid-tests");
+  const ids = tests ? [] : wanted.length ? wanted : Object.keys(CARDS);
   for (const id of ids) if (!CARDS[id]) throw new Error(`unknown card ${id}`);
 
   fs.mkdirSync(WORK_DIR, { recursive: true });
@@ -267,19 +392,13 @@ async function main() {
     args: ["--no-sandbox", "--allow-file-access-from-files"],
   });
   try {
+    if (tests) await gridTests(browser);
     for (const id of ids) {
       const card = CARDS[id];
       const htmlPath = path.join(WORK_DIR, `comp-card-front-${id}.html`);
-      fs.writeFileSync(htmlPath, buildHtml(card));
       const outPath = path.join(OUT_DIR, card.out);
-
-      const page = await browser.newPage();
-      await page.setViewport({ width: PAGE_W, height: PAGE_H, deviceScaleFactor: 2 });
-      await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle0" });
-      await page.evaluate(() => document.fonts.ready);
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      await page.screenshot({ path: outPath, clip: { x: 0, y: 0, width: PAGE_W, height: PAGE_H } });
-      await page.close();
+      const rail = await renderCard(browser, card, htmlPath, outPath);
+      if (rail) console.log(`rail: name ${rail.size.toFixed(1)}px${rail.stacked ? " stacked" : ""}, representation ${rail.repLength.toFixed(0)}px`);
 
       const dims = execFileSync("sips", ["-g", "pixelWidth", "-g", "pixelHeight", outPath]).toString();
       const width = Number(/pixelWidth:\s*(\d+)/.exec(dims)?.[1]);

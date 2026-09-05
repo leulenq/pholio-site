@@ -1258,7 +1258,7 @@ same talent record as the back), and each one varies on every axis at once:
 
 | Card | Structure | Field | Photograph | Voice |
 | --- | --- | --- | --- | --- |
-| The Grid | a type rail and one photograph column bleeding top, right and foot | white paper | the walking full-length | Archivo 700, name set vertically |
+| The Grid | the photograph as a module on the page margins, the left margin widened into a type rail | white paper | the walking full-length | Archivo 700, name and representation on one vertical baseline |
 | The Strip | full-bleed hero over a three-frame foot strip | cream | the clearest face, then beauty / full-length / detail | Manrope 700 caps |
 | The Diptych | two tall panels on a hinge rule | cream | studio beauty in B&W beside the full length in colour | Playfair Display caps, centred |
 
@@ -1285,3 +1285,24 @@ right eye landed against the panel edge; the Grid's figure was scaled up
 until the crown sat near a fifth of the frame with the stride still on the
 floor; the Strip's hero was opened up so the crown had air. A crop is a
 decision recorded as numbers in the script, never a default.
+
+**25.3 A front carries the name and who to call.** Nothing else. The
+first Grid printed the city and height on the front; the city was
+ambiguous (hers or an office?) and the height duplicated the back's stats
+line, which is the one place measurements live, in the agency order. What
+a booker needs from a front is the face, the name, and the representation:
+the agency and its office for represented talent, the talent's own address
+(portfolio or email) for independent talent, and nothing when the record
+has nothing. `representation()` in `scripts/comp-card-fronts/render.cjs`
+resolves it from the record and never invents it.
+
+**25.4 Align type by ink, and test the layout as a system.** A rotated
+name centred by its line box sits visibly off; the Grid's rail is placed
+from measured glyph extents in the browser (cap height in from the margin,
+first-glyph side bearing on the foot margin, name and representation on
+one baseline). And a layout that only works for one name and one
+photograph is a picture of a card, not a design: `render.cjs --grid-tests`
+renders the same template over long, short, stacked and diacritic names,
+represented and independent records, a record with no representation, and
+dark, high-key, headshot and studio-colour frames. Look at that sheet
+before calling a direction finished.
