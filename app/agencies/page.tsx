@@ -28,7 +28,7 @@ export default async function AgenciesPage() {
   const agencies = await fetchAgencyRegister();
 
   return (
-    <main className="min-h-mobile-screen bg-[#FAF7F2]">
+    <div className="min-h-mobile-screen bg-[#FAF7F2]">
       <div className="px-6 pt-40 pb-32">
         <div className="mx-auto max-w-3xl">
           <h1 className="font-editorial text-5xl md:text-7xl text-[#050505] leading-[1.05]">
@@ -94,6 +94,6 @@ export default async function AgenciesPage() {
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

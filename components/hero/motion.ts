@@ -71,7 +71,10 @@ export const STAGE_VH = SCRUB_VH + 100;
  * them, so the figure can travel out while the plates travel in
  * (`lessons.md` §20).
  */
-export const CARD_VH = 380;
+// 520, not 380: the first two beats (the frames arriving, the lead being
+// chosen and becoming the card) read as rushed coming off the push in, and
+// the room they needed was measured in scroll, not in easing.
+export const CARD_VH = 520;
 
 export const HOME_STAGE_VH = STAGE_VH + CARD_VH;
 

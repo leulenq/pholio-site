@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="min-h-mobile-screen bg-[#050505]">
+    <div className="min-h-mobile-screen bg-[#050505]">
       <AboutPageContent />
-    </main>
+    </div>
   );
 }

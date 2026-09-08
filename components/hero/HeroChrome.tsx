@@ -79,7 +79,10 @@ export default function HeroChrome({
         </nav>
 
         <div className="pointer-events-auto">
-          <AccountCluster />
+          <AccountCluster
+            closeSignal={moving ? timeline : undefined}
+            closeAt={WORDMARK_EXIT.start}
+          />
         </div>
       </div>
     </motion.div>

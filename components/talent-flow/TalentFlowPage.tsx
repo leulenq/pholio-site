@@ -93,7 +93,7 @@ export default function TalentFlowPage() {
   });
 
   return (
-    <main className="min-h-mobile-screen">
+    <div className="min-h-mobile-screen">
       <ThemeColor color={themeColor} />
       <motion.div ref={flowRef} style={{ backgroundColor: field }}>
         <SceneArrival />
@@ -105,6 +105,6 @@ export default function TalentFlowPage() {
         <SceneWallet />
         <SceneClose />
       </motion.div>
-    </main>
+    </div>
   );
 }

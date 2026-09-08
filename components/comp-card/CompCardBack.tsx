@@ -20,13 +20,17 @@ const BACK_OUTPUT =
  * simply not printed. Nothing is invented and no placeholder stands in for a
  * missing measurement. No name: the front's masthead carries it.
  */
-export default function CompCardBack() {
+export default function CompCardBack({
+  loading = "eager",
+}: {
+  loading?: "eager" | "lazy";
+} = {}) {
   const src = useDeferredCardAsset(BACK_OUTPUT);
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
-      loading="lazy"
+      loading={loading}
       decoding="async"
       alt="Comp card, back"
       className="block h-full w-full object-cover"

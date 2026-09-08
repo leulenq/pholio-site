@@ -3,11 +3,7 @@
 import type { MotionValue } from "framer-motion";
 
 import { useMediaQuery } from "@/components/hero/useMediaQuery";
-import {
-  cubicBezier,
-  motion,
-  useTransform,
-} from "framer-motion";
+import { motion, useMotionTemplate, useSpring, useTransform } from "framer-motion";
 import CompCardBack from "./CompCardBack";
 import CompCardFront from "./CompCardFront";
 import { CARD_SHADOW, CardImage, DoubleSidedCard } from "./GeneratedCard";
@@ -18,299 +14,329 @@ import {
   type CardVariant,
   type SourceFrame,
 } from "./data";
+import {
+  ARRIVAL_FROM_VH,
+  ARRIVAL_ROTATE,
+  ARRIVAL_X,
+  CAPTION_TRAVEL_FULL_VW,
+  CAPTION_TRAVEL_VH,
+  CAPTION_TRAVEL_VW,
+  CAPTIONS,
+  CARD_ASPECT,
+  DEAL_STAGGER,
+  FLIP_APEX_Y,
+  FLIP_SCALE,
+  FLIP_TILT,
+  FLIP_Y,
+  LABEL_RANGE,
+  READY_SCALE,
+  READY_TILT,
+  READY_X,
+  READY_Y,
+  ROW_SCALE,
+  ROW_X,
+  ROW_Y,
+  T,
+  TIMELINE_SPRING,
+  TURN_BACK_LIFT,
+  TURN_BACK_TILT,
+  arrive,
+  glide,
+  type Caption,
+  type CaptionPlace,
+  type StageKind,
+} from "./motion";
 
-const glide = cubicBezier(0.65, 0, 0.35, 1);
-
-/**
- * The lead plate, expressed as the card's own photograph.
- *
- * The Masthead prints its photo into a band that starts 220/1632 down the
- * card and runs to the bottom edge, filled with this same source file scaled
- * to the card's width. Measured off `ola-editorial-masthead-front.png`
- * against `source/ola-editorial-standing.jpg`: the band is rows 44..1456 of
- * the source at that scale, mean absolute error 0.7 of 255 — the same pixels,
- * not a lookalike.
- *
- * Giving the lead plate that band's aspect, that crop and that offset means
- * the photograph does not move when the card fades in over it. Only the
- * masthead and the card's own edges arrive. The plate also rides the card's
- * `y` and `scale` curves through the dissolve (see `LEAD_CARD_TRACK`), so the
- * two do not slide past each other while both are on screen.
- *
- * Re-measure all three if the lead edition changes: the band geometry is a
- * property of that edition's layout, not of the engine.
- */
-const LEAD_PHOTO = {
-  /** The card's photo band: 1056 x 1412 of a 1056 x 1632 card. */
-  aspect: "1056 / 1412",
-  /** Which slice of the source the band shows: rows 44..1456 of 1584. */
-  objectPosition: "50% 25.58%",
-  /**
-   * The band's centre sits below the card's, by 110 of 1056 card-widths.
-   * Written against the band's own height so it scales with the plate.
-   */
-  offsetY: "7.79%",
-};
-
-/**
- * The lead plate's `y` and `scale`, borrowed from `ContinuousCard` so the two
- * travel together while they are dissolving into each other. Keyframe
- * *positions* matter as much as values: sharing 0.105 and 0.22 means both
- * sides ease identically inside the window where both are visible.
- */
-const LEAD_CARD_TRACK = {
-  yInput: [0, 0.105, 0.22, 0.35],
-  yOutput: [72, 40, -30, -60],
-  scaleInput: [0, 0.105, 0.22, 0.31],
-  scaleOutput: [1.04, 1.04, 1.02, 0.98],
-};
-
-const BEATS = [
-  {
-    key: "selection",
-    head: ["The frame that ", "leads", "."],
-    position: "bottom" as const,
-    range: [0, 0.03, 0.18, 0.225] as const,
-  },
-  {
-    key: "output",
-    head: ["A real front. A real ", "back", "."],
-    position: "bottom" as const,
-    range: [0.235, 0.3, 0.47, 0.515] as const,
-  },
-  {
-    // Editions, not markets. A card varies by art direction; a city is an
-    // intel concept and never touches composition. Nine is the shipped
-    // catalog count, not a claim (`data.ts` EDITION_COUNT).
-    key: "editions",
-    head: ["One book. Nine ", "directions", "."],
-    position: "top" as const,
-    range: [0.53, 0.6, 0.77, 0.815] as const,
-  },
-  {
-    key: "ready",
-    head: ["Ready for the ", "room", "."],
-    position: "left" as const,
-    range: [0.83, 0.9, 1, 1] as const,
-  },
-] as const;
-
-type Beat = (typeof BEATS)[number];
-
-function captionClass(position: Beat["position"]) {
-  const base = "pointer-events-none absolute z-40 flex flex-col px-6";
-
-  if (position === "top") {
-    return `${base} left-1/2 top-[7.5vh] w-full max-w-[44rem] -translate-x-1/2 items-center text-center`;
-  }
-
-  if (position === "left") {
-    return `${base} bottom-[8vh] left-1/2 w-full max-w-[34rem] -translate-x-1/2 items-center text-center md:bottom-auto md:left-[8%] md:top-1/2 md:w-auto md:max-w-[23rem] md:translate-x-0 md:-translate-y-1/2 md:items-start md:text-left`;
-  }
-
-  return `${base} bottom-[8vh] left-1/2 w-full max-w-[42rem] -translate-x-1/2 items-center text-center`;
+/** Below 768 the row of four becomes two rows and the arrival is a fan. */
+function useStageKind(): StageKind {
+  return useMediaQuery("(max-width: 767px)") ? "compact" : "wide";
 }
 
-function ScrollCaption({ beat, progress }: { beat: Beat; progress: MotionValue<number> }) {
-  const opacity = useTransform(
-    progress,
-    [beat.range[0], beat.range[1], beat.range[2], beat.range[3]],
-    beat.key === "ready" ? [0, 1, 1, 1] : [0, 1, 1, 0],
+/**
+ * Whether there is room for a line to stand beside the card. Between 768
+ * and 1023 the stage is wide enough for the row but not for a column of
+ * type next to a lifted card, so every side-standing line sits below it
+ * instead, as on the narrow stage.
+ */
+function useRoomBeside(): boolean {
+  return useMediaQuery("(min-width: 1024px)");
+}
+
+const CARD_WIDTH = "w-[16rem] sm:w-[17.75rem] md:w-[20rem] lg:w-[22.75rem]";
+const EDITION_WIDTH = "w-[15.5rem] sm:w-[17rem] md:w-[19.5rem] lg:w-[21.5rem]";
+
+/** The cards' label, counter-scaled so it keeps its own size beside them. */
+const LABEL_CLASS =
+  "absolute inset-x-0 top-[calc(100%+0.9rem)] origin-top text-center font-mono text-[0.52rem] tracking-[0.2em] text-white/44";
+
+// ── Captions ──────────────────────────────────────────────────────────────
+
+function placeClass(place: CaptionPlace) {
+  const base = "pointer-events-none absolute z-40 flex flex-col px-6";
+  switch (place) {
+    case "top":
+      return `${base} left-1/2 top-[7.5vh] w-full max-w-[44rem] -translate-x-1/2 items-center text-center`;
+    case "bottom":
+      return `${base} bottom-[8vh] left-1/2 w-full max-w-[42rem] -translate-x-1/2 items-center text-center`;
+    case "left":
+      return `${base} left-[7%] top-1/2 w-auto max-w-[30rem] -translate-y-1/2 items-start text-left`;
+    case "right":
+      return `${base} right-[7%] top-1/2 w-auto max-w-[30rem] -translate-y-1/2 items-end text-right`;
+    // Against the card's edge: the card is centred, at most 12rem to a side
+    // through the turn, and the line stands 1.5rem off it.
+    // Against the card's edge, and never past the stage's own margin.
+    case "beside-left":
+      return `${base} right-[calc(50%+13.5rem)] top-1/2 w-auto max-w-[calc(45vw-13.5rem)] -translate-y-1/2 items-end text-right`;
+    case "beside-right":
+      return `${base} left-[calc(50%+13.5rem)] top-1/2 w-auto max-w-[calc(45vw-13.5rem)] -translate-y-1/2 items-start text-left`;
+  }
+}
+
+const isBeside = (place: CaptionPlace) => place !== "top" && place !== "bottom";
+const isRightHand = (place: CaptionPlace) => place === "right" || place === "beside-right";
+
+/** Beside the card the line sets a size down; above and below it, full. */
+function headClass(place: CaptionPlace) {
+  return `font-editorial leading-[1.06] tracking-[-0.03em] text-[#FAF7F2] ${
+    isBeside(place) ? "text-[clamp(1.8rem,2.8vw,2.5rem)]" : "text-[clamp(2.15rem,4.4vw,3.65rem)]"
+  }`;
+}
+
+/** Renders an authored "\n" in a head part as a line break. */
+function Lines({ text }: { text: string }) {
+  const parts = text.split("\n");
+  return (
+    <>
+      {parts.map((part, i) => (
+        <span key={i}>
+          {i > 0 ? <br /> : null}
+          {part}
+        </span>
+      ))}
+    </>
   );
-  const y = useTransform(
+}
+
+function Head({ head }: { head: Caption["head"] }) {
+  return (
+    <span>
+      <Lines text={head[0]} />
+      {head[1] ? <span className="font-editorial-italic text-[#C9A55A]">{head[1]}</span> : null}
+      <Lines text={head[2]} />
+    </span>
+  );
+}
+
+/**
+ * A caption travels into the stage and travels out of it. No opacity on
+ * display copy (`lessons.md` §14.3). Where it stands and which way it
+ * travels are the caption's own (`motion.ts` CAPTIONS): the halves of the
+ * front/back line ride the turn, the closing line comes in beside the card.
+ */
+function ScrollCaption({
+  caption,
+  progress,
+  stage,
+}: {
+  caption: Caption;
+  progress: MotionValue<number>;
+  stage: StageKind;
+}) {
+  const { range } = caption;
+  const roomBeside = useRoomBeside();
+  const wanted = caption.place[stage];
+  const place = stage === "wide" && !roomBeside && isBeside(wanted) ? "bottom" : wanted;
+  const travel = caption.travel[stage];
+  const holds = range[2] === range[3];
+
+  // 1 is off the stage, 0 is in place.
+  const off = useTransform(
     progress,
-    [beat.range[0], beat.range[1], beat.range[2], beat.range[3]],
-    beat.key === "ready" ? [10, 0, 0, 0] : [10, 0, 0, -8],
+    holds ? [range[0], range[1]] : [...range],
+    holds ? [1, 0] : [1, 0, 0, 1],
     { ease: glide },
   );
+  // A line beside the card is narrow and clears the stage in 72vw; a
+  // full-width line above or below it must cross the whole stage.
+  const sideways = isBeside(place) ? CAPTION_TRAVEL_VW : CAPTION_TRAVEL_FULL_VW;
+  const x = useTransform(off, (v) =>
+    travel === "left"
+      ? `${-v * sideways}vw`
+      : travel === "right"
+        ? `${v * sideways}vw`
+        : "0vw",
+  );
+  const y = useTransform(off, (v) =>
+    travel === "up"
+      ? `${-v * CAPTION_TRAVEL_VH}vh`
+      : travel === "down"
+        ? `${v * CAPTION_TRAVEL_VH}vh`
+        : "0vh",
+  );
 
   return (
-    <motion.h2
-      style={{ opacity, y }}
-      className={`${captionClass(beat.position)} font-editorial text-[clamp(2.15rem,4.4vw,3.65rem)] leading-[1.01] tracking-[-0.03em] text-[#FAF7F2]`}
-    >
-      <span>
-        {beat.head[0]}
-        <span className="font-editorial-italic text-[#C9A55A]">{beat.head[1]}</span>
-        {beat.head[2]}
-      </span>
-    </motion.h2>
+    <motion.div style={{ x, y, willChange: "transform" }} className={placeClass(place)}>
+      <h2 className={headClass(place)}>
+        <Head head={caption.head} />
+      </h2>
+    </motion.div>
   );
 }
 
-function StaticHeading({ beat }: { beat: Beat }) {
-  return (
-    <h2 className="text-center font-editorial text-[clamp(2.15rem,7vw,3.65rem)] leading-[1.01] tracking-[-0.03em] text-[#FAF7F2]">
-      {beat.head[0]}
-      <span className="font-editorial-italic text-[#C9A55A]">{beat.head[1]}</span>
-      {beat.head[2]}
-    </h2>
-  );
-}
+// ── The frames ────────────────────────────────────────────────────────────
 
-function SourceFrame({
+/**
+ * One of the two frames that is not chosen. It arrives beside the lead,
+ * then tucks in behind it, smaller, and is covered. The lead is in front and
+ * larger, so by the end of the selection it is simply not visible; it is
+ * switched off only after that, while nothing of it can be seen.
+ */
+function SupportFrame({
   frame,
   index,
   progress,
+  stage,
 }: {
   frame: SourceFrame;
-  index: number;
+  /** 1 or 2: the lead is index 0 and is the card itself. */
+  index: 1 | 2;
   progress: MotionValue<number>;
+  stage: StageKind;
 }) {
-  const startLefts = ["18%", "50%", "82%"];
-  const startLeft = startLefts[index] || "50%";
-  const isLead = index === 0;
-  // The lead settles at centre before the card starts fading in at 0.18, so
-  // the two never differ horizontally while both are readable.
-  const left = useTransform(
+  const arriveVh = useTransform(
     progress,
-    isLead ? [0, 0.065, 0.16] : [0, 0.065, 0.21],
-    [startLeft, startLeft, "50%"],
+    [T.arriveStart, T.arriveEnd],
+    [ARRIVAL_FROM_VH[index], 0],
+    { ease: arrive },
+  );
+  const settlePx = useTransform(
+    progress,
+    [T.selectStart, T.selectEnd],
+    [index === 1 ? 0 : 8, -6],
     { ease: glide },
   );
-  const opacity = useTransform(
+  const y = useMotionTemplate`calc(${arriveVh}vh + ${settlePx}px)`;
+  const x = useTransform(
     progress,
-    isLead ? [0, 0.045, 0.16, 0.26, 0.33] : [0, 0.02 + index * 0.01, 0.11, 0.185],
-    isLead
-      // By 0.26 the card is fully opaque and covers this band exactly, so the
-      // tail here is under it rather than fading over black.
-      ? [0, 0.94, 0.94, 0.56, 0]
-      : [0, index === 1 ? 1 : 0.5, index === 1 ? 0.88 : 0.34, 0],
-  );
-  const y = useTransform(
-    progress,
-    isLead ? LEAD_CARD_TRACK.yInput : [0, 0.08, 0.21],
-    isLead
-      ? LEAD_CARD_TRACK.yOutput
-      : [index === 1 ? 24 : 36, index === 1 ? -8 : index === 0 ? 8 : 2, -8],
+    [T.selectStart, T.selectEnd],
+    [ARRIVAL_X[stage][index], "0vw"],
     { ease: glide },
   );
   const rotateZ = useTransform(
     progress,
-    isLead ? [0, 0.08, 0.22] : [0, 0.08, 0.21],
-    isLead ? [0, 0, 0] : [index === 0 ? -6 : index === 2 ? 6 : 0, index === 0 ? -4 : index === 2 ? 4 : 0, 0],
+    [T.selectStart, T.selectEnd],
+    [ARRIVAL_ROTATE[stage][index], 0],
     { ease: glide },
   );
   const scale = useTransform(
     progress,
-    isLead ? LEAD_CARD_TRACK.scaleInput : [0, 0.08, 0.21],
-    isLead
-      ? LEAD_CARD_TRACK.scaleOutput
-      : [index === 0 ? 0.96 : 0.94, index === 1 ? 1 : 0.9, index === 1 ? 1.035 : 0.82],
+    [T.selectStart, T.selectEnd],
+    index === 1 ? [1, 0.75] : [0.94, 0.72],
     { ease: glide },
   );
+  const opacity = useTransform(
+    progress,
+    [T.supportReleaseStart, T.supportReleaseEnd],
+    [1, 0],
+  );
   const sizeClass =
-    index === 0
-      ? "w-[16rem] sm:w-[17.75rem] md:w-[20rem] lg:w-[22.75rem]"
-      : index === 1
-        ? "w-[10.5rem] sm:w-[12.25rem] md:w-[14rem] lg:w-[15.75rem]"
-        : "w-[10.25rem] sm:w-[11.5rem] md:w-[13rem] lg:w-[14.5rem]";
-  const zClass = index === 0 ? "z-20" : "z-10";
+    index === 1
+      ? "w-[10.5rem] sm:w-[12.25rem] md:w-[14rem] lg:w-[15.75rem]"
+      : "w-[10.25rem] sm:w-[11.5rem] md:w-[13rem] lg:w-[14.5rem]";
   const deferredSrc = useDeferredCardAsset(frame.src);
 
   return (
     <motion.figure
       aria-hidden
-      className={`pointer-events-none absolute left-1/2 top-1/2 m-0 -translate-x-1/2 -translate-y-1/2 ${sizeClass} ${zClass}`}
-      style={{ left, opacity, y, rotateZ, scale }}
+      className={`pointer-events-none absolute left-1/2 top-1/2 z-10 m-0 -translate-x-1/2 -translate-y-1/2 ${sizeClass}`}
+      style={{ x, y, rotateZ, scale, opacity, willChange: "transform" }}
     >
       <div
         className="overflow-hidden rounded-[0.35rem]"
-        style={
-          isLead
-            ? {
-                aspectRatio: LEAD_PHOTO.aspect,
-                boxShadow: CARD_SHADOW,
-                // Drops the band from the card's centre onto the card's photo
-                // band. A percentage, so it scales with the plate.
-                transform: `translateY(${LEAD_PHOTO.offsetY})`,
-              }
-            : { aspectRatio: "5.5 / 8.5", boxShadow: CARD_SHADOW }
-        }
+        style={{ aspectRatio: CARD_ASPECT, boxShadow: CARD_SHADOW }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={deferredSrc}
           alt=""
           draggable={false}
+          decoding="async"
           className="h-full w-full object-cover"
-          style={{
-            objectPosition: isLead ? LEAD_PHOTO.objectPosition : frame.objectPosition,
-            filter: frame.filter,
-          }}
+          style={{ objectPosition: frame.objectPosition, filter: frame.filter }}
         />
       </div>
     </motion.figure>
   );
 }
 
+/**
+ * One of the three dealt directions. It exists only behind the lead: it is
+ * switched on while the lead covers it, slides out from under it into the
+ * row, slides back under it in the gather, and is switched off once covered
+ * again. Its
+ * transform matches the lead's exactly at both ends, and its base width is
+ * a little under the lead's, so nothing of it can show past the lead's edge.
+ */
 function EditionVariant({
   variant,
   index,
   progress,
+  stage,
 }: {
   variant: CardVariant;
+  /** 1..3, in deal order: the top of the deck leaves first. */
   index: number;
   progress: MotionValue<number>;
+  stage: StageKind;
 }) {
-  const compact = useMediaQuery("(max-width: 767px)");
-  const targetLeft = compact
-    ? index === 1
-      ? "72%"
-      : index === 2
-        ? "28%"
-        : "72%"
-    : index === 1
-      ? "39%"
-      : index === 2
-        ? "61%"
-        : "81%";
-  // Rows on a narrow stage; a single line of four on a wide one.
-  const settledY = compact ? (index >= 2 ? 152 : -122) : index % 2 === 0 ? -4 : 4;
-  const settledScale = compact ? 0.46 : 0.62;
-  const delay = (index - 1) * 0.012;
-  const left = useTransform(
+  const delay = (index - 1) * DEAL_STAGGER;
+  const keys = [T.dealStart + delay, T.dealEnd + delay, T.gatherStart, T.gatherEnd];
+  const x = useTransform(
     progress,
-    [0.545 + delay, 0.685 + delay, 0.815, 0.93],
-    ["50%", targetLeft, targetLeft, "62%"],
-    { ease: glide },
-  );
-  const opacity = useTransform(
-    progress,
-    [0.55 + delay, 0.655 + delay, 0.825, 0.925],
-    [0, 1, 1, 0],
-  );
-  const scale = useTransform(
-    progress,
-    [0.545 + delay, 0.685 + delay, 0.815, 0.93],
-    [0.78, settledScale, settledScale, 0.98],
+    keys,
+    ["0vw", ROW_X[stage][index], ROW_X[stage][index], READY_X[stage]],
     { ease: glide },
   );
   const y = useTransform(
     progress,
-    [0.545 + delay, 0.685 + delay, 0.815, 0.93],
-    [18, settledY, settledY, 0],
+    keys,
+    [ROW_Y[stage][0], ROW_Y[stage][index], ROW_Y[stage][index], READY_Y[stage]],
     { ease: glide },
   );
-  const labelOpacity = useTransform(progress, [0.63 + delay, 0.7 + delay, 0.8, 0.86], [0, 1, 1, 0]);
-
-  const captionScale = useTransform(scale, (v: number) => 1 / v);
+  const scale = useTransform(
+    progress,
+    [T.gatherStart, T.gatherEnd, T.end],
+    [ROW_SCALE[stage], READY_SCALE[stage][0], READY_SCALE[stage][1]],
+    { ease: glide },
+  );
+  // Only ever changes while the lead is flat on top of it.
+  const opacity = useTransform(
+    progress,
+    [T.dealStart - 0.01, T.dealStart, T.gatherEnd + 0.005, T.gatherEnd + 0.02],
+    [0, 1, 1, 0],
+  );
+  const labelOpacity = useTransform(
+    progress,
+    [LABEL_RANGE[0] + delay, LABEL_RANGE[1] + delay, LABEL_RANGE[2], LABEL_RANGE[3]],
+    [0, 1, 1, 0],
+  );
+  const labelScale = useTransform(scale, (v: number) => 1 / v);
 
   return (
     <motion.figure
       aria-hidden
-      className="pointer-events-none absolute left-1/2 top-1/2 z-20 m-0 w-[15.5rem] -translate-x-1/2 -translate-y-1/2 sm:w-[17rem] md:w-[19.5rem] lg:w-[21.5rem]"
-      style={{ left, opacity, y, scale }}
+      className={`pointer-events-none absolute left-1/2 top-1/2 m-0 -translate-x-1/2 -translate-y-1/2 ${EDITION_WIDTH}`}
+      style={{ x, y, scale, opacity, zIndex: 20 + (3 - index), willChange: "transform, opacity" }}
     >
       <div
         className="relative overflow-hidden rounded-[0.55rem]"
-        style={{ aspectRatio: "5.5 / 8.5", boxShadow: CARD_SHADOW }}
+        style={{ aspectRatio: CARD_ASPECT, boxShadow: CARD_SHADOW }}
       >
         <CardImage src={variant.src} />
       </div>
       <motion.figcaption
-        className="absolute inset-x-0 top-[calc(100%+0.9rem)] origin-top text-center font-mono text-[0.52rem] tracking-[0.2em] text-white/44"
-        style={{ opacity: labelOpacity, scale: captionScale }}
+        className={LABEL_CLASS}
+        style={{ opacity: labelOpacity, scale: labelScale }}
       >
         {variant.edition}
       </motion.figcaption>
@@ -318,85 +344,166 @@ function EditionVariant({
   );
 }
 
-function ContinuousCard({ progress }: { progress: MotionValue<number> }) {
-  // The lead card joins the same grid as the other three: one row of four on a
-  // wide stage, the first cell of a two-by-two on a narrow one.
-  const compact = useMediaQuery("(max-width: 767px)");
-  const gridLeft = compact ? "28%" : "19%";
-  const gridY = compact ? -122 : -4;
-  const gridScale = compact ? 0.46 : 0.62;
-  const left = useTransform(
+/**
+ * The lead: the one object the whole beat is about.
+ *
+ * It arrives as a photograph (the card's own photo band, the front face
+ * clipped to it), is chosen, lifts, and its card stock rises out from behind
+ * the print carrying the name. It turns over to its back, turns back and is
+ * set down in the row, the other directions are dealt from behind it and
+ * gathered back, and it is picked up and handed forward.
+ */
+function LeadCard({ progress, stage }: { progress: MotionValue<number>; stage: StageKind }) {
+  const arriveVh = useTransform(
     progress,
-    [0, 0.545, 0.685, 0.815, 0.93, 1],
-    ["50%", "50%", gridLeft, gridLeft, "62%", "62%"],
+    [T.arriveStart, T.arriveEnd],
+    [ARRIVAL_FROM_VH[0], 0],
+    { ease: arrive },
+  );
+  // Lifted before the turn, up through the apex, set down through the turn
+  // back, picked up again at the close.
+  const settlePx = useTransform(
+    progress,
+    [
+      T.liftStart,
+      T.flipStart,
+      T.flipApex,
+      T.flipEnd,
+      T.turnBackStart,
+      T.turnBackApex,
+      T.turnBackEnd,
+      T.gatherStart,
+      T.gatherEnd,
+    ],
+    [
+      0,
+      FLIP_Y,
+      FLIP_APEX_Y,
+      FLIP_Y,
+      FLIP_Y,
+      (FLIP_Y + ROW_Y[stage][0]) / 2 + TURN_BACK_LIFT,
+      ROW_Y[stage][0],
+      ROW_Y[stage][0],
+      READY_Y[stage],
+    ],
     { ease: glide },
   );
-  const opacity = useTransform(progress, [0.18, 0.26, 1], [0, 1, 1]);
-  const rotateY = useTransform(
+  const y = useMotionTemplate`calc(${arriveVh}vh + ${settlePx}px)`;
+  const x = useTransform(
     progress,
-    [0, 0.24, 0.31, 0.48, 0.57, 0.69, 1],
-    [0, 0, -18, -180, -180, -360, -360],
+    [T.selectStart, T.selectEnd, T.dealStart, T.dealEnd, T.gatherStart, T.gatherEnd],
+    [ARRIVAL_X[stage][0], "0vw", "0vw", ROW_X[stage][0], ROW_X[stage][0], READY_X[stage]],
     { ease: glide },
   );
   const scale = useTransform(
     progress,
-    [0.105, 0.22, 0.31, 0.48, 0.57, 0.69, 0.815, 0.93, 1],
-    [1.04, 1.02, 0.98, 0.98, 0.96, gridScale, gridScale, 1.04, 1.06],
+    [
+      T.liftStart,
+      T.flipStart,
+      T.flipApex,
+      T.flipEnd,
+      T.turnBackStart,
+      T.turnBackEnd,
+      T.gatherStart,
+      T.gatherEnd,
+      T.end,
+    ],
+    [
+      1,
+      FLIP_SCALE[0],
+      FLIP_SCALE[1],
+      FLIP_SCALE[0],
+      FLIP_SCALE[0],
+      ROW_SCALE[stage],
+      ROW_SCALE[stage],
+      READY_SCALE[stage][0],
+      READY_SCALE[stage][1],
+    ],
     { ease: glide },
   );
-  // The two bottom captions (beats 1-2) sit at bottom-[8vh]; the card is tall,
-  // so its default centred position overlapped that text. Raise the card through
-  // those beats and ease back to the original resting spots by the markets grid
-  // (0.69+ keyframes unchanged) so the flip/grid/ready choreography is untouched.
-  const y = useTransform(
+  // Over to the back, back to the front, and at the close held a little
+  // off square as it is handed forward.
+  const rotateY = useTransform(
     progress,
-    [0.105, 0.22, 0.35, 0.46, 0.6, 0.69, 0.815, 0.93, 1],
-    [40, -30, -60, -60, -18, gridY, gridY, -2, -2],
+    [T.flipStart, T.flipEnd, T.turnBackStart, T.turnBackEnd, T.gatherEnd, T.end],
+    [0, -180, -180, -360, -360, -360 + READY_TILT.rotateY],
     { ease: glide },
   );
-  const labelOpacity = useTransform(progress, [0.63, 0.7, 0.8, 0.86], [0, 1, 1, 0]);
-
-  // Scale lives on the wrapper so the label scales with the card and stays
-  // beside it; the text is counter-scaled back to its own size.
-  const captionScale = useTransform(scale, (v: number) => 1 / v);
+  // Tips back toward the apex of each turn and comes level again.
+  const rotateX = useTransform(
+    progress,
+    [
+      T.flipStart,
+      T.flipApex,
+      T.flipEnd,
+      T.turnBackStart,
+      T.turnBackApex,
+      T.turnBackEnd,
+      T.gatherEnd,
+      T.end,
+    ],
+    [0, FLIP_TILT, 0, 0, TURN_BACK_TILT, 0, 0, READY_TILT.rotateX],
+    { ease: glide },
+  );
+  const stockHidden = useTransform(
+    progress,
+    [T.stockStart, T.stockEnd],
+    [1, 0],
+    { ease: glide },
+  );
+  const labelOpacity = useTransform(progress, [...LABEL_RANGE], [0, 1, 1, 0]);
+  const labelScale = useTransform(scale, (v: number) => 1 / v);
 
   return (
     <motion.div
       className="pointer-events-none absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2"
-      // `y` rides the wrapper with `scale`, not the inner card: applied inside
-      // a 0.46-scaled element it was landing at 46% of its value, which is why
-      // the lead card sat lower than the other three in the narrow grid.
-      style={{ left, scale, y }}
+      style={{ x, y, scale, willChange: "transform" }}
     >
       <DoubleSidedCard
         rotateY={rotateY}
-        scale={1}
-        y={0}
-        opacity={opacity}
-        className="!w-[16rem] sm:!w-[17.75rem] md:!w-[20rem] lg:!w-[22.75rem]"
+        rotateX={rotateX}
+        stockHidden={stockHidden}
+        className={CARD_WIDTH}
       />
-      <motion.span
-        className="absolute inset-x-0 top-[calc(100%+0.9rem)] origin-top text-center font-mono text-[0.52rem] tracking-[0.2em] text-white/44"
-        style={{ opacity: labelOpacity, scale: captionScale }}
-      >
+      <motion.span className={LABEL_CLASS} style={{ opacity: labelOpacity, scale: labelScale }}>
         {CARD_VARIANTS[0].edition}
       </motion.span>
     </motion.div>
   );
 }
 
+// ── The still composition ─────────────────────────────────────────────────
+
+function captionByKey(key: string): Caption {
+  const found = CAPTIONS.find((c) => c.key === key);
+  if (!found) throw new Error(`comp-card: no caption "${key}"`);
+  return found;
+}
+
+function StaticHeading({ head }: { head: Caption["head"] }) {
+  return (
+    <h2 className="text-center font-editorial text-[clamp(2.15rem,7vw,3.65rem)] leading-[1.01] tracking-[-0.03em] text-[#FAF7F2]">
+      <Head head={head} />
+    </h2>
+  );
+}
+
 function ReducedMotionSection() {
+  const selection = captionByKey("selection");
+  const direction = captionByKey("direction");
+  const uses = captionByKey("uses");
+
   return (
     <section className="relative overflow-hidden bg-[#080808] text-[#FAF7F2]">
       <div className="mx-auto flex max-w-[76rem] flex-col gap-32 px-5 py-28 sm:px-8">
         <article className="space-y-12">
-          <StaticHeading beat={BEATS[0]} />
+          <StaticHeading head={selection.head} />
           <div className="grid grid-cols-3 items-center gap-3 sm:gap-6">
             {SOURCE_FRAMES.map((frame, index) => (
               <div
                 key={`${frame.src}-static-${index}`}
                 className="overflow-hidden rounded-[0.25rem]"
-                style={{ aspectRatio: "5.5 / 8.5" }}
+                style={{ aspectRatio: CARD_ASPECT }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -413,20 +520,21 @@ function ReducedMotionSection() {
         </article>
 
         <article className="space-y-12">
-          <StaticHeading beat={BEATS[1]} />
+          {/* The two halves of the line, as one line when nothing turns. */}
+          <StaticHeading head={["A real front. A real ", "back", "."]} />
           <div className="mx-auto grid w-full max-w-[40rem] grid-cols-2 gap-4 sm:gap-8">
-            <div className="overflow-hidden rounded-[0.35rem]"><CompCardFront /></div>
-            <div className="overflow-hidden rounded-[0.35rem]"><CompCardBack /></div>
+            <div className="overflow-hidden rounded-[0.35rem]"><CompCardFront loading="lazy" /></div>
+            <div className="overflow-hidden rounded-[0.35rem]"><CompCardBack loading="lazy" /></div>
           </div>
         </article>
 
         <article className="space-y-12">
-          <StaticHeading beat={BEATS[2]} />
+          <StaticHeading head={direction.head} />
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-7">
             {CARD_VARIANTS.map((variant) => (
               <figure key={`${variant.edition}-static`} className="m-0">
                 <div className="overflow-hidden rounded-[0.25rem]">
-                  <CardImage src={variant.src} />
+                  <CardImage src={variant.src} loading="lazy" />
                 </div>
                 <figcaption className="mt-3 text-center font-mono text-[0.5rem] tracking-[0.2em] text-white/42">
                   {variant.edition}
@@ -437,9 +545,9 @@ function ReducedMotionSection() {
         </article>
 
         <article className="space-y-12">
-          <StaticHeading beat={BEATS[3]} />
+          <StaticHeading head={uses.head} />
           <div className="mx-auto w-[min(21rem,78vw)] overflow-hidden rounded-[0.45rem]">
-            <CompCardFront />
+            <CompCardFront loading="lazy" />
           </div>
         </article>
       </div>
@@ -452,12 +560,17 @@ export default function SceneCompCard() {
   return <ReducedMotionSection />;
 }
 
+// ── The scene ─────────────────────────────────────────────────────────────
+
 /**
  * The comp-card beat's layers, with no section and no sticky of its own.
  *
  * It renders inside the home stage's single pinned container so there is no
  * unpin between the intelligence sequence and this one: the figure travels
  * out as the plates travel in, on one continuous scroll (`lessons.md` §20).
+ *
+ * The keyframes and the copy are in `./motion.ts`. Every layer here reads
+ * one spring-smoothed copy of the timeline, so the scene moves as one thing.
  */
 export function CompCardLayers({
   progress,
@@ -467,14 +580,18 @@ export function CompCardLayers({
   /** Set once the hero's opening frames are in hand. See ./assets. */
   assetsArmed?: boolean;
 }) {
+  const stage = useStageKind();
+  const smooth = useSpring(progress, TIMELINE_SPRING);
+
   return (
     <CompCardAssetsProvider value={assetsArmed}>
-      {SOURCE_FRAMES.map((frame, index) => (
-        <SourceFrame
-          key={`${frame.src}-${index}`}
-          frame={frame}
+      {([1, 2] as const).map((index) => (
+        <SupportFrame
+          key={SOURCE_FRAMES[index].src}
+          frame={SOURCE_FRAMES[index]}
           index={index}
-          progress={progress}
+          progress={smooth}
+          stage={stage}
         />
       ))}
 
@@ -483,14 +600,15 @@ export function CompCardLayers({
           key={variant.edition}
           variant={variant}
           index={index + 1}
-          progress={progress}
+          progress={smooth}
+          stage={stage}
         />
       ))}
 
-      <ContinuousCard progress={progress} />
+      <LeadCard progress={smooth} stage={stage} />
 
-      {BEATS.map((beat) => (
-        <ScrollCaption key={beat.key} beat={beat} progress={progress} />
+      {CAPTIONS.map((caption) => (
+        <ScrollCaption key={caption.key} caption={caption} progress={smooth} stage={stage} />
       ))}
     </CompCardAssetsProvider>
   );

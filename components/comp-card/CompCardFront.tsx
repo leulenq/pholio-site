@@ -7,13 +7,19 @@ const FRONT_OUTPUT = "/generated/comp-card/ola-editorial-masthead-front.png";
  * comp-card engine, edition `editorial-masthead` (The Masthead).
  * Regenerate with `node scripts/render-comp-cards.cjs`.
  */
-export default function CompCardFront() {
+export default function CompCardFront({
+  loading = "eager",
+}: {
+  /** The scene defers these through `assets.tsx`; only the static
+      composition below the fold wants the browser to lazy-load them. */
+  loading?: "eager" | "lazy";
+} = {}) {
   const src = useDeferredCardAsset(FRONT_OUTPUT);
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
-      loading="lazy"
+      loading={loading}
       decoding="async"
       alt="Comp card, front"
       className="block h-full w-full object-cover"

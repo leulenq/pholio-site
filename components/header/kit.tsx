@@ -22,25 +22,33 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useId,
   useRef,
   useState,
   type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  AnimatePresence,
   motion,
   useReducedMotion,
   useScroll,
+  useMotionValue,
   useMotionValueEvent,
+  type MotionValue,
 } from "framer-motion";
 import {
   ChevronDown,
   ExternalLink,
+  HelpCircle,
+  LayoutDashboard,
   LogOut,
   Settings,
   Sparkles,
+  Users,
 } from "lucide-react";
 
 import {
@@ -50,6 +58,7 @@ import {
 } from "@/lib/marketing-nav-links";
 import { PHOLIO_APP_ORIGIN as APP_URL } from "@/lib/pholio-app-origin";
 import { STUDIO_PLUS_SIGNUP_URL } from "@/lib/marketing-pricing";
+import { SUPPORT_EMAIL } from "@/lib/legal-constants";
 import { usePholioAuth } from "@/lib/pholio-auth/PholioAuthProvider";
 
 /** The site's single ease. Mutable tuple so framer-motion accepts it directly. */
@@ -308,6 +317,8 @@ function useFooterTakeover(enabled: boolean): boolean {
 
   useEffect(() => {
     checkTakeover();
+    window.addEventListener("resize", checkTakeover);
+    return () => window.removeEventListener("resize", checkTakeover);
   }, [checkTakeover]);
 
   return taken;
@@ -692,25 +703,55 @@ export function NavLink({
    ══════════════════════════════════════════════════════════════════════ */
 
 /**
- * Signed-in cluster. Rebuilt without the glass trigger and rounded card: a bare
- * avatar and name, opening a square-cornered panel in the page's own paper with
- * hairline sections and mono section labels. The profile-strength meter becomes
- * a 1px gold rule — the same furniture the rest of the site uses.
+ * Signed-in cluster. A bare avatar and name opening a panel closed by
+ * hairlines and a gold sweep — the site's own furniture, never a bordered
+ * card — anchored tight to the trigger with a real entrance *and* exit,
+ * and real keyboard support (roving focus, Escape, focus return).
+ *
+ * The row list is role-aware, not the shell: a Talent session gets its
+ * plan as a fact, a public-profile link, and the Studio+ upsell; an
+ * Agency session gets Team Members and Help & Support instead, and never
+ * the upsell (Pholio does not charge agencies). Ground truth for what
+ * belongs to each role is the real app's own account menus
+ * (`TalentLayout`, `UserDropdown`) — this component only borrows their
+ * *content*, never their chrome. "Dashboard" is the one row with no app
+ * equivalent: inside the app you're already there, but from the marketing
+ * site it's the single most likely reason a signed-in visitor opens this
+ * menu at all, so it leads the list at full-strength colour.
  */
+const FOCUS_RING =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px]";
+
 export function AccountCluster({
   compact = false,
   showAction = true,
+  closeSignal,
+  closeAt = 0.001,
 }: {
   compact?: boolean;
   /** Set false when the variant renders its own action (the Ledger's gold cell). */
   showAction?: boolean;
+  /**
+   * A scroll-linked progress value from an animated ancestor (e.g. the home
+   * hero's own exit timeline). The moment that ancestor starts moving, an
+   * open panel closes rather than sliding or fading away with it — a menu
+   * must never visually detach from the button that opened it.
+   */
+  closeSignal?: MotionValue<number>;
+  closeAt?: number;
 }) {
   const tokens = useTokens();
   const { session, isLoading, isAuthenticated, logout, dashboardHref } =
     usePholioAuth();
   const [open, setOpen] = useState(false);
-  const [hover, setHover] = useState<string | null>(null);
+  const [active, setActive] = useState<string | null>(null);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [logoutFailed, setLogoutFailed] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const panelId = useId();
+  const fallbackProgress = useMotionValue(0);
 
   useEffect(() => {
     const onDown = (e: MouseEvent) => {
@@ -721,11 +762,53 @@ export function AccountCluster({
     return () => document.removeEventListener("mousedown", onDown);
   }, []);
 
+  // Escape closes and returns focus to the trigger — the menu's only
+  // keyboard exit besides Tab-ing all the way past it.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  // See `closeSignal` above: an open menu closes itself the instant its
+  // animated ancestor starts leaving, instead of riding along with it.
+  useMotionValueEvent(closeSignal ?? fallbackProgress, "change", (v) => {
+    if (open && v >= closeAt) setOpen(false);
+  });
+
   const handleLogout = useCallback(async () => {
-    setOpen(false);
-    await logout();
-    window.location.reload();
+    setLoggingOut(true);
+    setLogoutFailed(false);
+    try {
+      await logout();
+      window.location.reload();
+    } catch {
+      setLoggingOut(false);
+      setLogoutFailed(true);
+    }
   }, [logout]);
+
+  const rovingKeyDown = useCallback((e: ReactKeyboardEvent) => {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault();
+    const items = Array.from(
+      panelRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ??
+        [],
+    );
+    if (!items.length) return;
+    const at = items.indexOf(document.activeElement as HTMLElement);
+    const next =
+      e.key === "ArrowDown"
+        ? items[(at + 1) % items.length]
+        : items[(at - 1 + items.length) % items.length];
+    next?.focus();
+  }, []);
 
   if (isLoading)
     return <span style={{ width: compact ? 84 : 132 }} aria-hidden />;
@@ -753,41 +836,65 @@ export function AccountCluster({
   const name = profile?.first_name
     ? `${profile.first_name}${profile.last_name ? ` ${profile.last_name}` : ""}`
     : session?.user?.email?.split("@")[0] || "Account";
-  const strength = session?.completeness?.percentage ?? 0;
+  const isTalent = session?.role === "TALENT";
+  const isAgency = session?.role === "AGENCY";
+  const planLabel = session?.subscription?.isPro ? "Studio+" : "Free";
 
-  const item = (key: string): CSSProperties => ({
+  const item = (key: string, emphasis: "default" | "lead" = "default"): CSSProperties => ({
     display: "flex",
     alignItems: "center",
     gap: 10,
     width: "100%",
-    padding: "11px 18px",
+    padding: "13px 18px",
     fontFamily: SANS,
     fontSize: 12.5,
+    fontWeight: emphasis === "lead" ? 600 : 400,
     letterSpacing: "0.01em",
     textAlign: "left",
     textDecoration: "none",
-    background: hover === key ? tokens.wash : "transparent",
-    color: hover === key ? tokens.gold : tokens.textMuted,
+    background: active === key ? tokens.wash : "transparent",
+    color:
+      active === key
+        ? tokens.gold
+        : emphasis === "lead"
+          ? tokens.text
+          : tokens.textMuted,
     transition:
       "color 0.24s cubic-bezier(0.22,1,0.36,1), background 0.24s cubic-bezier(0.22,1,0.36,1)",
     border: "none",
     cursor: "pointer",
+    outline: "none",
+    outlineColor: tokens.gold,
   });
 
-  const hoverProps = (key: string) => ({
-    onMouseEnter: () => setHover(key),
-    onMouseLeave: () => setHover(null),
+  const rowProps = (key: string) => ({
+    role: "menuitem" as const,
+    className: FOCUS_RING,
+    onMouseEnter: () => setActive(key),
+    onMouseLeave: () => setActive((a) => (a === key ? null : a)),
+    onFocus: () => setActive(key),
+    onBlur: () => setActive((a) => (a === key ? null : a)),
   });
 
   return (
     <div ref={ref} className="relative">
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
+        aria-haspopup="menu"
+        aria-controls={panelId}
         aria-label="Account menu"
-        className="flex items-center focus:outline-none"
-        style={{ gap: 10, background: "none", border: "none", padding: 0 }}
+        className={`flex items-center focus:outline-none ${FOCUS_RING}`}
+        style={{
+          gap: 10,
+          background: "none",
+          border: "none",
+          padding: 4,
+          margin: -4,
+          outlineColor: tokens.gold,
+        }}
       >
         <span
           style={{
@@ -798,7 +905,7 @@ export function AccountCluster({
             display: "grid",
             placeItems: "center",
             background: profile?.profile_image ? "transparent" : GOLD,
-            color: "#050505",
+            color: TOKENS.ink.surface,
             fontFamily: SANS,
             fontSize: 11,
             fontWeight: 600,
@@ -846,147 +953,161 @@ export function AccountCluster({
         />
       </button>
 
-      {open && (
-        <motion.div
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, ease: EASE }}
-          style={{
-            position: "absolute",
-            top: "calc(100% + 18px)",
-            right: 0,
-            width: 288,
-            background: tokens.panel,
-            border: `1px solid ${tokens.rule}`,
-            zIndex: 60,
-          }}
-        >
-          <div style={{ padding: "16px 18px 14px" }}>
-            <Kicker>{session?.role === "TALENT" ? "Talent" : "Agency"}</Kicker>
-            <div
-              style={{
-                fontFamily: SERIF,
-                fontSize: 17,
-                letterSpacing: "-0.01em",
-                color: tokens.text,
-                marginTop: 9,
-              }}
-            >
-              {name}
-            </div>
-            <div
-              style={{
-                fontFamily: SANS,
-                fontSize: 11.5,
-                color: tokens.textFaint,
-                marginTop: 3,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {session?.user?.email}
-            </div>
-          </div>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            ref={panelRef}
+            id={panelId}
+            role="menu"
+            aria-label="Account"
+            onKeyDown={rovingKeyDown}
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.22, ease: EASE }}
+            style={{
+              position: "absolute",
+              top: "calc(100% + 8px)",
+              right: 0,
+              width: 264,
+              background: tokens.panel,
+              zIndex: 60,
+            }}
+          >
+            <GoldSweep />
 
-          {session?.role === "TALENT" && (
-            <>
-              <Rule />
+            <div style={{ padding: "16px 18px 14px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Kicker>
+                  {isTalent ? "Talent" : isAgency ? "Agency" : "Account"}
+                </Kicker>
+                {isTalent && (
+                  <Kicker color={tokens.gold}>{planLabel}</Kicker>
+                )}
+              </div>
+              <div
+                style={{
+                  fontFamily: SERIF,
+                  fontSize: 17,
+                  letterSpacing: "-0.01em",
+                  color: tokens.text,
+                  marginTop: 10,
+                }}
+              >
+                {name}
+              </div>
+              <div
+                style={{
+                  fontFamily: SANS,
+                  fontSize: 11.5,
+                  color: tokens.textMuted,
+                  marginTop: 4,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {session?.user?.email}
+              </div>
+            </div>
+
+            <Rule />
+            <div style={{ padding: "6px 0" }}>
               <a
                 href={dashboardHref}
-                style={{
-                  display: "block",
-                  padding: "13px 18px",
-                  textDecoration: "none",
-                }}
-                {...hoverProps("strength")}
+                style={item("dashboard", "lead")}
+                {...rowProps("dashboard")}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                  }}
-                >
-                  <Kicker>Profile strength</Kicker>
-                  <span
-                    style={{
-                      fontFamily: MONO,
-                      fontSize: 10,
-                      color: GOLD,
-                      letterSpacing: "0.08em",
-                    }}
-                  >
-                    {strength}%
-                  </span>
-                </div>
-                <div
-                  style={{
-                    height: 1,
-                    background: tokens.rule,
-                    marginTop: 9,
-                    position: "relative",
-                  }}
-                >
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      width: `${strength}%`,
-                      background: GOLD,
-                      transition: "width 0.6s cubic-bezier(0.22,1,0.36,1)",
-                    }}
-                  />
-                </div>
+                <LayoutDashboard size={14} />
+                <span>Dashboard</span>
               </a>
-            </>
-          )}
-
-          <Rule />
-          <div style={{ padding: "6px 0" }}>
-            {session?.role === "TALENT" && profile?.slug && (
+              {isTalent && profile?.slug && (
+                <a
+                  href={`${APP_URL}/portfolio/${profile.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={item("public")}
+                  {...rowProps("public")}
+                >
+                  <ExternalLink size={14} />
+                  <span>View public profile</span>
+                </a>
+              )}
               <a
-                href={`${APP_URL}/portfolio/${profile.slug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={item("public")}
-                {...hoverProps("public")}
+                href={`${dashboardHref}/settings`}
+                style={item("settings")}
+                {...rowProps("settings")}
               >
-                <ExternalLink size={14} />
-                <span>View public profile</span>
+                <Settings size={14} />
+                <span>Account settings</span>
               </a>
-            )}
-            <a
-              href={`${dashboardHref}/settings`}
-              style={item("settings")}
-              {...hoverProps("settings")}
+              {isAgency && (
+                <a
+                  href={`${dashboardHref}/team`}
+                  style={item("team")}
+                  {...rowProps("team")}
+                >
+                  <Users size={14} />
+                  <span>Team members</span>
+                </a>
+              )}
+              {isTalent && !session?.subscription?.isPro && (
+                <a
+                  href={STUDIO_PLUS_SIGNUP_URL}
+                  style={item("upgrade")}
+                  {...rowProps("upgrade")}
+                >
+                  <Sparkles size={14} />
+                  <span>Upgrade to Studio+</span>
+                </a>
+              )}
+              {isAgency && (
+                <a
+                  href={`mailto:${SUPPORT_EMAIL}`}
+                  style={item("support")}
+                  {...rowProps("support")}
+                >
+                  <HelpCircle size={14} />
+                  <span>Help &amp; support</span>
+                </a>
+              )}
+            </div>
+
+            <Rule />
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={loggingOut}
+              style={{
+                ...item("logout"),
+                cursor: loggingOut ? "default" : "pointer",
+                opacity: loggingOut ? 0.5 : 1,
+              }}
+              {...rowProps("logout")}
             >
-              <Settings size={14} />
-              <span>Account settings</span>
-            </a>
-            {!session?.subscription?.isPro && (
-              <a
-                href={STUDIO_PLUS_SIGNUP_URL}
-                style={item("upgrade")}
-                {...hoverProps("upgrade")}
+              <LogOut size={14} />
+              <span>{loggingOut ? "Signing out…" : "Log out"}</span>
+            </button>
+            {logoutFailed && (
+              <div
+                style={{
+                  padding: "0 18px 14px",
+                  fontFamily: SANS,
+                  fontSize: 11,
+                  color: "#C0392B",
+                }}
               >
-                <Sparkles size={14} />
-                <span>Upgrade to Studio+</span>
-              </a>
+                Couldn&apos;t sign out — try again.
+              </div>
             )}
-          </div>
-
-          <Rule />
-          <button
-            type="button"
-            onClick={handleLogout}
-            style={item("logout")}
-            {...hoverProps("logout")}
-          >
-            <LogOut size={14} />
-            <span>Log out</span>
-          </button>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

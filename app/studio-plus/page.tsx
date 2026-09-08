@@ -4,7 +4,7 @@ export const metadata = {
 
 export default function StudioPlusPage() {
   return (
-    <main className="min-h-mobile-screen bg-[#050505]">
+    <div className="min-h-mobile-screen bg-[#050505]">
       <div className="pt-40 px-6">
         <div className="max-w-3xl mx-auto">
           <h1 className="font-editorial text-5xl md:text-7xl text-[#FAF7F2] mb-6">
@@ -12,6 +12,6 @@ export default function StudioPlusPage() {
           </h1>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

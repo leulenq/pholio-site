@@ -33,11 +33,15 @@ export const SOURCE_FRAMES: SourceFrame[] = [
     src: "/generated/comp-card/source/ola-editorial-standing.jpg",
     objectPosition: "50% 38%",
   },
-  // A second look, different wardrobe and location from the other two: the
-  // range a booker scans for isn't one outfit shot three ways.
+  // The studio close-up, monochrome as shot (`lessons.md` §19): with the
+  // three-quarter and the full length it is the triad a booker reads a card
+  // by, face, figure, length. It is also the one frame that visibly does
+  // not lead: a front is a body shot with the name set into it, and the
+  // headshot's place is on the back. The night-street frame it replaces
+  // wore the hero sequence's wardrobe and read as the hero again.
   {
-    src: "/generated/comp-card/source/ola-night-street.jpg",
-    objectPosition: "50% 42%",
+    src: "/generated/comp-card/source/ola-studio-closeup-bw.jpg",
+    objectPosition: "50% 30%",
   },
   {
     src: "/generated/comp-card/source/ola-full-length.jpg",

@@ -102,7 +102,7 @@ export default async function AgencyPage({ params }: PageProps) {
   const heic = heicNote(files);
 
   return (
-    <main className="min-h-mobile-screen bg-[#FAF7F2]">
+    <div className="min-h-mobile-screen bg-[#FAF7F2]">
       <div className="px-6 pt-40 pb-32">
         <div className="mx-auto max-w-3xl">
           <Link
@@ -271,6 +271,6 @@ export default async function AgencyPage({ params }: PageProps) {
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -37,8 +37,8 @@
  */
 
 import type { CSSProperties, ReactNode } from "react";
-import { useState, useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform, useSpring } from "framer-motion";
+import { useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
 import { TOKENS, Wordmark } from "@/components/header/kit";
@@ -89,50 +89,18 @@ export function FooterSurface({
   children: ReactNode;
   className?: string;
 }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end end"],
-  });
-
-  const ySpring = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 22,
-    mass: 0.4,
-  });
-
-  const cardY = useTransform(
-    reduceMotion ? scrollYProgress : ySpring,
-    [0, 1],
-    ["100%", "0%"],
-  );
-
   return (
-    <div
-      ref={containerRef}
+    <footer
+      data-site-footer
       data-footer-trigger
-      className="relative z-20 h-[100dvh] w-full"
-      style={{ pointerEvents: "none" }}
+      className={`relative z-20 flex min-h-[100dvh] w-full flex-col justify-between overflow-hidden texture-grain ${className}`}
+      style={{
+        background: PAPER,
+        color: INK,
+      }}
     >
-      <motion.footer
-        /* The consent banner is also a <footer>. This marks the site's own, the
-           way `data-site-header` marks the bar, so tooling and tests can tell
-           them apart. */
-        data-site-footer
-        className={`fixed inset-0 z-30 flex h-[100dvh] w-full flex-col justify-between overflow-hidden texture-grain ${className}`}
-        style={{
-          y: cardY,
-          background: PAPER,
-          color: INK,
-          pointerEvents: "auto",
-          willChange: "transform",
-        }}
-      >
-        {children}
-      </motion.footer>
-    </div>
+      {children}
+    </footer>
   );
 }
 
@@ -218,7 +186,7 @@ export function ArriveGroup({
       style={style}
       initial={reduce ? "shown" : "hidden"}
       whileInView="shown"
-      viewport={{ once: true, margin: "-25%" }}
+      viewport={{ once: true, amount: 0.12 }}
       variants={{
         hidden: {},
         shown: { transition: { staggerChildren: reduce ? 0 : 0.09 } },

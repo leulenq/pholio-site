@@ -1343,3 +1343,197 @@ axis by ink, one line while it spans the plate at a legible size and two
 lines (given over family) otherwise. The catalog's `ink-noir` names gold
 as its accent; there is none here, because there is no brand on a front.
 
+
+## 26. A scene has no seams when nothing in it is half there
+
+**Date:** 2026-09-08
+**Surface:** the comp-card beat's motion
+
+**What was wrong.**
+
+> "I'm seeing glitches, strange white lines/seams, occasional visual
+> artifacts, and motion that doesn't consistently feel smooth or physically
+> convincing."
+> "Nothing should snap, jitter, flicker, expose seams, fight the scroll, or
+> reveal implementation artifacts."
+
+Every one of those had a mechanical cause, and none of them was the easing.
+
+- **The white line down the card's edge** was a modelled "spine": an 8px
+  cream slab at `rotateY(90deg)` to give the card thickness. It stuck 3px
+  proud of the face, and under perspective that projected as a lit hairline
+  outside the card at rest, on the front and again on the back.
+- **The grey masthead and the line under it** were the card cross-fading
+  with a second copy of its own photograph. For a tenth of the timeline the
+  card was half opaque over a plate whose edges, corner radius and 1px ring
+  did not quite coincide with its own.
+- **The ghost rectangles** at the deal and the gather were the three other
+  editions fading in and out at partial opacity while overlapping the lead
+  and each other, at a different scale from the card they were meant to be
+  behind.
+- **The stutter** was every horizontal move being animated through `left`,
+  a layout property, on eight elements, on every scroll frame, against
+  stepped wheel input with no inertia.
+
+**The rules.**
+
+**26.1 Nothing is half there.** No object in a scene is ever at partial
+opacity where it can be seen. A thing arrives by travelling in from off the
+stage, or it is already there behind something opaque. It leaves by
+travelling out, or by going behind something. The only opacity changes are
+on objects that are fully covered at the time, where the change is
+invisible and only releases a layer. This finishes §17 and §18: they said
+type does not fade; this says nothing does.
+
+**26.2 One object, not two that match.** The photograph that arrives is the
+card's own photo band, so the card is on stage from the first frame with its
+front clipped to the print; the stock rises out from behind the print. Two
+elements built to coincide will not, by a sub-pixel, and that sub-pixel is
+the seam.
+
+**26.3 Card stock has no thickness at this size.** Two faces, backs hidden,
+a pixel apart in z. Anything modelled onto the edge will show.
+
+**26.4 Anything that must be hidden behind the lead matches its transform
+exactly and is narrower than it.** Same x, same y, same scale curve, at
+both ends of every deal and gather, on a base width a little under the
+lead's. Then the stack is a stack and not a set of edges.
+
+**26.5 Transforms only, one ease per phase, one inertia for the scene.**
+Horizontal position is a `vw` offset applied as a transform. Each property
+crosses a phase in a single segment so it never comes to a dead stop between
+two adjacent keyframes. The timeline is spring-smoothed once, and every layer
+reads that one value, so the scene has weight and nothing detaches from
+anything else.
+
+**26.6 Scrub it before calling it done.** Screenshot the scene at every few
+hundredths of the timeline, at two widths, then zoom the resting states at
+3x and scan the card's edges numerically. The seams above were all invisible
+at the resting compositions and obvious in between.
+
+**Note on Safari.** Playwright's WebKit, headed or headless, does not
+composite 3D transforms: it fails even the textbook two-face flip card, so
+it cannot be used as a Safari oracle for `preserve-3d` or
+`backface-visibility`. The card is therefore built on the standard pattern
+plus a 1px z-separation, which paints correctly in any engine that
+z-sorts, and Safari is checked by hand.
+
+## 27. Room is measured in scroll, and a turn is a hand, not a hinge
+
+**Date:** 2026-09-08
+**Surface:** the comp-card beat, second pass
+
+**What was wrong.**
+
+> "The first two beats seem to be too fast as you enter from the section
+> prior to comp card. I also want the comp card flipping motion to be more
+> visually appealing."
+
+**27.1 Pace is scroll distance, not easing.** The frames arriving and the
+lead becoming the card had a third of the scroll the flip had. Slowing an
+ease inside the same distance only makes the same rush feel heavier. The
+beat's allotment went from 380vh to 460vh and the opening phases took the
+extra; nothing in the hero's own timeline moved. When a beat feels rushed,
+give it scroll.
+
+**27.2 The arrival does not start from rest.** With the frames off the stage
+and the opening slowed, there was an empty quarter viewport between her
+boots leaving and their tops arriving. The frames are thrown up by the same
+scroll that sent her out, so their arrival eases out, not in and out: in
+fast, settling slow, and already crossing her exit.
+
+**27.3 A turn is a hand, not a hinge.** A rotation on its own, however well
+eased, reads as a texture swap. The card is lifted toward you before it
+turns, rises and grows to an apex at edge-on, tips back a few degrees as it
+goes, darkens as its face turns away from the light, and is set down again.
+The turn back does the same, smaller, as it is set down in the row.
+
+**27.4 Edge-on is not empty.** A card with no thickness is a blank stage at
+ninety degrees, and a scrub can park there. The card has three pixels of
+edge, flush between the faces and dimmer than they are, so the apex is a
+paper edge in shadow rather than nothing. Flush is the whole rule: an edge
+that reaches past a face is the hairline of §26 again.
+
+## 28. A count is not a claim, and the copy and the motion are one design
+
+**Date:** 2026-09-08
+**Surface:** the comp-card beat, third pass (story, copy, choreography)
+
+**What was wrong.**
+
+> "'One book. Nine directions.' I don't like this. 'Nine directions' makes
+> the product sound artificially limited by the number of examples we're
+> showing. Rewrite this from the underlying product idea."
+> "'Ready for the room.' weak/meh. Reconsider what this moment should
+> actually communicate."
+> "'A real front. A real back.' I like the idea and wording. I don't like
+> the current two-line treatment or placement. Explore a stronger
+> composition and use motion/typography to emphasize the front/back idea."
+> "Don't derive the marketing story from the current landing-page copy."
+> "The copy and animation shouldn't feel like two systems layered on top of
+> each other. Design them together."
+
+**28.1 A real number is not automatically the idea.** Nine is the shipped
+catalog count and it was true, and it still read as a limit, because the
+row shows four. The product idea is not the size of the catalog; it is
+that the same book and the same record, composed again, are a different
+card, and that "New direction" is the product's own gesture for it. The
+line is now "Same book. New direction." A number belongs in copy when the
+number is the point.
+
+**28.2 The strategy is the source, the landing page is inventory.** Read
+`pholio-app/docs/pholio-strategic-analysis-2026-08.md`, the editions spec,
+and the engine before writing a word. The close is the strategy's own
+sentence, blemish last: "Won't get you signed. Gets you considered." It
+refuses the outcome nobody legitimate can promise and names the mechanism.
+"Ready for the room" said neither.
+
+**28.3 Type rides the object.** "A real front." stands beside the card on
+the side the front turns away toward and leaves with it; "A real back."
+arrives from the side the back turns in from. The words change over
+because the card does. A caption that sits still under a moving object is
+two systems.
+
+**28.4 The support line is for what the artifact cannot show at this
+size.** The back is a document and its stats are unreadable at card
+scale, so one sentence says what is on it and in what order, and what is
+not ("Nothing invented"). One sentence, at most, and only where the object
+cannot carry the fact itself.
+
+**28.5 The last frame is the memory.** The close is the card handed
+forward, held a little off square, larger than at any other point, with
+the two-sided fact and its two real-world uses beside it (sent with an
+application; printed and left at the casting). Not a display; a hand-over.
+
+**28.6 The triad on the first beat is face, figure, length.** The middle
+frame is the studio close-up, monochrome as shot. It is also the frame
+that visibly does not lead: a front is a body shot with the name set into
+it. The frame it replaced wore the hero sequence's wardrobe and read as
+the hero again.
+
+## 29. Headlines only; the slide, not the turn; the close is the two uses
+
+**Date:** 2026-09-08
+**Surface:** the comp-card beat, fourth pass
+
+> "Also no subtitle text, just headlines like before. I also don't like the
+> new same book new direction card motion, the previous one was good. Please
+> also rewrite 'wont get you signed gets you considered'."
+
+**29.1 No support lines in this beat.** §28.4 is superseded: the four
+captions are headlines alone, one gold word each, and the artifact carries
+every fact. The support sentence under the back and under the close was
+removed. Where the back's stats are unreadable at card scale, that is the
+size's problem, not a reason to add a sentence.
+
+**29.2 The deal is a slide.** The directions come out from under the lead
+on a short stagger, top of the deck first, flat. The laid-down turn (each
+card leaving turned toward the deck) was tried and read worse. Physical
+does not mean more motion; the simplest motion that is still an object is
+the one to keep.
+
+**29.3 The close is the two uses.** "Sent to the agency. Left at the
+casting." Two lines, one use each, both shipped: the card travels inside
+the application to the agency the talent chose, and it is the thing left
+with the client at a casting. The strategy's "gets you considered" line was
+tried as the close and rejected here; it belongs to prose, not to the beat.

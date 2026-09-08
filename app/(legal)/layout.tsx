@@ -13,9 +13,9 @@ import ThemeColor from "@/components/ThemeColor";
  */
 export default function LegalLayout({ children }: { children: ReactNode }) {
   return (
-    <main className="min-h-mobile-screen bg-cream">
+    <div className="min-h-mobile-screen bg-cream">
       <ThemeColor color="#FAF7F2" />
       {children}
-    </main>
+    </div>
   );
 }
