@@ -1,0 +1,75 @@
+<meta charset="utf-8" />
+<title>The Night Edition</title>
+<style>
+  {{FONT_FACES}}
+  :root { --field: {{FIELD}}; --ink: {{INK}}; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: {{PAGE_W}}px; height: {{PAGE_H}}px; background: var(--field); }
+  .card { position: relative; width: {{PAGE_W}}px; height: {{PAGE_H}}px; background: var(--field); overflow: hidden; }
+  .cell { position: absolute; overflow: hidden; }
+  .cell img { position: absolute; display: block; }
+  /* One plate, one name. The name is set by ink in the foot band. */
+  svg.type { position: absolute; inset: 0; width: {{PAGE_W}}px; height: {{PAGE_H}}px; overflow: visible; }
+  text { font-family: "CardDisplay", Georgia, serif; font-weight: 400; fill: var(--ink); letter-spacing: {{TRACKING}}em; }
+</style>
+<div class="card">
+  {{PLATE}}
+  <svg class="type" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+<script>
+  const W = {{PAGE_W}}, H = {{PAGE_H}};
+  const PLATE = {{PLATE_JSON}};   // x, y, w, h
+  const GIVEN = {{GIVEN_JSON}}, FAMILY = {{FAMILY_JSON}};
+  const TRACKING = {{TRACKING}};
+  const SIZE_MAX = {{SIZE_MAX}}, SIZE_MIN = {{SIZE_MIN}};
+  const LEADING = {{LEADING}};
+
+  window.__ready = (async () => {
+    await document.fonts.ready;
+    await document.fonts.load(`400 100px CardDisplay`);
+    const svg = document.querySelector("svg.type");
+    const ctx = document.createElement("canvas").getContext("2d");
+    const ink = (text, size) => {
+      ctx.font = `400 ${size}px CardDisplay`;
+      ctx.letterSpacing = `${TRACKING}em`;
+      const m = ctx.measureText(text);
+      // The trailing letter-space after the last glyph is not ink.
+      const left = -m.actualBoundingBoxLeft;
+      return { left, width: m.actualBoundingBoxRight - left, ascent: m.actualBoundingBoxAscent, descent: m.actualBoundingBoxDescent };
+    };
+    const fit = (text) => Math.min(SIZE_MAX, (100 * PLATE.w) / ink(text, 100).width);
+
+    // One line if it spans no more than the plate at a legible size; else
+    // the given name over the family name, the longer line setting the size.
+    const full = [GIVEN, FAMILY].filter(Boolean).join(" ");
+    let lines = [full];
+    let size = fit(full);
+    if (size < SIZE_MIN && GIVEN && FAMILY) {
+      lines = [GIVEN, FAMILY];
+      size = Math.min(SIZE_MAX, ...lines.map(fit));
+    }
+    size = Math.max(size, SIZE_MIN * 0.75);
+
+    // Centre the ink block on the foot band's own centre, each line centred
+    // on the plate's axis by its ink, not its advance box.
+    const bandTop = PLATE.y + PLATE.h, bandCentre = bandTop + (H - bandTop) / 2;
+    const metrics = lines.map((t) => ink(t, size));
+    const lineStep = size * LEADING;
+    const blockHeight = metrics[0].ascent + (lines.length - 1) * lineStep + metrics[metrics.length - 1].descent;
+    let baseline = bandCentre - blockHeight / 2 + metrics[0].ascent;
+    const axis = PLATE.x + PLATE.w / 2;
+    const placed = [];
+    lines.forEach((t, i) => {
+      const m = metrics[i];
+      const el = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      el.setAttribute("font-size", size);
+      el.setAttribute("x", axis - m.width / 2 - m.left);
+      el.setAttribute("y", baseline);
+      el.textContent = t;
+      svg.appendChild(el);
+      placed.push({ text: t, size, baseline });
+      baseline += lineStep;
+    });
+    window.__layout = { words: placed.map((p) => ({ text: p.text, size: p.size, luma: 0, fill: "light" })), lines: lines.length, size };
+  })();
+</script>

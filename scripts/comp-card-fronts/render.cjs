@@ -215,6 +215,57 @@ const COVER_FIXTURES = [
     photo: { file: "01-walking-columns.jpg", zoom: 1.2, top: 0.1, left: 0.06 } },
 ];
 
+/* --------------------------------------------------------- the night edition */
+
+const NIGHT = {
+  // The field is the photograph's own shadow tone, lifted just enough to
+  // hold the card's edge against the site's velvet (#050505) and to print
+  // as a rich black. The ink is a warm white, not a pure one, for the same
+  // reason: it belongs to the lamplight in the frame.
+  FIELD: "#121110",
+  INK: "#f2ece2",
+  // The plate keeps the photograph's own proportion at a fixed height,
+  // centred, so a frame is never cropped to fit a window: a 2:3 frame sits
+  // on a uniform 44px margin, a taller frame on wider sides. The foot band
+  // beneath is the name's alone.
+  PLATE_Y: 44,
+  PLATE_H: 660,
+  TRACKING: 0.3,
+  SIZE_MAX: 25,
+  SIZE_MIN: 18,
+  LEADING: 1.5,
+};
+
+async function nightValues({ given, family, photo }) {
+  const ratio = photo.ratio || SRC_RATIO;
+  const h = NIGHT.PLATE_H;
+  const w = h / ratio; // exact, so the frame fills the plate to the pixel
+  const plate = { x: (PAGE_W - w) / 2, y: NIGHT.PLATE_Y, w, h };
+  return {
+    ...NIGHT,
+    PLATE_JSON: JSON.stringify(plate),
+    GIVEN_JSON: JSON.stringify(String(given || "").toUpperCase()),
+    FAMILY_JSON: JSON.stringify(String(family || "").toUpperCase()),
+    PLATE: cell({ ...plate, ...photo }),
+  };
+}
+
+/** Fixtures for `--night-tests`: invented names, other frames. */
+const NIGHT_FIXTURES = [
+  { id: "long-name", given: "Aleksandra", family: "Wiśniewska-Nowakowska",
+    photo: { dir: "site-source", file: "ola-night-street.jpg", ratio: 1640 / 970, zoom: 1.0 } },
+  { id: "short", given: "Mia", family: "Li",
+    photo: { dir: "site-source", file: "mara-voss-red-hero.jpg", zoom: 1.0 } },
+  { id: "diacritics", given: "Zoë", family: "Østergaard",
+    photo: { file: "05-editorial-standing.jpg", zoom: 1.0 } },
+  { id: "single-name", given: "", family: "Szkolda",
+    photo: { file: "07-studio-closeup-bw.jpg", zoom: 1.0 } },
+  { id: "high-key", given: "Ola", family: "Szkolda",
+    photo: { file: "02-full-body-columns.jpg", zoom: 1.0 } },
+  { id: "walking", given: "Ola", family: "Szkolda",
+    photo: { file: "01-walking-columns.jpg", zoom: 1.0 } },
+];
+
 /* ------------------------------------------------------------------- cards */
 
 /**
@@ -256,54 +307,30 @@ const CARDS = {
   },
 
   /*
-   * THE STRIP — the working commercial card. Warm paper, a full-bleed colour
-   * hero of the frame with the clearest face, a clean-modern name band, and
-   * a three-frame strip along the foot that does the back's job on the
-   * front: beauty, full length, detail. Rhythm, not a single image.
+   * THE NIGHT EDITION — dark paper, reversed type. The photograph is a
+   * 2:3 plate on a lifted warm black, and the name is set once beneath it
+   * in a hairline serif, tracked wide, centred on the plate's axis by ink.
+   * The one dark card in the row: cream, photograph, black, cream. Nothing
+   * else is on the front.
    */
-  strip: {
-    out: "ola-strip-composed.png",
-    template: "strip.html",
-    fonts: [
-      fontFace("CardDisplay", "manrope-700.ttf", 700),
-      fontFace("CardBody", "manrope-500.ttf", 500),
-      fontFace("CardWordmark", "noto-serif-display-400.ttf", 400),
-    ],
-    values() {
-      const HERO_H = 516;
-      const BAND_H = 72;
-      const M = 24;
-      const GUTTER = 8;
-      const STRIP_Y = HERO_H + BAND_H;
-      const STRIP_W = (PAGE_W - M * 2 - GUTTER * 2) / 3;
-      const STRIP_H = 200;
-      const stripX = (i) => M + i * (STRIP_W + GUTTER);
-      return {
-        HERO_H,
-        BAND_H,
-        M,
-        NAME_SIZE: 27,
-        MARK_SIZE: 12,
-        HERO: cell({
-          x: 0,
-          y: 0,
-          w: PAGE_W,
-          h: HERO_H,
-          file: "05-editorial-standing.jpg",
+  night: {
+    out: "ola-night-edition-composed.png",
+    template: "night-edition.html",
+    fonts: [fontFace("CardDisplay", "italiana-400.ttf", 400)],
+    values: () =>
+      nightValues({
+        given: TALENT.first_name,
+        family: TALENT.last_name,
+        photo: {
+          // The night street frame, 970x1640, whole: crown and boots both
+          // inside the plate, the wet floor beneath her.
+          dir: "site-source",
+          file: "ola-night-street.jpg",
+          ratio: 1640 / 970,
           zoom: 1.0,
-          top: 0.045,
-          left: 0.0,
-        }),
-        STRIP: [
-          // Beauty, native B&W: crown breaks the top, eye line high.
-          cell({ x: stripX(0), y: STRIP_Y, w: STRIP_W, h: STRIP_H, file: "07-studio-closeup-bw.jpg", zoom: 1.0, top: 0.06 }),
-          // Full length in motion: feet on the floor of the cell.
-          cell({ x: stripX(1), y: STRIP_Y, w: STRIP_W, h: STRIP_H, file: "01-walking-columns.jpg", zoom: 1.0, top: 0.07 }),
-          // Detail: hands, jewellery, the knit.
-          cell({ x: stripX(2), y: STRIP_Y, w: STRIP_W, h: STRIP_H, file: "06-close-jewelry.jpg", zoom: 1.0, top: 0.05 }),
-        ].join("\n    "),
-      };
-    },
+        },
+      }),
+    ready: "__ready",
   },
 
   /*
@@ -397,10 +424,23 @@ async function coverTests(browser) {
   }
 }
 
+async function nightTests(browser) {
+  const dir = path.join(WORK_DIR, "night-tests");
+  fs.mkdirSync(dir, { recursive: true });
+  const night = CARDS.night;
+  for (const fx of NIGHT_FIXTURES) {
+    const card = { ...night, values: () => nightValues({ given: fx.given, family: fx.family, photo: fx.photo }) };
+    const out = path.join(dir, `${fx.id}.png`);
+    const layout = await renderCard(browser, card, path.join(dir, `${fx.id}.html`), out);
+    console.log(`${path.relative(SITE, out)}  ${layout.lines} line(s) at ${layout.size.toFixed(1)}px`);
+  }
+}
+
 async function main() {
   const wanted = process.argv.slice(2);
   const tests = wanted.includes("--cover-tests");
-  const ids = tests ? [] : wanted.length ? wanted : Object.keys(CARDS);
+  const nightTestsWanted = wanted.includes("--night-tests");
+  const ids = tests || nightTestsWanted ? [] : wanted.length ? wanted : Object.keys(CARDS);
   for (const id of ids) if (!CARDS[id]) throw new Error(`unknown card ${id}`);
 
   fs.mkdirSync(WORK_DIR, { recursive: true });
@@ -411,6 +451,7 @@ async function main() {
   });
   try {
     if (tests) await coverTests(browser);
+    if (nightTestsWanted) await nightTests(browser);
     for (const id of ids) {
       const card = CARDS[id];
       const htmlPath = path.join(WORK_DIR, `comp-card-front-${id}.html`);

@@ -1259,12 +1259,12 @@ same talent record as the back), and each one varies on every axis at once:
 | Card | Structure | Field | Photograph | Voice |
 | --- | --- | --- | --- | --- |
 | The Cover Story | the photograph is the whole page; the name at trim-to-trim scale set behind the figure | none, the photograph | the walking full-length | Archivo 700, surname across the foot, given name at the head |
-| The Strip | full-bleed hero over a three-frame foot strip | cream | the clearest face, then beauty / full-length / detail | Manrope 700 caps |
+| The Night Edition | the photograph as a plate on dark paper, the name once beneath it | lifted warm black | the night street frame | Italiana, hairline caps tracked wide |
 | The Diptych | two tall panels on a hinge rule | cream | studio beauty in B&W beside the full length in colour | Playfair Display caps, centred |
 
 Four cards, four photographs leading, four typefaces, four structures. The labels are the shipped catalog's own (`editions.js`: The
-Grid is `swiss-modernist`, whose fields allow dark; The Strip is `the-strip`;
-The Diptych is `duet`), so §21's rule still holds: a label names the axis the
+Grid is `swiss-modernist`, whose fields allow dark; The Night Edition is
+`ink-noir`, without its gold; The Diptych is `duet`), so §21's rule still holds: a label names the axis the
 artwork actually varies on.
 
 **The rule.** When a row claims *directions*, every card must differ from
@@ -1321,3 +1321,20 @@ name into "SZKO"; and black type on the white columns, which vanished
 where the columns gave way to windows. The rule for a full-bleed front:
 the type has to *do* something with the photograph (occlusion, scale
 against the trims, contrast taken from the picture), or it is a caption.
+
+**25.6 A dark card must hold its edge on the stage.** The Night Edition
+replaced The Strip after sketches of the Cutout, the Night Edition and a
+Lookbook were compared: the inset plate on black was the most finished
+thing on the sheet and the only dark card, which gives the row a rhythm
+(cream, photograph, black, cream). Two things decided its execution. The
+site's stage is `#050505`, so a pure-black card disappears into it and its
+plate floats alone; the field is the photograph's own shadow tone lifted
+to `#121110`, which holds the edge on screen and still prints as a rich
+black. And a fixed 2:3 plate would have cut either the crown or the boots
+of a frame taller than 2:3, so the plate keeps the photograph's proportion
+at a fixed height and the margins absorb the difference; a front never
+crops a foot. The name is Italiana at the foot, centred on the plate's
+axis by ink, one line while it spans the plate at a legible size and two
+lines (given over family) otherwise. The catalog's `ink-noir` names gold
+as its accent; there is none here, because there is no brand on a front.
+

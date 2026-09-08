@@ -77,11 +77,12 @@ export const CARD_VARIANTS: CardVariant[] = [
     src: "/generated/comp-card/ola-cover-story-composed.png",
     edition: "The Cover Story",
   },
-  // The working commercial card: a full-bleed colour hero over a
-  // three-frame strip along the foot.
+  // Dark paper, reversed type: the photograph as a plate on a lifted warm
+  // black, the name once beneath it in a hairline serif. The row's one
+  // dark card.
   {
-    src: "/generated/comp-card/ola-strip-composed.png",
-    edition: "The Strip",
+    src: "/generated/comp-card/ola-night-edition-composed.png",
+    edition: "The Night Edition",
   },
   // Two frames on a hinge: the studio beauty in black and white beside the
   // full length in colour, an editorial serif name centred beneath.
