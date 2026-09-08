@@ -1259,7 +1259,7 @@ same talent record as the back), and each one varies on every axis at once:
 | Card | Structure | Field | Photograph | Voice |
 | --- | --- | --- | --- | --- |
 | The Cover Story | the photograph is the whole page; the name at trim-to-trim scale set behind the figure | none, the photograph | the walking full-length | Archivo 700, surname across the foot, given name at the head |
-| The Night Edition | the photograph as a plate on dark paper, the name once beneath it | lifted warm black | the night street frame | Italiana, hairline caps tracked wide |
+| The Night Edition | the photograph as a plate on dark paper, the name once beneath it | lifted warm black | a colour beauty crop of the standing frame | Italiana, hairline caps tracked wide |
 | The Diptych | two tall panels on a hinge rule | cream | studio beauty in B&W beside the full length in colour | Playfair Display caps, centred |
 
 Four cards, four photographs leading, four typefaces, four structures. The labels are the shipped catalog's own (`editions.js`: The
@@ -1322,11 +1322,16 @@ where the columns gave way to windows. The rule for a full-bleed front:
 the type has to *do* something with the photograph (occlusion, scale
 against the trims, contrast taken from the picture), or it is a caption.
 
-**25.6 A dark card must hold its edge on the stage.** The Night Edition
-replaced The Strip after sketches of the Cutout, the Night Edition and a
-Lookbook were compared: the inset plate on black was the most finished
-thing on the sheet and the only dark card, which gives the row a rhythm
-(cream, photograph, black, cream). Two things decided its execution. The
+**25.6 A dark card must hold its edge on the stage, and it needs a
+photograph with presence.** The Night Edition replaced The Strip after
+sketches of the Cutout, the Night Edition and a Lookbook were compared:
+the inset plate on black was the most finished thing on the sheet and the
+only dark card, which gives the row a rhythm (cream, photograph, black,
+cream). Its first frame, the night street, was chosen for its subject and
+made a quiet card; the plate is now a colour beauty crop of the standing
+frame, the one face-led card in the row. The studio face was the stronger
+plate but is the Diptych's, and a photograph repeated across the row is a
+worse fault than any single card. Two things decided its execution. The
 site's stage is `#050505`, so a pure-black card disappears into it and its
 plate floats alone; the field is the photograph's own shadow tone lifted
 to `#121110`, which holds the edge on screen and still prints as a rich

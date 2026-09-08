@@ -254,6 +254,8 @@ async function nightValues({ given, family, photo }) {
 const NIGHT_FIXTURES = [
   { id: "long-name", given: "Aleksandra", family: "Wiśniewska-Nowakowska",
     photo: { dir: "site-source", file: "ola-night-street.jpg", ratio: 1640 / 970, zoom: 1.0 } },
+  { id: "beauty-bw", given: "Ola", family: "Szkolda",
+    photo: { file: "07-studio-closeup-bw.jpg", zoom: 1.18, top: 0.06, left: 0.09 } },
   { id: "short", given: "Mia", family: "Li",
     photo: { dir: "site-source", file: "mara-voss-red-hero.jpg", zoom: 1.0 } },
   { id: "diacritics", given: "Zoë", family: "Østergaard",
@@ -322,12 +324,14 @@ const CARDS = {
         given: TALENT.first_name,
         family: TALENT.last_name,
         photo: {
-          // The night street frame, 970x1640, whole: crown and boots both
-          // inside the plate, the wet floor beneath her.
-          dir: "site-source",
-          file: "ola-night-street.jpg",
-          ratio: 1640 / 970,
-          zoom: 1.0,
+          // A colour beauty crop of the standing frame: eyes near a third of
+          // the plate, hair and shoulders whole, cut at the waist. The one
+          // face-led card in the row, and the plate's brightness is what
+          // makes the dark paper read.
+          file: "05-editorial-standing.jpg",
+          zoom: 1.5,
+          top: 0.025,
+          left: 0.19,
         },
       }),
     ready: "__ready",
