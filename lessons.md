@@ -1771,3 +1771,25 @@ the preference on and counting the sections, not by reading the code.
 
 > "we have a dedicated 'TALENT' AND 'AGENCIES' page to explain features. This
 > is about pholio as a platform/company."
+
+## 32. Recover means the previous markup, not a new composition with the same name
+
+**Date:** 2026-09-09
+**Surface:** `/about` The Collective (`components/about/Collective.tsx`)
+
+**What was built.** The §31.3 pass kept the idea of a portrait triptych and then
+redesigned it: left-aligned headline, 3:4 plates, stacked names, role under the
+name, per-column parallax, biographies always on the page. It was a new section
+that cited the old one.
+
+**What was wrong.**
+
+> "restore the previous "the collective section" in the about us page."
+
+**The rule.** When the owner says restore a section, check out the previous
+implementation and put that composition back. The recovered Collective is the
+a06016d block: centered header, 4:5 plates, `shadow-xl`, the gold wash that
+lifts on hover, grayscale returning to colour with a slow push, the gold role
+label above the name, the given name and gold-italic family on one line. Copy
+that was retired stays retired. The one change that is not the old file: on a
+narrow stage the biographies are already open, because a phone has no hover.

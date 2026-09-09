@@ -86,13 +86,27 @@ export const STAGE_VH = SCRUB_VH + 100;
 // the room they needed was measured in scroll, not in easing.
 export const CARD_VH = 520;
 
-export const HOME_STAGE_VH = STAGE_VH + CARD_VH;
+/**
+ * The Studio+ beat's scroll: the break where the stage changes worlds, from
+ * velvet to light, then Zofia's site entered and walked by this page's own
+ * scroll, then the step back to the close. Long on purpose: the beat is
+ * paced for air after the dense card sequence. Appended to the same stage
+ * for the same reason as the card: one pinned container, so the word can
+ * rise over the card's close rather than arriving after an unpin. See
+ * components/studio-site/motion.ts.
+ */
+export const SITE_VH = 1400;
+
+export const HOME_STAGE_VH = STAGE_VH + CARD_VH + SITE_VH;
 
 /**
  * Where the hero's timeline ends inside the shared stage. The hero keeps
  * exactly the scroll distance it had, so every frame cue above is unchanged.
  */
 export const HERO_FRACTION = SCRUB_VH / (HOME_STAGE_VH - 100);
+
+/** Where the comp-card beat ends and the Studio+ beat begins. */
+export const CARD_FRACTION = (SCRUB_VH + CARD_VH) / (HOME_STAGE_VH - 100);
 
 const HERO_END_P = BEAT_VH.hero / SCRUB_VH;
 const TRANSITION_END_P = (BEAT_VH.hero + BEAT_VH.transition) / SCRUB_VH;

@@ -91,12 +91,30 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      /**
+       * Zofia's site is framed by the home stage, same origin only. Later
+       * rules override earlier ones for the same key, so this narrows the
+       * sitewide DENY for exactly this path and nothing else. The document
+       * itself holds no credentials and never calls /api.
+       */
+      {
+        source: "/zofia/:path*",
+        headers: [{ key: "X-Frame-Options", value: "SAMEORIGIN" }],
+      },
+      {
+        source: "/zofia",
+        headers: [{ key: "X-Frame-Options", value: "SAMEORIGIN" }],
+      },
     ];
   },
 
   async rewrites() {
     return {
-      beforeFiles: [],
+      beforeFiles: [
+        // Zofia's site: the Studio+ prototype, a static document under
+        // public/zofia. `/zofia` is its address; the home stage frames it.
+        { source: "/zofia", destination: "/zofia/index.html" },
+      ],
       afterFiles: [
         {
           source: "/api/:path*",

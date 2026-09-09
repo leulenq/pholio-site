@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zofia Nowicka — fashion model, Warsaw</title>
+<meta name="description" content="Zofia Nowicka is a fashion model based in Warsaw, represented in Milan and Paris. Book, tearsheets, digitals and card.">
+<meta name="theme-color" content="#F2EFE9">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Noto+Serif+Display:wght@400&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────────────
+   ZOFIA NOWICKA — one page.
+   Paper, ink, one red pencil. Bodoni for the voice, a mono for the facts.
+   Nothing here belongs to Pholio's visual system except the closing mark.
+   ───────────────────────────────────────────────────────────────────── */
+:root{
+  --paper:#F2EFE9;
+  --ink:#171613;
+  --mute:#7B766E;
+  --line:rgba(23,22,19,.16);
+  --mark:#D4361A;
+  --bone:#F2EFE9;
+  --m:clamp(20px,4vw,64px);
+  --serif:"Bodoni Moda","Bodoni 72",Didot,"Didot LT STD",Georgia,serif;
+  --mono:"DM Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+html{background:var(--paper);color:var(--ink);font-family:var(--serif);font-optical-sizing:auto;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+html.lenis{height:auto}
+/* Embedded in the Pholio home stage: the parent drives the scroll, so no bar. */
+html.embed{scrollbar-width:none}
+html.embed::-webkit-scrollbar{display:none}
+.lenis.lenis-smooth{scroll-behavior:auto}
+body{margin:0;overflow-x:clip;min-height:100vh}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+h1,h2,p,figure,ol,dl,dd{margin:0}
+ol{padding:0;list-style:none}
+::selection{background:var(--ink);color:var(--bone)}
+
+.mono{font-family:var(--mono);font-size:11.5px;line-height:1.5;letter-spacing:.01em;font-weight:400}
+
+/* ── The bar. Fixed, and blends so it reads on paper and on the photographs. ── */
+.bar{position:fixed;inset:0 0 auto 0;z-index:40;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  gap:2vw;padding:18px var(--m);font-family:var(--mono);font-size:11.5px;line-height:1.4;
+  color:var(--bone);mix-blend-mode:difference;pointer-events:none}
+.bar>*{pointer-events:auto}
+.bar-name{letter-spacing:.02em}
+.bar-nav{display:flex;gap:2.2vw}
+.bar-nav a{position:relative;padding:2px 0}
+.bar-nav a::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:currentColor;
+  transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.bar-nav a:hover::after{transform:scaleX(1)}
+.bar-right{display:flex;justify-content:flex-end;gap:2.4vw;white-space:nowrap}
+.avail i{display:inline-block;width:6px;height:6px;margin-right:8px;vertical-align:1px;visibility:hidden}
+.dot{position:fixed;z-index:41;width:6px;height:6px;border-radius:50%;background:var(--mark);pointer-events:none;opacity:0}
+.clock{font-variant-numeric:tabular-nums}
+
+/* ── Hero. The masthead and one frame, layered. ── */
+.hero{position:relative;z-index:1;height:100vh;height:100svh;min-height:600px;background:var(--paper);overflow:hidden}
+/* Everything after the hero is opaque paper, so the covered print never shows through. */
+.statement,.book,.sheets,.digitals,.card,.close,.foot{position:relative;z-index:2}
+.statement,.book,.sheets,.digitals,.card{background:var(--paper)}
+.hero-stage{position:absolute;inset:0}
+.hero{--gap:13vh}
+.mast{position:absolute;left:var(--m);right:var(--m);bottom:calc(var(--m) + 52px);font-weight:400;line-height:.84;
+  letter-spacing:-.015em;font-size:120px}
+.mast-line{display:block;white-space:nowrap;overflow:hidden;padding:.1em 0 .03em;margin:-.1em 0 -.03em}
+.mast-in{display:inline-block;will-change:transform}
+.mast-1{position:relative;z-index:1}
+.mast-2{position:relative;z-index:3;font-style:italic;color:var(--bone);mix-blend-mode:difference;margin-top:calc(var(--gap) - .1em)}
+/* The figure: cut from its photograph, standing on the paper. No frame, no edge. */
+.hero-figure{position:absolute;z-index:2;left:50%;bottom:0;height:92vh;height:92svh;transform:translateX(-38%);transform-origin:50% 100%;will-change:transform}
+.hero-figure-in{height:100%;clip-path:inset(0 0 0 0);will-change:transform}
+.hero-figure img{height:100%;width:auto;max-width:none}
+.hero-side{position:absolute;z-index:4;right:var(--m);top:calc(50% - 4.5em);font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--mute);max-width:26ch;text-align:right}
+.hero-side b{font-weight:500;color:var(--ink)}
+.hero-cap{position:absolute;left:var(--m);right:var(--m);bottom:var(--m);z-index:4;display:grid;grid-template-columns:1fr 1fr;gap:2vw;
+  font-family:var(--mono);font-size:11.5px;line-height:1.5;color:var(--mute)}
+.hero-cap span:nth-child(2){text-align:right}
+.hero-cap b{font-weight:500;color:var(--ink)}
+.hero-cap em{font-style:normal;color:var(--mark)}
+
+/* ── Statement. One sentence with two pictures set inside it. ── */
+.statement{padding:22vh var(--m) 16vh;max-width:1800px}
+.state{font-size:clamp(30px,4.9vw,86px);line-height:1.06;font-style:italic;font-weight:400;letter-spacing:-.01em;text-wrap:balance}
+.inl{display:inline-block;vertical-align:-.16em;height:1.04em;aspect-ratio:3/4;overflow:hidden;margin:0 .06em;
+  background:var(--ink)}
+.inl img{width:100%;height:100%;object-fit:cover;transform:scale(1.04)}
+.inl-in{display:block;height:100%;width:100%;transform-origin:left;will-change:transform}
+.state-meta{margin-top:10vh;display:grid;grid-template-columns:1fr 1fr;gap:4vw;max-width:1100px;font-family:var(--mono);font-size:11.5px;
+  line-height:1.65;color:var(--mute)}
+.state-meta b{font-weight:500;color:var(--ink);display:block;margin-bottom:.6em}
+
+/* ── The Book. Vertical scroll pushes a horizontal track. ── */
+.book{position:relative;height:100vh;height:100svh}
+.book-pin{position:relative;height:100%;overflow:hidden}
+.book.is-native .book-pin{overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.book-track{display:flex;align-items:center;gap:7vw;height:100%;width:max-content;padding:0 var(--m);will-change:transform}
+.book-title{flex:none;width:min(36vw,560px);padding-right:2vw;align-self:center}
+.book-title h2{font-size:clamp(64px,9vw,170px);line-height:.9;font-weight:400;letter-spacing:-.02em}
+.book-title em{font-style:italic;display:block;padding-left:.28em}
+.book-title p{margin-top:2.6em;font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--mute);max-width:32ch}
+.fr{flex:none;position:relative;scroll-snap-align:center}
+.fr-in{position:absolute;inset:0;overflow:hidden;background:#dcd8d0}
+.fr-in img{position:absolute;top:-4%;left:-7%;width:114%;max-width:none;height:108%;object-fit:cover;will-change:transform}
+.fr figcaption{position:absolute;left:0;top:100%;margin-top:14px;font-family:var(--mono);font-size:11.5px;line-height:1.5;color:var(--mute);white-space:nowrap}
+.fr figcaption b{font-weight:500;color:var(--ink)}
+.fr-1{height:78vh;aspect-ratio:3636/4491}
+.fr-2{height:60vh;aspect-ratio:4480/6720;align-self:flex-start;margin-top:12vh}
+.fr-3{height:64vh;aspect-ratio:16/10;align-self:flex-end;margin-bottom:12vh}
+.fr-4{height:84vh;aspect-ratio:4000/6000}
+.fr-5{height:56vh;aspect-ratio:3744/5240;align-self:flex-start;margin-top:14vh}
+.fr-6{height:80vh;aspect-ratio:3164/4430}
+.fr-7{height:62vh;aspect-ratio:2624/3674;align-self:flex-end;margin-bottom:10vh}
+.fr-8{height:84vh;aspect-ratio:5504/6880}
+.fr-9{height:90vh;aspect-ratio:5668/8503}
+.fr-10{height:58vh;aspect-ratio:6054/7568;align-self:flex-start;margin-top:12vh}
+.fr-11{height:76vh;aspect-ratio:3008/4512;margin-right:14vw}
+.book-count{position:absolute;right:var(--m);bottom:22px;z-index:5;display:flex;align-items:center;gap:14px;
+  font-family:var(--mono);font-size:11.5px;font-variant-numeric:tabular-nums;color:var(--mute)}
+.book-count #bc-cur{color:var(--mark);font-weight:500}
+.book-bar{position:relative;width:120px;height:1px;background:var(--line);display:block}
+.book-bar i{position:absolute;left:0;top:0;height:100%;width:100%;background:var(--ink);transform:scaleX(0);transform-origin:left}
+
+/* ── Tearsheets. A list; the pictures follow the hand. ── */
+.sheets{padding:20vh var(--m) 14vh}
+.sec-head{display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:4vw;margin-bottom:5vh}
+.sec-head h2{font-size:clamp(48px,7vw,128px);line-height:.9;font-weight:400;letter-spacing:-.02em}
+.sec-head p{font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--mute);max-width:36ch;justify-self:end;text-align:right}
+.rows{border-bottom:1px solid var(--line)}
+.row{display:grid;grid-template-columns:4ch 1fr auto 6ch;gap:3vw;align-items:baseline;padding:2.4vh 0;border-top:1px solid var(--line);cursor:default}
+.row-n{font-family:var(--mono);font-size:11.5px;color:var(--mute);transition:color .3s}
+.row-t{font-size:clamp(28px,3.6vw,64px);line-height:1;font-weight:400;letter-spacing:-.015em;transition:transform .6s var(--ease)}
+.row-k{font-family:var(--mono);font-size:11.5px;color:var(--mute)}
+.row-y{font-family:var(--mono);font-size:11.5px;text-align:right;font-variant-numeric:tabular-nums}
+.row-img{display:none}
+@media (hover:hover) and (pointer:fine){
+  .row:hover .row-t{transform:translateX(1.4vw)}
+  .row:hover .row-n{color:var(--mark)}
+}
+.peek{position:fixed;left:0;top:0;z-index:30;width:clamp(180px,17vw,320px);aspect-ratio:3/4;pointer-events:none;
+  opacity:0;transform:translate(-50%,-50%) scale(.92);transition:opacity .35s var(--ease),transform .5s var(--ease)}
+.peek.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.peek img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s}
+.peek img.on{opacity:1}
+
+/* ── Digitals. The honest frames. A strip that drifts as it passes. ── */
+.digitals{padding:12vh 0 10vh;overflow:hidden}
+.digitals .sec-head{padding:0 var(--m)}
+.dig-wrap{padding:0 var(--m)}
+.dig-track{display:flex;gap:1.6vw;width:max-content;will-change:transform}
+.dig{flex:none;width:clamp(150px,21vw,360px);aspect-ratio:2005/3024;position:relative;background:#e5e1da}
+.dig img{width:100%;height:100%;object-fit:cover}
+.dig figcaption{position:absolute;left:0;top:100%;margin-top:12px;font-family:var(--mono);font-size:11.5px;color:var(--mute)}
+.dig figcaption b{font-weight:500;color:var(--ink);margin-right:1em}
+
+/* ── The Card. ── */
+.card{display:grid;grid-template-columns:5fr 7fr;gap:6vw;padding:18vh var(--m) 16vh;align-items:start}
+.card-photo{position:sticky;top:12vh;aspect-ratio:2716/4069;background:#111}
+.card-photo img{width:100%;height:100%;object-fit:cover}
+.card-data h2{font-size:clamp(48px,7vw,128px);line-height:.9;font-weight:400;letter-spacing:-.02em;margin-bottom:6vh}
+.card-data dl{border-bottom:1px solid var(--line)}
+.card-data dl>div{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:2vw;padding:1.6vh 0;border-top:1px solid var(--line)}
+.card-data dt{font-family:var(--mono);font-size:11.5px;color:var(--mute)}
+.card-data dd{font-size:clamp(28px,3.2vw,56px);line-height:1;letter-spacing:-.01em;font-variant-numeric:tabular-nums;text-align:right}
+.card-data dd small{font-family:var(--mono);font-size:11.5px;color:var(--mute);margin-left:.5em;letter-spacing:0}
+.card-links{margin-top:5vh;display:flex;flex-wrap:wrap;gap:1.4em 3em;font-family:var(--mono);font-size:11.5px}
+.card-links a{position:relative;padding-bottom:3px;border-bottom:1px solid var(--ink);transition:color .3s,border-color .3s}
+.card-links a:hover{color:var(--mark);border-color:var(--mark)}
+.card-note{margin-top:3vh;font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--mute);max-width:44ch}
+
+/* ── Close. The wide frame, and where to write. ── */
+.close{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;background:#1a1917;color:var(--bone)}
+.close-photo{position:absolute;inset:-12% 0 0 0;will-change:transform}
+.close-photo img{width:100%;height:100%;object-fit:cover;object-position:62% 30%}
+.close-body{position:absolute;inset:0;padding:var(--m);display:flex;flex-direction:column;justify-content:flex-end}
+.close-contact{font-family:var(--mono);font-size:11.5px;line-height:1.7;display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:5vw;margin-bottom:6vh}
+.close-contact b{display:block;font-weight:500;margin-bottom:.4em}
+.close-contact a{border-bottom:1px solid rgba(242,239,233,.45);padding-bottom:1px;transition:border-color .3s}
+.close-contact a:hover{border-color:var(--bone)}
+.close-name{font-size:clamp(90px,19vw,360px);line-height:1;font-style:italic;font-weight:400;letter-spacing:-.02em;margin:0 0 -.04em -.02em;will-change:transform}
+.foot{display:grid;grid-template-columns:1fr auto 1fr;gap:2vw;padding:22px var(--m);font-family:var(--mono);font-size:11px;color:var(--mute);
+  background:var(--paper)}
+.foot span:nth-child(2){text-align:center}
+.foot span:nth-child(3){text-align:right}
+.foot a{border-bottom:1px solid var(--line)}
+.foot-mark{
+  font-family:"Noto Serif Display",Georgia,serif;font-weight:400;font-size:13px;letter-spacing:.2em;
+  margin-right:-.2em;color:#A8894E;line-height:1;display:inline-block;vertical-align:-.08em}
+.foot a.foot-mark{border-bottom:none}
+.foot-credit{white-space:nowrap}
+
+/* ── Narrow. The same page told top-to-bottom. ── */
+@media (max-width:899px){
+  .bar{grid-template-columns:1fr auto;padding:16px var(--m);gap:4vw}
+  .bar-nav{gap:16px}
+  .bar-nav a:nth-child(2),.bar-nav a:nth-child(3){display:none}
+  .bar-right,.avail,.dot{display:none}
+  .hero{min-height:0}
+  .hero{--gap:30svh}
+  .hero-figure{left:50%;transform:translateX(-50%);height:86svh}
+  .mast{top:15svh;bottom:auto}
+  .hero-side{display:none}
+  .hero-figure img{-webkit-mask-image:linear-gradient(#000 88%,transparent);mask-image:linear-gradient(#000 88%,transparent)}
+  .hero-cap{mix-blend-mode:difference;color:var(--bone)}
+  .hero-cap b,.hero-cap em{color:var(--bone)}
+  .statement{padding:16vh var(--m) 10vh}
+  .state-meta{grid-template-columns:1fr;gap:3vh;margin-top:6vh}
+  .book{height:auto}
+  .book-pin{height:auto;overflow:visible}
+  .book-track{flex-direction:column;align-items:flex-start;width:auto;height:auto;gap:11vh;padding:6vh var(--m) 12vh;will-change:auto}
+  .book-title{width:auto;margin-bottom:2vh}
+  .book-title p{margin-top:1.6em}
+  .fr{height:auto !important;margin:0 !important;align-self:auto !important}
+  .fr-in img{top:0;left:0;width:100%;height:100%;transform:none !important}
+  .fr-1{width:86%}.fr-2{width:64%;align-self:flex-end !important}.fr-3{width:100vw;margin-left:calc(-1 * var(--m)) !important}
+  .fr-4{width:78%}.fr-5{width:58%;align-self:flex-end !important}.fr-6{width:88%}.fr-7{width:66%;align-self:flex-end !important}
+  .fr-8{width:82%}.fr-9{width:74%;align-self:center !important}.fr-10{width:60%}.fr-11{width:86%;align-self:flex-end !important}
+  .fr figcaption{white-space:normal}
+  .book-count{display:none}
+  .sheets{padding:12vh var(--m) 10vh}
+  .sec-head{grid-template-columns:1fr;gap:2vh;margin-bottom:3vh}
+  .sec-head p{justify-self:start;text-align:left}
+  .row{grid-template-columns:3ch 1fr 5ch;padding:2vh 0}
+  .row-k{grid-column:2;grid-row:2}
+  .row-y{grid-column:3;grid-row:1}
+  .row-t{font-size:clamp(28px,8vw,44px)}
+  .row.open .row-img{display:block;grid-column:1/-1;margin-top:2vh;width:66%;aspect-ratio:3/4;overflow:hidden}
+  .row-img img{width:100%;height:100%;object-fit:cover}
+  .peek{display:none}
+  .digitals{padding:8vh 0 8vh}
+  .dig-wrap{padding:0;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .dig-wrap::-webkit-scrollbar{display:none}
+  .dig-track{gap:12px;padding:0 var(--m) 40px;will-change:auto;transform:none !important}
+  .dig{width:66vw;scroll-snap-align:start}
+  .card{grid-template-columns:1fr;gap:5vh;padding:10vh var(--m) 12vh}
+  .card-photo{position:static;width:72%}
+  .card-data h2{margin-bottom:3vh}
+  .close{min-height:0;height:100svh}
+  .close-contact{grid-template-columns:1fr 1fr;gap:3vh 6vw;margin-bottom:4vh}
+  .close-contact>div:nth-child(3){grid-column:1/-1}
+  .foot{grid-template-columns:1fr 1fr;padding:18px var(--m)}
+  .foot span:nth-child(2){display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero-figure img{-webkit-mask-image:linear-gradient(#000 86%,transparent);mask-image:linear-gradient(#000 86%,transparent)}
+  .mast-in,.hero-figure,.hero-figure-in,.book-track,.fr-in img,.dig-track,.close-photo,.close-name,.inl-in{will-change:auto}
+  .row-t,.bar-nav a::after,.peek,.peek img{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <a class="bar-name" href="#top">Zofia Nowicka</a>
+  <nav class="bar-nav" aria-label="Sections">
+    <a href="#book">Book</a><a href="#tearsheets">Tearsheets</a><a href="#digitals">Digitals</a><a href="#card">Card</a><a href="#contact">Contact</a>
+  </nav>
+  <div class="bar-right">
+    <span class="avail"><i></i>Available from 6 October</span>
+    <span class="clock" id="clock">Warsaw --:--</span>
+  </div>
+</header>
+
+<i class="dot" id="dot" aria-hidden="true"></i>
+
+<section class="hero" id="top" aria-label="Zofia Nowicka">
+  <div class="hero-stage">
+    <h1 class="mast" id="mast">
+      <span class="mast-line mast-1"><span class="mast-in">Zofia</span></span>
+      <span class="mast-line mast-2"><span class="mast-in">Nowicka</span></span>
+    </h1>
+    <figure class="hero-figure" id="hero-figure">
+      <div class="hero-figure-in" id="hero-figure-in">
+        <img src="/zofia/assets/figure-1400.webp" srcset="/zofia/assets/figure-1400.webp 1400w, /zofia/assets/figure-2200.webp 2200w" sizes="(max-width:899px) 63vh, 67vh" width="1828" height="2499" alt="Zofia in black taffeta, looking down, cut from the photograph and standing on the page" fetchpriority="high" decoding="async">
+      </div>
+    </figure>
+    <p class="hero-side" id="hero-side"><b>Represented in</b><br>Warsaw, Milan and Paris<br><br>Height 178 · Eyes blue<br>Hair blonde</p>
+  </div>
+  <div class="hero-cap" id="hero-cap">
+    <span><b>Fashion model</b><br>Warsaw</span>
+    <span>Frame <em>01</em> of 30<br>Taffeta. Studio, 2024</span>
+  </div>
+</section>
+
+<section class="statement" aria-label="About">
+  <p class="state" id="state">
+    Zofia Nowicka is a fashion model based in
+    <span class="inl"><span class="inl-in"><img src="https://images.unsplash.com/photo-1782400243175-f73497097e43?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1782400243175-f73497097e43?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1782400243175-f73497097e43?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1782400243175-f73497097e43?w=2000&q=80&auto=format&fit=max 2000w" width="4000" height="6000" sizes="8vw" alt="" loading="lazy" decoding="async"></span></span>
+    Warsaw, represented in Milan and Paris, and on the road for most of the year
+    <span class="inl"><span class="inl-in"><img src="https://images.unsplash.com/photo-1779675397130-370aa243cff3?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779675397130-370aa243cff3?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779675397130-370aa243cff3?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779675397130-370aa243cff3?w=2000&q=80&auto=format&fit=max 2000w" width="4287" height="6431" sizes="8vw" alt="" loading="lazy" decoding="async"></span></span>.
+  </p>
+  <div class="state-meta">
+    <p><b>Work</b>Runway, lookbook, campaign and beauty. Working since 2022, in Milan and Paris since 2024. Travels on request. EU passport.</p>
+    <p><b>Representation</b>Północ Models, Warsaw, mother agency.<br>Casa Lume, Milan.<br>Rue Neuve, Paris.</p>
+  </div>
+</section>
+
+<section class="book" id="book" aria-label="The book">
+  <div class="book-pin" id="book-pin">
+    <div class="book-track" id="book-track">
+      <div class="book-title">
+        <h2>The<em>Book</em></h2>
+        <p>Eleven frames from three years of work, in the order she would show them.</p>
+      </div>
+      <figure class="fr fr-1"><div class="fr-in"><img src="https://images.unsplash.com/photo-1779406338045-59b7b488f4c8?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779406338045-59b7b488f4c8?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779406338045-59b7b488f4c8?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779406338045-59b7b488f4c8?w=2000&q=80&auto=format&fit=max 2000w" width="3636" height="4491" sizes="66vh" alt="Black and white, leather collar, studio" loading="lazy" decoding="async"></div><figcaption><b>01</b> Collar. Studio, Warsaw, 2025</figcaption></figure>
+      <figure class="fr fr-2"><div class="fr-in"><img src="https://images.unsplash.com/photo-1779153249963-1c190305cff0?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779153249963-1c190305cff0?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779153249963-1c190305cff0?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779153249963-1c190305cff0?w=2000&q=80&auto=format&fit=max 2000w" width="4480" height="6720" sizes="42vh" alt="Black coat, walking past stone columns" loading="lazy" decoding="async"></div><figcaption><b>02</b> Coat. Warsaw, 2025</figcaption></figure>
+      <figure class="fr fr-3"><div class="fr-in"><img src="https://images.unsplash.com/photo-1779153777963-da4514fa414b?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779153777963-da4514fa414b?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779153777963-da4514fa414b?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779153777963-da4514fa414b?w=2000&q=80&auto=format&fit=max 2000w" width="7360" height="4912" sizes="100vh" alt="Black and white, a long dress among birch trees" loading="lazy" decoding="async"></div><figcaption><b>03</b> Birch. Mazovia, 2024</figcaption></figure>
+      <figure class="fr fr-4"><div class="fr-in"><img src="https://images.unsplash.com/photo-1779399722098-5df306acf93c?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779399722098-5df306acf93c?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779399722098-5df306acf93c?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779399722098-5df306acf93c?w=2000&q=80&auto=format&fit=max 2000w" width="4000" height="6000" sizes="60vh" alt="Green satin dress against a dark studio backdrop" loading="lazy" decoding="async"></div><figcaption><b>04</b> Satin. Studio, 2025</figcaption></figure>
+      <figure class="fr fr-5"><div class="fr-in"><img src="https://images.unsplash.com/photo-1779675259233-4a3daaebd32b?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779675259233-4a3daaebd32b?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779675259233-4a3daaebd32b?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779675259233-4a3daaebd32b?w=2000&q=80&auto=format&fit=max 2000w" width="3744" height="5240" sizes="42vh" alt="Lace in afternoon light" loading="lazy" decoding="async"></div><figcaption><b>05</b> Lace. Afternoon, 2024</figcaption></figure>
+      <figure class="fr fr-6"><div class="fr-in"><img src="https://images.unsplash.com/photo-1779398645852-b7a98f0cb7c3?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779398645852-b7a98f0cb7c3?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779398645852-b7a98f0cb7c3?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779398645852-b7a98f0cb7c3?w=2000&q=80&auto=format&fit=max 2000w" width="3164" height="4430" sizes="60vh" alt="Patent coat in a striped corridor" loading="lazy" decoding="async"></div><figcaption><b>06</b> Corridor. Warsaw, 2023</figcaption></figure>
+      <figure class="fr fr-7"><div class="fr-in"><img src="https://images.unsplash.com/photo-1779406252886-33e39014ac12?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779406252886-33e39014ac12?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779406252886-33e39014ac12?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779406252886-33e39014ac12?w=2000&q=80&auto=format&fit=max 2000w" width="2624" height="3674" sizes="46vh" alt="Black and white, crossing the street in a printed dress" loading="lazy" decoding="async"></div><figcaption><b>07</b> Crossing. Warsaw, 2024</figcaption></figure>
+      <figure class="fr fr-8"><div class="fr-in"><img src="https://images.unsplash.com/photo-1779399153922-330529c04f06?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779399153922-330529c04f06?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779399153922-330529c04f06?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779399153922-330529c04f06?w=2000&q=80&auto=format&fit=max 2000w" width="5504" height="6880" sizes="70vh" alt="Dark knit and mirrored sunglasses" loading="lazy" decoding="async"></div><figcaption><b>08</b> Shade. Studio, 2025</figcaption></figure>
+      <figure class="fr fr-9"><div class="fr-in"><img src="https://images.unsplash.com/photo-1779406976051-e844144a1350?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779406976051-e844144a1350?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779406976051-e844144a1350?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779406976051-e844144a1350?w=2000&q=80&auto=format&fit=max 2000w" width="5668" height="8503" sizes="60vh" alt="Pink tulle dress on a hillside" loading="lazy" decoding="async"></div><figcaption><b>09</b> Tulle. On the hill, 2024</figcaption></figure>
+      <figure class="fr fr-10"><div class="fr-in"><img src="https://images.unsplash.com/photo-1779399147755-cb3c1a62c3de?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779399147755-cb3c1a62c3de?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779399147755-cb3c1a62c3de?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779399147755-cb3c1a62c3de?w=2000&q=80&auto=format&fit=max 2000w" width="6054" height="7568" sizes="48vh" alt="Feathered top, leaning back" loading="lazy" decoding="async"></div><figcaption><b>10</b> Feathers. Studio, 2023</figcaption></figure>
+      <figure class="fr fr-11"><div class="fr-in"><img src="https://images.unsplash.com/photo-1779398555763-2ff65b26f2a8?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779398555763-2ff65b26f2a8?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779398555763-2ff65b26f2a8?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779398555763-2ff65b26f2a8?w=2000&q=80&auto=format&fit=max 2000w" width="3008" height="4512" sizes="52vh" alt="A gloved hand across the face" loading="lazy" decoding="async"></div><figcaption><b>11</b> Glove. Studio, 2025</figcaption></figure>
+    </div>
+  </div>
+  <div class="book-count" id="book-count"><span id="bc-cur">01</span><span class="book-bar"><i id="bc-bar"></i></span><span>11</span></div>
+</section>
+
+<section class="sheets" id="tearsheets" aria-label="Tearsheets">
+  <div class="sec-head">
+    <h2>Tearsheets</h2>
+    <p>Seven published stories, 2022 to 2025. Move over a line to see the frame.</p>
+  </div>
+  <ol class="rows" id="rows">
+    <li class="row" data-peek="0"><span class="row-n">01</span><span class="row-t">Gold</span><span class="row-k">Evening campaign</span><span class="row-y">2025</span><div class="row-img"><img src="https://images.unsplash.com/photo-1779763320618-508808d8d5e3?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779763320618-508808d8d5e3?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779763320618-508808d8d5e3?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779763320618-508808d8d5e3?w=2000&q=80&auto=format&fit=max 2000w" width="1867" height="2800" sizes="66vw" alt="" loading="lazy"></div></li>
+    <li class="row" data-peek="1"><span class="row-n">02</span><span class="row-t">Checkerboard</span><span class="row-k">Hair story</span><span class="row-y">2025</span><div class="row-img"><img src="https://images.unsplash.com/photo-1779398645920-a3e9901784d6?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779398645920-a3e9901784d6?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779398645920-a3e9901784d6?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779398645920-a3e9901784d6?w=2000&q=80&auto=format&fit=max 2000w" width="3700" height="5180" sizes="66vw" alt="" loading="lazy"></div></li>
+    <li class="row" data-peek="2"><span class="row-n">03</span><span class="row-t">Leopard</span><span class="row-k">Cover story</span><span class="row-y">2024</span><div class="row-img"><img src="https://images.unsplash.com/photo-1779153249718-d713742e2600?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779153249718-d713742e2600?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779153249718-d713742e2600?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779153249718-d713742e2600?w=2000&q=80&auto=format&fit=max 2000w" width="4480" height="6720" sizes="66vw" alt="" loading="lazy"></div></li>
+    <li class="row" data-peek="3"><span class="row-n">04</span><span class="row-t">Beauty</span><span class="row-k">Skin editorial</span><span class="row-y">2025</span><div class="row-img"><img src="https://images.unsplash.com/photo-1779398970521-5c3cfd9dc381?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779398970521-5c3cfd9dc381?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779398970521-5c3cfd9dc381?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779398970521-5c3cfd9dc381?w=2000&q=80&auto=format&fit=max 2000w" width="4320" height="6480" sizes="66vw" alt="" loading="lazy"></div></li>
+    <li class="row" data-peek="4"><span class="row-n">05</span><span class="row-t">Leather</span><span class="row-k">Outerwear campaign</span><span class="row-y">2024</span><div class="row-img"><img src="https://images.unsplash.com/photo-1779153249910-3bb21c91c7fc?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779153249910-3bb21c91c7fc?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779153249910-3bb21c91c7fc?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779153249910-3bb21c91c7fc?w=2000&q=80&auto=format&fit=max 2000w" width="4480" height="6720" sizes="66vw" alt="" loading="lazy"></div></li>
+    <li class="row" data-peek="5"><span class="row-n">06</span><span class="row-t">Cut-out</span><span class="row-k">Swim and resort</span><span class="row-y">2023</span><div class="row-img"><img src="https://images.unsplash.com/photo-1779400203329-587b117787f9?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779400203329-587b117787f9?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779400203329-587b117787f9?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779400203329-587b117787f9?w=2000&q=80&auto=format&fit=max 2000w" width="2005" height="3024" sizes="66vw" alt="" loading="lazy"></div></li>
+    <li class="row" data-peek="6"><span class="row-n">07</span><span class="row-t">Turtleneck</span><span class="row-k">First test</span><span class="row-y">2022</span><div class="row-img"><img src="https://images.unsplash.com/photo-1779406859387-5d6fd116b3ff?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779406859387-5d6fd116b3ff?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779406859387-5d6fd116b3ff?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779406859387-5d6fd116b3ff?w=2000&q=80&auto=format&fit=max 2000w" width="4380" height="6563" sizes="66vw" alt="" loading="lazy"></div></li>
+  </ol>
+</section>
+<div class="peek" id="peek" aria-hidden="true">
+  <img src="https://images.unsplash.com/photo-1779763320618-508808d8d5e3?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779763320618-508808d8d5e3?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779763320618-508808d8d5e3?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779763320618-508808d8d5e3?w=2000&q=80&auto=format&fit=max 2000w" width="1867" height="2800" sizes="17vw" alt="" loading="lazy">
+  <img src="https://images.unsplash.com/photo-1779398645920-a3e9901784d6?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779398645920-a3e9901784d6?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779398645920-a3e9901784d6?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779398645920-a3e9901784d6?w=2000&q=80&auto=format&fit=max 2000w" width="3700" height="5180" sizes="17vw" alt="" loading="lazy">
+  <img src="https://images.unsplash.com/photo-1779153249718-d713742e2600?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779153249718-d713742e2600?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779153249718-d713742e2600?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779153249718-d713742e2600?w=2000&q=80&auto=format&fit=max 2000w" width="4480" height="6720" sizes="17vw" alt="" loading="lazy">
+  <img src="https://images.unsplash.com/photo-1779398970521-5c3cfd9dc381?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779398970521-5c3cfd9dc381?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779398970521-5c3cfd9dc381?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779398970521-5c3cfd9dc381?w=2000&q=80&auto=format&fit=max 2000w" width="4320" height="6480" sizes="17vw" alt="" loading="lazy">
+  <img src="https://images.unsplash.com/photo-1779153249910-3bb21c91c7fc?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779153249910-3bb21c91c7fc?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779153249910-3bb21c91c7fc?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779153249910-3bb21c91c7fc?w=2000&q=80&auto=format&fit=max 2000w" width="4480" height="6720" sizes="17vw" alt="" loading="lazy">
+  <img src="https://images.unsplash.com/photo-1779400203329-587b117787f9?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779400203329-587b117787f9?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779400203329-587b117787f9?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779400203329-587b117787f9?w=2000&q=80&auto=format&fit=max 2000w" width="2005" height="3024" sizes="17vw" alt="" loading="lazy">
+  <img src="https://images.unsplash.com/photo-1779406859387-5d6fd116b3ff?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779406859387-5d6fd116b3ff?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779406859387-5d6fd116b3ff?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779406859387-5d6fd116b3ff?w=2000&q=80&auto=format&fit=max 2000w" width="4380" height="6563" sizes="17vw" alt="" loading="lazy">
+</div>
+
+<section class="digitals" id="digitals" aria-label="Digitals">
+  <div class="sec-head">
+    <h2>Digitals</h2>
+    <p>Shot 2 September 2026, Warsaw. Daylight, no retouching, hair down. Seven frames.</p>
+  </div>
+  <div class="dig-wrap">
+    <div class="dig-track" id="dig-track">
+      <figure class="dig"><img src="https://images.unsplash.com/photo-1779400203231-102e4e62a5f3?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779400203231-102e4e62a5f3?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779400203231-102e4e62a5f3?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779400203231-102e4e62a5f3?w=2000&q=80&auto=format&fit=max 2000w" width="2005" height="3024" sizes="(max-width:899px) 66vw, 21vw" alt="Digital, headshot" loading="lazy" decoding="async"><figcaption><b>01</b>Headshot</figcaption></figure>
+      <figure class="dig"><img src="https://images.unsplash.com/photo-1779400203250-a2b3ac76a5be?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779400203250-a2b3ac76a5be?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779400203250-a2b3ac76a5be?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779400203250-a2b3ac76a5be?w=2000&q=80&auto=format&fit=max 2000w" width="2005" height="3024" sizes="(max-width:899px) 66vw, 21vw" alt="Digital, front, waist up" loading="lazy" decoding="async"><figcaption><b>02</b>Front</figcaption></figure>
+      <figure class="dig"><img src="https://images.unsplash.com/photo-1779400203195-8906eec4b645?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779400203195-8906eec4b645?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779400203195-8906eec4b645?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779400203195-8906eec4b645?w=2000&q=80&auto=format&fit=max 2000w" width="2005" height="3024" sizes="(max-width:899px) 66vw, 21vw" alt="Digital, three-quarter" loading="lazy" decoding="async"><figcaption><b>03</b>Three-quarter</figcaption></figure>
+      <figure class="dig"><img src="https://images.unsplash.com/photo-1779400202936-ee0459c41bfb?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779400202936-ee0459c41bfb?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779400202936-ee0459c41bfb?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779400202936-ee0459c41bfb?w=2000&q=80&auto=format&fit=max 2000w" width="2005" height="3024" sizes="(max-width:899px) 66vw, 21vw" alt="Digital, waist up, hands at hips" loading="lazy" decoding="async"><figcaption><b>04</b>Waist up</figcaption></figure>
+      <figure class="dig"><img src="https://images.unsplash.com/photo-1779400205156-e21b3d8d1e4f?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779400205156-e21b3d8d1e4f?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779400205156-e21b3d8d1e4f?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779400205156-e21b3d8d1e4f?w=2000&q=80&auto=format&fit=max 2000w" width="2005" height="3024" sizes="(max-width:899px) 66vw, 21vw" alt="Digital, full length" loading="lazy" decoding="async"><figcaption><b>05</b>Full length</figcaption></figure>
+      <figure class="dig"><img src="https://images.unsplash.com/photo-1779400203036-f0c0862fd580?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779400203036-f0c0862fd580?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779400203036-f0c0862fd580?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779400203036-f0c0862fd580?w=2000&q=80&auto=format&fit=max 2000w" width="2005" height="3024" sizes="(max-width:899px) 66vw, 21vw" alt="Digital, in movement" loading="lazy" decoding="async"><figcaption><b>06</b>Movement</figcaption></figure>
+      <figure class="dig"><img src="https://images.unsplash.com/photo-1779400204082-51cfd45e0411?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779400204082-51cfd45e0411?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779400204082-51cfd45e0411?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779400204082-51cfd45e0411?w=2000&q=80&auto=format&fit=max 2000w" width="2005" height="3024" sizes="(max-width:899px) 66vw, 21vw" alt="Digital, personality" loading="lazy" decoding="async"><figcaption><b>07</b>Personality</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="card" aria-label="Card">
+  <figure class="card-photo"><img src="https://images.unsplash.com/photo-1779406273514-b7303d6bbe69?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779406273514-b7303d6bbe69?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779406273514-b7303d6bbe69?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779406273514-b7303d6bbe69?w=2000&q=80&auto=format&fit=max 2000w" width="2716" height="4069" sizes="(max-width:899px) 72vw, 40vw" alt="Black and white close portrait" loading="lazy" decoding="async"></figure>
+  <div class="card-data">
+    <h2>Card</h2>
+    <dl>
+      <div><dt>Height</dt><dd>178<small>cm · 5′10″</small></dd></div>
+      <div><dt>Bust</dt><dd>82<small>cm · 32</small></dd></div>
+      <div><dt>Waist</dt><dd>60<small>cm · 24</small></dd></div>
+      <div><dt>Hips</dt><dd>89<small>cm · 35</small></dd></div>
+      <div><dt>Shoes</dt><dd>39<small>EU · 8 US</small></dd></div>
+      <div><dt>Dress</dt><dd>34<small>EU · 4 US</small></dd></div>
+      <div><dt>Hair</dt><dd>Blonde</dd></div>
+      <div><dt>Eyes</dt><dd>Blue</dd></div>
+    </dl>
+    <p class="card-links"><a href="#card">Comp card, PDF</a><a href="#digitals">Digitals, ZIP</a><a href="#book">Book, PDF</a></p>
+    <p class="card-note">Measured 2 September 2026. Files are current to that date; ask before printing anything older.</p>
+  </div>
+</section>
+
+<section class="close" id="contact" aria-label="Contact">
+  <div class="close-photo" id="close-photo"><img src="https://images.unsplash.com/photo-1779153862705-5969578ac606?w=1400&q=80&auto=format&fit=max" srcset="https://images.unsplash.com/photo-1779153862705-5969578ac606?w=800&q=80&auto=format&fit=max 800w, https://images.unsplash.com/photo-1779153862705-5969578ac606?w=1400&q=80&auto=format&fit=max 1400w, https://images.unsplash.com/photo-1779153862705-5969578ac606?w=2000&q=80&auto=format&fit=max 2000w" width="6016" height="4016" sizes="100vw" alt="Black and white, soft portrait in a dark doorway" loading="lazy" decoding="async"></div>
+  <div class="close-body">
+    <div class="close-contact">
+      <div><b>Bookings</b><a href="mailto:booking@zofianowicka.com">booking@zofianowicka.com</a></div>
+      <div><b>Mother agency</b>Północ Models, Warsaw<br><a href="#contact">booking@polnoc.models</a></div>
+      <div><b>Elsewhere</b><a href="#contact">Instagram</a>&nbsp;&nbsp;<a href="#contact">Models.com</a></div>
+    </div>
+    <p class="close-name" id="close-name">Zofia</p>
+  </div>
+</section>
+<footer class="foot">
+  <span>© 2026 Zofia Nowicka</span>
+  <span>Warsaw</span>
+  <span class="foot-credit">Made with <a class="foot-mark" href="/" target="_blank" rel="noopener">PHOLIO</a></span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script>
+(function(){
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const wide = () => innerWidth >= 900;
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ── Embedded in the Pholio home stage (?embed). ──
+     The page is the same page. What changes: no smooth-scroll layer, because the
+     parent sets the scroll position directly; no intro, so the first frame is the
+     finished masthead the moment the page arrives; and a small message channel so
+     the parent can drive the scroll and learn where the scenes begin. */
+  const EMBED = new URLSearchParams(location.search).has('embed');
+  const inFrame = window.parent && window.parent !== window;
+  if (EMBED) document.documentElement.classList.add('embed');
+  const marks = () => {
+    const H = innerHeight;
+    const st = document.getElementById('state');
+    const bk = document.getElementById('book');
+    const tr = document.getElementById('book-track');
+    const top = el => el.getBoundingClientRect().top + scrollY;
+    return { hero: H, statement: st ? top(st) : H, book: bk ? top(bk) : 2 * H,
+             bookRun: tr ? Math.max(0, tr.scrollWidth - innerWidth) : 0,
+             height: document.documentElement.scrollHeight, wide: wide() };
+  };
+  const report = () => { if (EMBED && inFrame) parent.postMessage({ t: 'zn:ready', marks: marks() }, location.origin); };
+  if (EMBED && inFrame) {
+    addEventListener('message', e => {
+      if (e.origin !== location.origin || !e.data || typeof e.data !== 'object') return;
+      if (e.data.t === 'zn:scroll' && typeof e.data.y === 'number') window.scrollTo(0, e.data.y);
+      if (e.data.t === 'zn:intro' && typeof e.data.p === 'number' && introTl) introTl.progress(Math.min(1, Math.max(0, e.data.p)));
+      if (e.data.t === 'zn:marks') report();
+    });
+  }
+
+  /* Embedded, the masthead's intro is a timeline the parent scrubs (zn:intro),
+     so the page composes itself under the visitor's scroll. */
+  let introTl = null;
+
+  /* Smooth scroll. Off when the visitor asked for less motion, and off when embedded. */
+  let lenis = null;
+  if (!RM && !EMBED && typeof Lenis !== 'undefined') {
+    lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      const el = id.length > 1 && document.querySelector(id);
+      if (!el) return;
+      e.preventDefault();
+      if (lenis) lenis.scrollTo(el, { offset: 0, duration: 1.4 });
+      else el.scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
+    });
+  });
+
+  /* The clock: her time, not the visitor's. */
+  const clock = document.getElementById('clock');
+  const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Warsaw', hour: '2-digit', minute: '2-digit' });
+  const tick = () => { clock.textContent = 'Warsaw ' + fmt.format(new Date()); };
+  tick(); setInterval(tick, 15000);
+
+  /* The red dot sits outside the blended bar, placed over its hidden twin. */
+  const dot = document.getElementById('dot'), dotSlot = document.querySelector('.avail i');
+  function placeDot(){
+    if (!dotSlot || getComputedStyle(dotSlot).display === 'none') return;
+    const r = dotSlot.getBoundingClientRect();
+    dot.style.transform = 'translate(' + r.left + 'px,' + r.top + 'px)';
+    dot.style.opacity = getComputedStyle(document.querySelector('.bar')).opacity;
+  }
+
+  /* Masthead: the longer line fills the measure, the short line follows at the same size. */
+  const mast = document.getElementById('mast');
+  const lines = [...mast.querySelectorAll('.mast-line')];
+  function fitMast(){
+    const w = mast.clientWidth;
+    mast.style.fontSize = '100px';
+    const widest = Math.max(...lines.map(l => l.firstElementChild.getBoundingClientRect().width));
+    let size = 100 * (w / widest) * 0.985;
+    const maxH = (wide() ? 0.62 : 0.34) * innerHeight;
+    if (size * 0.84 * 2 > maxH) size = maxH / (0.84 * 2);
+    mast.style.fontSize = size + 'px';
+  }
+
+  /* Hero: the frame takes the page while the name lets go. */
+  const hero = document.querySelector('.hero');
+  const heroFigure = document.getElementById('hero-figure');
+  const heroCap = document.getElementById('hero-cap');
+  const mastIns = mast.querySelectorAll('.mast-in');
+  function heroScrub(){
+    if (RM || !wide()) return;
+    const tl = gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=100%', pin: true, pinSpacing: false, scrub: 0.6, anticipatePin: 1 } });
+    tl.to(heroFigure, { yPercent: 4, scale: 1.06, ease: 'none' }, 0)
+      .to('#hero-side', { opacity: 0, ease: 'none', duration: 0.25 }, 0)
+      .to(lines[0], { xPercent: -12, opacity: 0, ease: 'power1.in', duration: 0.5 }, 0)
+      .to(lines[1], { xPercent: 12, opacity: 0, ease: 'power1.in', duration: 0.5 }, 0)
+      .to(heroCap, { opacity: 0, ease: 'none', duration: 0.25 }, 0);
+  }
+
+  /* Intro. Under a second and a half, then nothing loops. */
+  function intro(){
+    const figIn = document.getElementById('hero-figure-in');
+    const side = document.getElementById('hero-side');
+    if (RM) { figIn.style.clipPath = 'none'; placeDot(); return; }
+    gsap.set(mastIns, { yPercent: 110 });
+    gsap.set(figIn, { clipPath: 'inset(100% 0 0 0)', y: 24 });
+    gsap.set([heroCap, side, '.bar'], { opacity: 0 });
+    const tl = gsap.timeline({ defaults: { ease: 'expo.out' }, paused: EMBED })
+      .to(figIn, { clipPath: 'inset(0% 0 0 0)', y: 0, duration: 1.6 }, 0)
+      .to(mastIns, { yPercent: 0, duration: 1.3, stagger: 0.14 }, 0.35)
+      .to([heroCap, side, '.bar'], { opacity: 1, duration: 0.9, ease: 'power1.out', onUpdate: placeDot }, 1.1);
+    if (EMBED) introTl = tl;
+    /* A little depth under the hand: the figure and the name drift apart with the pointer. */
+    if (FINE) {
+      const fx = gsap.quickTo(figIn, 'x', { duration: 1.2, ease: 'power3.out' });
+      const fy = gsap.quickTo(figIn, 'y', { duration: 1.2, ease: 'power3.out' });
+      const mx = mastIns.length ? [...mastIns].map(m => gsap.quickTo(m, 'x', { duration: 1.4, ease: 'power3.out' })) : [];
+      hero.addEventListener('pointermove', e => {
+        const nx = (e.clientX / innerWidth - 0.5), ny = (e.clientY / innerHeight - 0.5);
+        fx(nx * 14); fy(ny * 10); mx.forEach(f => f(nx * -8));
+      });
+    }
+  }
+
+  /* The Book: one vertical scroll, one horizontal track, a counter that keeps up. */
+  const book = document.getElementById('book');
+  const track = document.getElementById('book-track');
+  const frames = [...track.querySelectorAll('.fr')];
+  const bcCur = document.getElementById('bc-cur'), bcBar = document.getElementById('bc-bar');
+  function bookScrub(){
+    if (!wide()) return;
+    if (RM) {
+      book.classList.add('is-native');
+      const pin = document.getElementById('book-pin');
+      const count = () => {
+        const cx = innerWidth * 0.5; let cur = 0;
+        frames.forEach((f, i) => { if (f.getBoundingClientRect().left < cx) cur = i; });
+        bcCur.textContent = String(cur + 1).padStart(2, '0');
+        bcBar.style.transform = 'scaleX(' + (pin.scrollLeft / (pin.scrollWidth - pin.clientWidth)) + ')';
+      };
+      pin.addEventListener('scroll', count, { passive: true }); count();
+      return;
+    }
+    const dist = () => track.scrollWidth - innerWidth;
+    const imgs = frames.map(f => f.querySelector('img'));
+    const setX = imgs.map(i => gsap.quickSetter(i, 'x', 'px'));
+    gsap.to(track, {
+      x: () => -dist(), ease: 'none',
+      scrollTrigger: {
+        trigger: book, start: 'top top', end: () => '+=' + dist(), pin: true, scrub: 0.8, anticipatePin: 1, invalidateOnRefresh: true,
+        onUpdate(self){
+          const vw = innerWidth, cx = vw * 0.5;
+          let cur = 0;
+          frames.forEach((f, i) => {
+            const r = f.getBoundingClientRect();
+            const off = (r.left + r.width / 2 - cx) / vw;   /* -1 .. 1 across the viewport */
+            setX[i](off * -0.05 * r.width);
+            if (r.left < cx) cur = i;
+          });
+          bcCur.textContent = String(cur + 1).padStart(2, '0');
+          bcBar.style.transform = 'scaleX(' + self.progress + ')';
+        }
+      }
+    });
+  }
+
+  /* Statement: the two inline pictures open as the sentence arrives. */
+  function inlineOpen(){
+    const ins = document.querySelectorAll('.inl-in');
+    if (RM) return;
+    gsap.set(ins, { scaleX: 0 });
+    ScrollTrigger.create({
+      id: 'inline', trigger: '#state', start: 'top 78%', once: true,
+      onEnter: () => gsap.to(ins, { scaleX: 1, duration: 1.4, ease: 'expo.out', stagger: 0.25 })
+    });
+  }
+
+  /* Digitals: the strip drifts against the scroll so all seven pass. */
+  function digitalsDrift(){
+    if (RM || !wide()) return;
+    const t = document.getElementById('dig-track');
+    gsap.fromTo(t, { x: () => innerWidth * 0.06 }, {
+      x: () => -(t.scrollWidth - innerWidth + parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--m')) * 2) ,
+      ease: 'none',
+      scrollTrigger: { trigger: '.digitals', start: 'top bottom', end: 'bottom top', scrub: 0.6, invalidateOnRefresh: true }
+    });
+  }
+
+  /* Close: the wide frame settles as the name comes up under it. */
+  function closeParallax(){
+    if (RM) return;
+    gsap.fromTo('#close-photo', { yPercent: -8 }, { yPercent: 0, ease: 'none',
+      scrollTrigger: { trigger: '.close', start: 'top bottom', end: 'top top', scrub: true } });
+    gsap.fromTo('#close-name', { yPercent: 30 }, { yPercent: 0, ease: 'none',
+      scrollTrigger: { trigger: '.close', start: 'top bottom', end: 'top 20%', scrub: true } });
+  }
+
+  /* Tearsheets: the frame follows the hand on a fine pointer; opens in place on touch. */
+  const peek = document.getElementById('peek');
+  const peekImgs = [...peek.querySelectorAll('img')];
+  const rows = [...document.querySelectorAll('.row')];
+  if (FINE && !RM) {
+    let tx = 0, ty = 0, x = 0, y = 0, raf = null, active = false;
+    const step = () => {
+      x += (tx - x) * 0.14; y += (ty - y) * 0.14;
+      peek.style.transform = 'translate(' + x + 'px,' + y + 'px) translate(-50%,-50%) scale(' + (active ? 1 : 0.92) + ')';
+      if (Math.abs(tx - x) > 0.1 || Math.abs(ty - y) > 0.1 || active) raf = requestAnimationFrame(step); else raf = null;
+    };
+    const move = e => { tx = e.clientX + 40; ty = e.clientY; if (!raf) raf = requestAnimationFrame(step); };
+    rows.forEach(r => {
+      r.addEventListener('pointerenter', e => {
+        peekImgs.forEach((im, i) => im.classList.toggle('on', i === +r.dataset.peek));
+        if (!active) { x = e.clientX + 40; y = e.clientY; }
+        active = true; peek.classList.add('show'); move(e);
+      });
+      r.addEventListener('pointermove', move);
+    });
+    document.getElementById('rows').addEventListener('pointerleave', () => { active = false; peek.classList.remove('show'); });
+    peek.style.transition = 'opacity .35s cubic-bezier(.16,1,.3,1)';
+  } else {
+    rows.forEach(r => r.addEventListener('click', () => {
+      const open = r.classList.contains('open');
+      rows.forEach(o => o.classList.remove('open'));
+      if (!open) r.classList.add('open');
+      ScrollTrigger.refresh();
+    }));
+  }
+
+  /* The scroll layer is built for one breakpoint and rebuilt if the width crosses it. */
+  let builtWide = null;
+  function buildScroll(){
+    builtWide = wide();
+    heroScrub();
+    bookScrub();
+    digitalsDrift();
+    closeParallax();
+    ScrollTrigger.refresh();
+  }
+  function teardownScroll(){
+    ScrollTrigger.getAll().forEach(st => { if (st.vars.id !== 'inline') st.kill(); });
+    gsap.set([heroFigure, heroCap, lines, track, '#dig-track', '#close-photo', '#close-name', ...frames.map(f => f.querySelector('img'))], { clearProps: 'all' });
+    book.classList.remove('is-native');
+  }
+
+  /* Boot after the faces are set, so the masthead measures the real font. */
+  const boot = () => {
+    fitMast();
+    placeDot();
+    intro();
+    inlineOpen();
+    buildScroll();
+    report();
+  };
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(boot, boot);
+
+  let rt;
+  addEventListener('resize', () => {
+    clearTimeout(rt);
+    rt = setTimeout(() => {
+      fitMast(); placeDot();
+      if (builtWide !== null && builtWide !== wide()) { teardownScroll(); buildScroll(); }
+      else ScrollTrigger.refresh();
+      report();
+    }, 150);
+  });
+})();
+</script>
+</body>
+</html>

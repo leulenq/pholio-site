@@ -6,7 +6,7 @@
  *   Origin      ink    why it exists, three beats travelling past a plate
  *   The Line    cream  the defining scene: three statements at viewport scale
  *   The Record  ink    the proof, deliberately quiet, in document register
- *   Collective  cream  the triptych, at the scale the portraits deserve
+ *   Collective  cream  the recovered triptych: centered header, 4:5 plates
  *   Close       ink    the one sentence, and the two doors
  *
  * The pacing is the design: loud, moving, loud, quiet, loud, still. Every

@@ -11,6 +11,7 @@ import Image from "next/image";
 
 import Intelligence from "@/components/intelligence";
 import SceneCompCard, { CompCardLayers } from "@/components/comp-card";
+import { StaticStudioSite, StudioSiteLayers } from "@/components/studio-site";
 import { leave } from "@/components/intelligence/ease";
 import Ribbon from "@/components/intelligence/Ribbon";
 import HeroChrome from "./HeroChrome";
@@ -26,6 +27,7 @@ import {
   FIGURE_SCALE,
   FIGURE_STOPS,
   FIGURE_HANDOVER,
+  CARD_FRACTION,
   HERO_FRACTION,
   HERO_OPENING_VH,
   HOME_STAGE_VH,
@@ -145,7 +147,15 @@ export default function Hero({
   );
   const cardProgress = useTransform(
     stageProgress,
-    [HERO_FRACTION, 1],
+    [HERO_FRACTION, CARD_FRACTION],
+    [0, 1],
+    { clamp: true },
+  );
+  // The Studio+ beat runs on the last stretch of the same stage: her site
+  // rises over the card's close. See components/studio-site/motion.ts.
+  const siteProgress = useTransform(
+    stageProgress,
+    [CARD_FRACTION, 1],
     [0, 1],
     { clamp: true },
   );
@@ -357,6 +367,7 @@ export default function Hero({
         </div>
 
         <SceneCompCard />
+        <StaticStudioSite />
       </section>
     );
   }
@@ -422,6 +433,13 @@ export default function Hero({
         {/* ── The comp-card beat. Same pinned stage, second timeline. ── */}
         <div className="pointer-events-none absolute inset-0 z-30">
           <CompCardLayers progress={cardTimeline} assetsArmed={cardAssetsArmed} />
+        </div>
+
+        {/* ── The Studio+ beat. Same pinned stage, third timeline: her site
+              rises over the card's close as a sheet, is walked through by
+              this scroll, and pulls back to the offer. ── */}
+        <div className="pointer-events-none absolute inset-0 z-40">
+          <StudioSiteLayers progress={siteProgress} armed={cardAssetsArmed} />
         </div>
 
         {/* ── BEAT 1 — the wordmark, set behind her ── */}

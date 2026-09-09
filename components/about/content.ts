@@ -121,6 +121,7 @@ export const COLLECTIVE = {
   headlineBefore: "Engineering, business, and",
   headlineVerdict: "the runway",
   headlineAfter: ".",
+  support: `Pholio began in ${FOUNDED}. Three people make it, between engineering, business and fashion production.`,
   people: [
     {
       given: "Leul",

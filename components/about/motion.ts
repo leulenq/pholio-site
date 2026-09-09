@@ -47,12 +47,6 @@ export const LINE_SLICE_OVERLAP = 0.05;
 /** Where the plate handed over from the previous scene finishes leaving. */
 export const LINE_PLATE_EXIT = 0.2;
 
-/* ── THE COLLECTIVE ──────────────────────────────────────────────────
-   Per-column parallax. The three portraits never sit on one baseline, so
-   the triptych reads as three plates on a page rather than a row of
-   cards. Values are the y travel in pixels across the section's scroll. */
-export const COLLECTIVE_PARALLAX = [-92, 46, -54] as const;
-
 /** The once-only arrival used by the still scenes. */
 export const ARRIVE_DURATION = 0.9;
 export const ARRIVE_STAGGER = 0.1;
