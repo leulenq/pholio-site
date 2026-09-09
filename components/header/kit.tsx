@@ -162,19 +162,39 @@ export const SIGNUP_HREF = `${APP_URL}/onboarding`;
  */
 const CONDENSE_AT = 96; // px of scroll before the header settles
 
-function homeHeroActive(): boolean {
+/**
+ * True while the home stage is still on screen.
+ *
+ * Using the section edge rather than a scroll offset keeps this correct when
+ * the stage's length changes and when the user reverses direction at speed.
+ */
+function homeStageActive(): boolean {
   const hero = document
     .querySelector("[data-hero-chrome]")
     ?.closest("section");
-  if (hero) {
-    const rect = hero.getBoundingClientRect();
-    // The custom treatment owns the header until the Hero has genuinely left
-    // the viewport. Using the section edge rather than a scroll offset keeps
-    // this correct when the Hero's length changes and when the user reverses
-    // direction at speed.
-    return rect.bottom > 0;
-  }
+  if (hero) return hero.getBoundingClientRect().bottom > 0;
   return window.scrollY <= window.innerHeight;
+}
+
+/**
+ * True while the hero's own chrome owns the header treatment.
+ *
+ * A hero may scope that to less than its whole section by marking the stretch
+ * it actually dresses. The home stage is one 1400vh section carrying three
+ * scenes, and on the narrow stage the hero's chrome is a single index mark
+ * that leaves with the wordmark about two viewports in. Without the marker the
+ * section edge would keep the sitewide marks suppressed for the eleven
+ * viewports after that, which on a phone is the whole visit with no way out of
+ * the page. Nothing marks the opening on a wide stage, so this stays the
+ * section edge there and the wide behaviour is unchanged.
+ */
+function homeHeroActive(): boolean {
+  const opening = document.querySelector("[data-hero-opening]");
+  if (opening) {
+    const rect = opening.getBoundingClientRect();
+    if (rect.height > 0) return rect.bottom > 0;
+  }
+  return homeStageActive();
 }
 
 export interface HeaderState {
@@ -227,6 +247,14 @@ export function useHeaderState({
     if (preview || typeof window === "undefined") return false;
     return isHome ? homeHeroActive() : false;
   });
+  /**
+   * Paper is what a header takes when it is sitting on running body copy. The
+   * home stage never has any: it is one pinned cinematic frame the whole way
+   * down, and `lessons.md` §11.3 rules out drawing a rule across it, which is
+   * what the band's gold sweep would be. So on home the bar keeps its scrim
+   * treatment for the length of the stage even after the hero's own chrome has
+   * handed over, and only condenses once the stage is behind it.
+   */
   const [condensed, setCondensed] = useState(
     preview && previewState === "settled",
   );
@@ -237,9 +265,10 @@ export function useHeaderState({
   useEffect(() => {
     if (preview) return;
     const frame = window.requestAnimationFrame(() => {
-      const active = isHome ? homeHeroActive() : false;
-      setHeroActive(active);
-      setCondensed(isHome ? !active : window.scrollY > CONDENSE_AT);
+      setHeroActive(isHome ? homeHeroActive() : false);
+      setCondensed(
+        isHome ? !homeStageActive() : window.scrollY > CONDENSE_AT,
+      );
     });
     return () => window.cancelAnimationFrame(frame);
   }, [isHome, preview]);
@@ -247,9 +276,8 @@ export function useHeaderState({
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (preview) return;
     if (isHome) {
-      const active = homeHeroActive();
-      setHeroActive(active);
-      setCondensed(!active);
+      setHeroActive(homeHeroActive());
+      setCondensed(!homeStageActive());
     } else {
       setCondensed(latest > CONDENSE_AT);
     }

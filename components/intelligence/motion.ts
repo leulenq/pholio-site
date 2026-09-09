@@ -75,6 +75,30 @@ export type Beat = {
  *      camera centred on her in between.
  * III. A hanging indent, with the verdict carried by the small line so the
  *      beat is not one colour at one size.
+ *
+ * ── The narrow stage ──────────────────────────────────────────────────────
+ *
+ * Every position below is authored twice, and the pair is not one composition
+ * at two sizes. A wide stage is a landscape frame with a gutter either side of
+ * her: the copy can stand beside her and the beat's drama comes from the
+ * horizontal distance between two fragments. A phone is a portrait frame
+ * roughly 2.2 : 1 with her filling most of it, and the type layer sits behind
+ * her, so the only place a line is reliably readable is the band above her
+ * head. Scattering the wide placements into a narrow frame put fragments where
+ * she is: at 390 the closing verdict `stand.` was rendering behind her hair for
+ * most of its hold, which is the one thing §13.3 rules out.
+ *
+ * So the narrow stage keeps the band and varies the *lockup inside it*, which
+ * is where §13.2's three compositions come from here:
+ *
+ *   I    one line set to the full measure, left, one weight
+ *   II   split across the measure on one optical line, the small half left and
+ *        the verdict right, four times its size
+ *   III  a hanging indent, the small half tucked under the large one
+ *
+ * The band starts below the sitewide index marks, which return at the top of
+ * the frame once the hero's opening has left: a line resting at 6% of a phone
+ * viewport sat directly under the corner wordmark.
  */
 export const BEATS: Beat[] = [
   {
@@ -84,14 +108,18 @@ export const BEATS: Beat[] = [
       {
         id: "frame-line",
         delay: 0,
-        pos: ["left-6 top-[15%]", "left-6 top-[27%] md:left-12"],
+        pos: ["left-6 top-[16%]", "left-6 top-[27%] md:left-12"],
         enter: [100, 94],
-        exit: [30, 46],
+        exit: [42, 46],
         pieces: [
           {
+            // Narrow: set to the measure. At the old size the phrase was a
+            // 275px line adrift in a 390 frame with her a third of a viewport
+            // below it, which is the shrunken-desktop reading rather than a
+            // composition.
             words: [{ t: "sees the frame" }],
             type: [
-              "text-[clamp(2.3rem,8.4vw,3.9rem)]",
+              "text-[clamp(2.3rem,11.6vw,3.9rem)]",
               "text-[clamp(3rem,6.8vw,8.2rem)]",
             ],
           },
@@ -106,15 +134,18 @@ export const BEATS: Beat[] = [
       {
         id: "you-small",
         delay: 0,
-        pos: ["left-6 top-[6%]", "left-6 top-[38%] md:left-12"],
+        // Narrow: the quiet half sits low and left on the band's own baseline,
+        // so the two halves read as one line with a size jump rather than as
+        // two fragments at opposite corners of an empty frame (§14.2).
+        pos: ["left-6 top-[20.5%]", "left-6 top-[38%] md:left-12"],
         enter: [104, 76],
-        exit: [20, 48],
+        exit: [34, 48],
         pieces: [
           {
             words: [{ t: "Every agency," }],
             small: true,
             type: [
-              "text-[clamp(1.2rem,3.6vw,1.7rem)] tracking-[-0.015em]",
+              "text-[clamp(1.05rem,4.6vw,1.6rem)] tracking-[-0.015em]",
               "text-[clamp(1.6rem,3vw,3.4rem)] tracking-[-0.015em]",
             ],
           },
@@ -124,16 +155,16 @@ export const BEATS: Beat[] = [
         id: "you-verdict",
         delay: 0.26,
         pos: [
-          "right-6 top-[12%] text-right",
+          "right-6 top-[14%] text-right",
           "right-6 top-[47%] text-right md:right-12",
         ],
         enter: [100, 64],
-        exit: [30, 72],
+        exit: [40, 72],
         pieces: [
           {
             words: [{ t: "right.", verdict: true }],
             type: [
-              "text-[clamp(3rem,11vw,5rem)]",
+              "text-[clamp(3rem,20vw,5rem)]",
               "text-[clamp(3.6rem,9vw,10.8rem)]",
             ],
           },
@@ -148,14 +179,14 @@ export const BEATS: Beat[] = [
       {
         id: "understood-large",
         delay: 0,
-        pos: ["left-6 top-[6%]", "left-6 top-[46%] md:left-12"],
+        pos: ["left-6 top-[15%]", "left-6 top-[46%] md:left-12"],
         enter: [104, 64],
         exit: null,
         pieces: [
           {
             words: [{ t: "The truth," }],
             type: [
-              "text-[clamp(2.2rem,8vw,3.6rem)] tracking-[-0.045em]",
+              "text-[clamp(2.2rem,13.5vw,3.6rem)] tracking-[-0.045em]",
               "text-[clamp(3rem,6.8vw,8rem)] tracking-[-0.045em]",
             ],
           },
@@ -164,7 +195,10 @@ export const BEATS: Beat[] = [
       {
         id: "understood-small",
         delay: 0.3,
-        pos: ["left-[16%] top-[17%]", "left-[21%] top-[62%]"],
+        // Narrow: hangs directly off the large line's baseline, indented. At
+        // 17% it was a third of a viewport lower, which on a phone is her hair
+        // and shoulder: the closing verdict was rendering behind her.
+        pos: ["left-[24%] top-[24.5%]", "left-[21%] top-[62%]"],
         enter: [96, 46],
         exit: null,
         pieces: [
@@ -172,7 +206,7 @@ export const BEATS: Beat[] = [
             words: [{ t: "where you " }, { t: "stand.", verdict: true }],
             small: true,
             type: [
-              "text-[clamp(1.05rem,3.2vw,1.5rem)] tracking-[-0.015em]",
+              "text-[clamp(1.05rem,4.4vw,1.5rem)] tracking-[-0.015em]",
               "text-[clamp(1.2rem,2.1vw,2.4rem)] tracking-[-0.015em]",
             ],
           },
@@ -191,9 +225,13 @@ export const BEATS: Beat[] = [
  */
 export const RIBBON = {
   words: ["EDITORIAL", "RUNWAY", "COMMERCIAL", "LIFESTYLE"],
-  size: [15, 7.5] as [number, number],
-  top: [36, 70] as [number, number],
-  blur: [2.4, 4] as [number, number],
+  // Narrow was 15vw, which put a single word at 580px across a 390 frame: only
+  // two or three letterforms were ever on the stage at once, and a fragment of
+  // a word at low opacity reads as a rendering artifact rather than as depth.
+  // 9vw carries a whole word across, which is what makes it a category.
+  size: [9, 7.5] as [number, number],
+  top: [40, 70] as [number, number],
+  blur: [1.8, 4] as [number, number],
   drift: {
     at: [0, 0.28, 0.62, 1],
     x: ["22vw", "3vw", "-11vw", "-19vw"],

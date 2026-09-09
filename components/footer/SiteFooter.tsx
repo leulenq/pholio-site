@@ -67,11 +67,21 @@ export default function SiteFooter() {
         <div className="flex-1" style={{ minHeight: 24, maxHeight: 64 }} />
 
         {/* Four groups, three standing rules. The rules are grid items of their
-            own so they stretch to the tallest column and stop there. */}
+            own so they stretch to the tallest column and stop there, and they
+            belong to the wide stage only: a rule needs material on both sides
+            of it.
+
+            Two columns on a phone, four on a wide stage. Stacked one per row,
+            the four groups run about 2.2 viewports on a 390 frame, and a panel
+            that has to be scrolled through in three screens is a list of links
+            again rather than the closing panel this component exists to be.
+            Paired, the apparatus fits under the mark inside one viewport,
+            which is the whole composition: Product / Company, then
+            Legal / Contact. */}
         <Arrive>
           <Hairline />
           <div
-            className="grid gap-x-10 gap-y-8 md:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)_1px_minmax(0,1fr)_1px_minmax(0,1.1fr)]"
+            className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)_1px_minmax(0,1fr)_1px_minmax(0,1.1fr)] md:gap-x-10 md:gap-y-8"
             style={{ paddingTop: 32, paddingBottom: 16 }}
           >
             <Group label={LABEL.product} entries={PRIMARY_NAV} />

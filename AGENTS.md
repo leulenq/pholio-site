@@ -13,6 +13,7 @@ the legal corpus. Nothing else.
 |---|---|
 | Building anything visual, ever | [`lessons.md`](lessons.md), then [`docs/design-language/03-banned-ui.md`](docs/design-language/03-banned-ui.md) |
 | Building a scroll-driven section | [`docs/design-language/04-scroll-craft.md`](docs/design-language/04-scroll-craft.md) |
+| Touching anything the home stage renders, or any composition below 1024 | [`docs/design-language/08-narrow-stage.md`](docs/design-language/08-narrow-stage.md) |
 | Studying a reference site, or handed one in a brief | [`docs/design-language/06-reference-capture.md`](docs/design-language/06-reference-capture.md) |
 | Touching auth, cookies, legal constants, `next.config.ts`, or any `/api` call | [`docs/app-integration.md`](docs/app-integration.md) |
 
@@ -130,3 +131,13 @@ contradictions that made this reset necessary.
 
 **Say what you did not do.** If part of a task is blocked, finish everything
 else and state plainly what is outstanding.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

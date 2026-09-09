@@ -252,12 +252,21 @@ export function Hairline({ style }: { style?: CSSProperties }) {
  * It sits inside the row rather than reaching the gutters, and it stops where
  * the tallest column stops.
  */
-export function ColumnRule({ className = "" }: { className?: string }) {
+/**
+ * A standing rule between two groups.
+ *
+ * `display` is a class rather than an inline style on purpose. Inline it beat
+ * the `hidden md:block` its caller passes, so all three rules rendered on a
+ * phone as well, where the groups are stacked and each rule therefore had a
+ * column on its left and nothing at all on its right. That is a hairline drawn
+ * because the composition felt empty, which `03-banned-ui.md` §3.9 rules out.
+ */
+export function ColumnRule({ className = "block" }: { className?: string }) {
   return (
     <span
       aria-hidden
       className={className}
-      style={{ display: "block", width: 1, alignSelf: "stretch", background: HAIRLINE }}
+      style={{ width: 1, alignSelf: "stretch", background: HAIRLINE }}
     />
   );
 }

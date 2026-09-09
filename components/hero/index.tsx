@@ -19,6 +19,7 @@ import { useMediaQuery } from "./useMediaQuery";
 import {
   FRAMES,
   FRAME_HEIGHT,
+  FRAME_STRIDE,
   FRAME_WIDTH,
   FIGURE_DRIFT,
   FIGURE_RISE,
@@ -26,9 +27,11 @@ import {
   FIGURE_STOPS,
   FIGURE_HANDOVER,
   HERO_FRACTION,
+  HERO_OPENING_VH,
   HOME_STAGE_VH,
   STATIC_FIGURE_SCALE,
   WHEEL_EXIT,
+  WORDMARK,
   WORDMARK_EXIT,
   frameIndexAtProgress,
   frameSrc,
@@ -74,11 +77,20 @@ export default function Hero({
   // Below 1024 the figure has no gutter to stand in beside the intelligence
   // copy, so it takes the narrow treatment. See `motion.ts` FIGURE_SCALE.
   const isMobile = useMediaQuery("(max-width: 1023px)");
+  // The phone stage, which is a portrait frame rather than a narrow landscape
+  // one and so composes differently again. See `motion.ts` WORDMARK.
+  const narrow = useMediaQuery("(max-width: 767px)");
   const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
+  // A phone loads every second frame. The sequence is 10.5MB and 127 decodes
+  // at 970x1640, which measured as a 130ms median frame time on a throttled
+  // mobile profile against 17ms for the beat next to it. See
+  // ./useFrameSequence for the measurements and why decode, not drawImage, is
+  // the cost. The timing model is unchanged; only how densely it is sampled.
   const { canvasRef, draw, posterReady, openingReady } = useFrameSequence(
     FRAMES,
     frameSrc,
+    narrow ? FRAME_STRIDE.narrow : FRAME_STRIDE.wide,
   );
 
   // The comp-card beat's ~7MB of plates are held back until the hero's own
@@ -237,7 +249,6 @@ export default function Hero({
     [1, 1, 0]
   );
   const ambientScale = useTransform(scrollYProgress, [0, 0.6, 1], [1, 1.025, 1.08]);
-  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
 
   const grain = (
     <div
@@ -251,12 +262,27 @@ export default function Hero({
     />
   );
 
+  /**
+   * The mark.
+   *
+   * On a wide stage it is set larger than the frame and bleeds past both
+   * edges: at 1440 that costs the outer few percent of a mark whose painted
+   * width is well over two viewports, and the crop reads as scale.
+   *
+   * A phone frame is 2.2 tall to 1 wide. The same coefficient there is a
+   * landscape composition on a portrait frame: it takes a sixth of a six
+   * letter word off the two ends, so the crop stops reading as scale and
+   * starts reading as text that did not fit, and the mark shrinks against the
+   * frame's height at the same time. The narrow stage sets it to the frame
+   * instead, complete, spanning the full width as a lintel over her. See
+   * `motion.ts` WORDMARK.
+   */
   const wordmark = (
     <h1
       data-hero-wordmark
       className="whitespace-nowrap text-center font-editorial leading-none"
       style={{
-        fontSize: "clamp(5rem, 28vw, 28rem)",
+        fontSize: narrow ? WORDMARK.size.narrow : WORDMARK.size.wide,
         color: "#FAF7F2",
         WebkitTextStroke: "1px rgba(201, 165, 90, 0.5)",
       }}
@@ -287,7 +313,12 @@ export default function Hero({
 
           {grain}
           <HeroChrome staticMode />
-          <div className="pointer-events-none absolute inset-0 z-10 flex items-start justify-center px-6 pt-[17vh] opacity-85 md:pt-[15vh]">
+          <div
+            className="pointer-events-none absolute inset-0 z-10 flex items-start justify-center px-6 opacity-85"
+            style={{
+              paddingTop: `${narrow ? WORDMARK.topVh.narrow : WORDMARK.topVh.wide}vh`,
+            }}
+          >
             {wordmark}
           </div>
           <div className="absolute inset-0 z-20 flex items-end justify-center">
@@ -337,20 +368,36 @@ export default function Hero({
       className="relative z-10"
       style={{ height: `${HOME_STAGE_VH}vh` }}
     >
+      {/* The stage is one section holding three scenes, so its own bottom edge
+          is not where the hero stops dressing the header. On the narrow stage
+          the hero's chrome is a single index mark that leaves with the
+          wordmark, and the sitewide marks take over from here rather than
+          thirteen viewports later. See components/header/kit.tsx. */}
+      {narrow ? (
+        <div
+          aria-hidden
+          data-hero-opening
+          className="pointer-events-none absolute left-0 top-0 w-px"
+          style={{ height: `${HERO_OPENING_VH}vh` }}
+        />
+      ) : null}
+
       <div className="sticky top-0 flex h-[100dvh] w-full items-center justify-center overflow-hidden">
         <HeroChrome progress={scrollYProgress} />
         {/* Velvet field. Opaque, so the header's polarity sampler can read it. */}
         <motion.div className="absolute inset-0 z-0" style={{ backgroundColor: bgColor }} />
 
-        {/* ── Ambient Base (mobile + always-on) ── */}
+        {/* ── Ambient base. It rides the camera's scale and leaves when she
+              starts to move; it does not breathe on a timer. A seven second
+              opacity loop was running here for the whole stage, which is the
+              looping animation banned-ui 8.2 rules out and, on a phone, a
+              compositor layer repainting behind every other scene. ── */}
         <motion.div
           className="absolute inset-0 z-[14] pointer-events-none"
           style={{ opacity: sceneryOpacity }}
         >
           <motion.div
-            className="absolute inset-0"
-            animate={{ opacity: [0.07, 0.13, 0.07] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-0 opacity-[0.1]"
             style={{
               background: "radial-gradient(ellipse 80% 80% at 50% 50%, rgba(201, 165, 90, 0.4) 0%, transparent 70%)",
               scale: ambientScale,
@@ -379,8 +426,9 @@ export default function Hero({
 
         {/* ── BEAT 1 — the wordmark, set behind her ── */}
         <motion.div
-          className="pointer-events-none absolute inset-0 z-10 flex items-start justify-center px-6 pt-[17vh] md:pt-[15vh]"
+          className="pointer-events-none absolute inset-0 z-10 flex items-start justify-center px-6"
           style={{
+            paddingTop: `${narrow ? WORDMARK.topVh.narrow : WORDMARK.topVh.wide}vh`,
             opacity: wordmarkOpacity,
             y: wordmarkY,
             willChange: "transform, opacity",
@@ -510,21 +558,6 @@ export default function Hero({
           </div>
         </motion.div>
 
-        {/* ── Scroll indicator ── */}
-        <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-30 pointer-events-none"
-          style={{ opacity: scrollIndicatorOpacity }}
-        >
-          <motion.div
-            className="w-[1px] h-12"
-            style={{
-              background: "linear-gradient(to bottom, transparent, #C9A55A, transparent)",
-              transformOrigin: "top",
-            }}
-            animate={{ scaleY: [0, 1, 0], y: [0, 20, 40], opacity: [0, 1, 0] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
 
       </div>
     </section>

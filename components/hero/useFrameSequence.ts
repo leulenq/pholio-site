@@ -8,6 +8,27 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * One canvas rather than stacked <img> layers: 127 promoted layers is the
  * memory problem `04-scroll-craft.md` §3 warns about, and a single drawImage
  * per changed frame keeps the work off layout entirely.
+ *
+ * ── `stride`, and why a phone needs one ───────────────────────────────────
+ *
+ * Measured on the home stage at 390x844 under a 4x CPU throttle, with the
+ * whole sequence already downloaded so nothing was waiting on the network:
+ * scrubbing the hero and intelligence beats held a *median* frame time of
+ * 130ms, against 17ms across the comp-card beat immediately after it, which
+ * scrubs no footage. Eighty-four long tasks in one pass, the longest 168ms.
+ * A profile put 78% of samples in native work rather than in any script.
+ *
+ * The cause is not drawImage. It is decode. 127 frames at 970x1640 is roughly
+ * 800MB of decoded bitmap if the browser were to hold them all, so it holds
+ * almost none, and every scroll step decodes its frame again from scratch on
+ * the main thread.
+ *
+ * `stride` loads every Nth frame instead of all of them. Nothing else moves:
+ * the timing model in `motion.ts` is authored against the full `FRAMES` array
+ * and stays exactly as it is, and `draw` already snaps to the nearest frame
+ * that has arrived, which is the same code path that carries a slow network.
+ * Halving the count halves both the bytes and the number of live decodes, so
+ * frames survive in the image cache long enough to be redrawn without one.
  */
 
 const CONCURRENCY = 6;
@@ -25,6 +46,8 @@ const OPENING_FRAMES = 12;
 export function useFrameSequence(
   frames: number[],
   srcFor: (frame: number) => string,
+  /** Load every Nth frame. 1 loads all of them. */
+  stride = 1,
 ) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
@@ -43,7 +66,20 @@ export function useFrameSequence(
     let cancelled = false;
     let cursor = 0;
     let openingLoaded = 0;
-    const openingTarget = Math.min(OPENING_FRAMES, frames.length);
+
+    /* The frames this stride actually fetches, in order. Index 0 is always
+       included: it is the poster, and the composition at scroll zero. */
+    const step = Math.max(1, Math.round(stride));
+    const slots: number[] = [];
+    for (let i = 0; i < frames.length; i += step) slots.push(i);
+    if (slots[slots.length - 1] !== frames.length - 1) {
+      slots.push(frames.length - 1);
+    }
+
+    const openingTarget = Math.min(
+      slots.filter((i) => i < OPENING_FRAMES).length,
+      slots.length,
+    );
 
     const loadAt = (index: number) =>
       new Promise<void>((resolve) => {
@@ -54,7 +90,7 @@ export function useFrameSequence(
           if (!cancelled) {
             loaded[index] = true;
             if (index === 0) setPosterReady(true);
-            if (index < openingTarget) {
+            if (index < OPENING_FRAMES) {
               openingLoaded += 1;
               if (openingLoaded >= openingTarget) setOpeningReady(true);
             }
@@ -64,7 +100,7 @@ export function useFrameSequence(
         // A frame that 404s still counts toward the opening, so one missing
         // file degrades the scrub instead of pinning the preloader open.
         image.onerror = () => {
-          if (!cancelled && index < openingTarget) {
+          if (!cancelled && index < OPENING_FRAMES) {
             openingLoaded += 1;
             if (openingLoaded >= openingTarget) setOpeningReady(true);
           }
@@ -76,10 +112,10 @@ export function useFrameSequence(
     // Sequential order, so the opening frames are always the first to arrive.
     const pump = async (): Promise<void> => {
       while (!cancelled) {
-        const index = cursor;
+        const slot = cursor;
         cursor += 1;
-        if (index >= frames.length) return;
-        await loadAt(index);
+        if (slot >= slots.length) return;
+        await loadAt(slots[slot]);
       }
     };
 
@@ -88,7 +124,7 @@ export function useFrameSequence(
     return () => {
       cancelled = true;
     };
-  }, [frames, srcFor]);
+  }, [frames, srcFor, stride]);
 
   const draw = useCallback(
     (target: number) => {
