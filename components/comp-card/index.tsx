@@ -71,11 +71,17 @@ const LABEL_CLASS =
 
 // ── Captions ──────────────────────────────────────────────────────────────
 
-function placeClass(place: CaptionPlace) {
+function placeClass(place: CaptionPlace, stage: StageKind) {
   const base = "pointer-events-none absolute z-40 flex flex-col px-6";
   switch (place) {
     case "top":
-      return `${base} left-1/2 top-[7.5vh] w-full max-w-[44rem] -translate-x-1/2 items-center text-center`;
+      // The narrow stage carries the sitewide index marks in its top corners
+      // from the intelligence beat onward, and a two line head at 7.5vh sits
+      // directly under the wordmark on a 844 frame. It also has room: the
+      // compact row leaves the foot of the stage empty.
+      return `${base} left-1/2 ${
+        stage === "compact" ? "top-[13vh]" : "top-[7.5vh]"
+      } w-full max-w-[44rem] -translate-x-1/2 items-center text-center`;
     case "bottom":
       return `${base} bottom-[8vh] left-1/2 w-full max-w-[42rem] -translate-x-1/2 items-center text-center`;
     case "left":
@@ -175,7 +181,10 @@ function ScrollCaption({
   );
 
   return (
-    <motion.div style={{ x, y, willChange: "transform" }} className={placeClass(place)}>
+    <motion.div
+      style={{ x, y, willChange: "transform" }}
+      className={placeClass(place, stage)}
+    >
       <h2 className={headClass(place)}>
         <Head head={caption.head} />
       </h2>

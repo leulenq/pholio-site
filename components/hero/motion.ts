@@ -45,6 +45,16 @@ export const frameSrc = (frame: number) =>
 export const FRAME_WIDTH = 970;
 export const FRAME_HEIGHT = 1640;
 
+/**
+ * How densely each stage samples `FRAMES`.
+ *
+ * Not a timing change: every cue below is authored against the full array and
+ * stays where it is. This is only how many of those frames a given device
+ * actually fetches and decodes, and the scrub snaps to the nearest one it has.
+ * The measurements behind the narrow value are in `useFrameSequence.ts`.
+ */
+export const FRAME_STRIDE = { wide: 1, narrow: 2 } as const;
+
 // ── Scroll allocation ─────────────────────────────────────────────────────
 //
 // Deliberately uneven. The hero holds longer per frame than anything else so
@@ -166,6 +176,40 @@ export const WHEEL_EXIT = {
   end: progressAtFrame(28),
 } as const;
 
+/**
+ * The mark's size and where it hangs, per stage.
+ *
+ * Wide: unchanged. `28vw` sets the mark larger than the frame on purpose and
+ * the outer few percent of it bleed past the edges, which reads as scale.
+ *
+ * Narrow: a phone frame is roughly 2.2 : 1 in portrait, so the same width
+ * coefficient produces a *smaller* mark against the frame's height while
+ * cropping a *larger* fraction of a six letter word. `23.5vw` is measured, not
+ * guessed: the painted glyphs of PHOLIO in Noto Serif Display at this weight
+ * run about 4.2x the font size, so this lands them across the full width with
+ * the outer stems on the edges and nothing lost. It hangs higher too, so the
+ * mark crowns her instead of crossing her face: at 28vw and 17vh the baseline
+ * sits in her hair on a 390 frame.
+ */
+export const WORDMARK = {
+  size: { wide: "clamp(5rem, 28vw, 28rem)", narrow: "23.5vw" },
+  /** Distance from the top of the frame to the top of the mark's box, in vh. */
+  topVh: { wide: 15, narrow: 9 },
+} as const;
+
+/**
+ * How much of the stage the hero's *opening* occupies, in vh.
+ *
+ * The stage is one 1400vh section holding three scenes, so its section edge
+ * says nothing about when the opening composition has left. This is the scroll
+ * distance from the top of the stage to the frame where the wordmark and the
+ * hero's own chrome have finished travelling out, and it is what the narrow
+ * stage marks with `data-hero-opening` so the sitewide index marks can take
+ * over there instead of staying suppressed for the whole stage. See
+ * `components/header/kit.tsx`, `homeHeroActive`.
+ */
+export const HERO_OPENING_VH = WORDMARK_EXIT.end * SCRUB_VH;
+
 export const INTELLIGENCE_ENTER = {
   start: progressAtFrame(64),
   settled: progressAtFrame(84),
@@ -224,7 +268,13 @@ export const FIGURE_SCALE = {
     1.3 * STATIC_FIGURE_SCALE.desktop,
     1.72 * STATIC_FIGURE_SCALE.desktop,
   ] as const,
-  mobile: [1, 1, 0.94, 0.76, 0.86, 1.0, 1.24],
+  // The narrow close was gentler than the wide one by roughly a third, which
+  // on a portrait frame left her a small figure at the bottom of a mostly
+  // empty stage for the beat that is supposed to be the closest the camera
+  // ever gets. A phone frame is 2.2 : 1, so a plate that fits it by width is
+  // only about 0.78 of it tall at rest; the close has to work harder here than
+  // on a landscape frame, not less.
+  mobile: [1, 1, 0.94, 0.76, 0.86, 1.08, 1.46],
 } as const;
 
 /**
@@ -234,7 +284,7 @@ export const FIGURE_SCALE = {
  */
 export const FIGURE_RISE: { desktop: number[]; mobile: number[] } = {
   desktop: [0, 0, 0, 0, 4, 22, 46],
-  mobile: [0, 0, 0, 0, 4, 14, 28],
+  mobile: [0, 0, 0, 0, 4, 17, 37],
 };
 
 /**
@@ -244,7 +294,7 @@ export const FIGURE_RISE: { desktop: number[]; mobile: number[] } = {
  * 1.72 the plate is about 1.7 viewports tall, so anything less than this left
  * her boots hanging in the top of the comp-card beat.
  */
-export const FIGURE_HANDOVER = { desktop: -245, mobile: -200 } as const;
+export const FIGURE_HANDOVER = { desktop: -245, mobile: -235 } as const;
 
 /**
  * Stops for all three: hold, her first move, arrival, the wide frame, the pan

@@ -171,7 +171,10 @@ export const ROW_X: Stage<[string, string, string, string]> = {
 /** Vertical offsets in the row, in px. Two rows on a narrow stage. */
 export const ROW_Y: Stage<[number, number, number, number]> = {
   wide: [-4, 4, -4, 4],
-  compact: [-122, -122, 152, 152],
+  // Both rows sit a little below the stage's centre so the pair balances the
+  // heading above it rather than leaving a fifth of the frame empty at the
+  // foot. See `placeClass` for the matching heading inset.
+  compact: [-104, -104, 170, 170],
 };
 
 export const ROW_SCALE: Stage<number> = { wide: 0.62, compact: 0.46 };
