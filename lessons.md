@@ -1540,6 +1540,12 @@ tried as the close and rejected here; it belongs to prose, not to the beat.
 
 ## 30. The About page is a position, not a manifesto, and the founding year may be stated
 
+**Partly superseded by §31.** The diagnosis of the old page's bugs (30 below),
+the biography standard (§30.5) and the founding-year decision (§30.4) all
+stand. The art direction this entry describes was rejected: §30.1's "register
+of statements", §30.2's vertical thread, and §30.6's stripping of the
+Collective are overturned by §31.
+
 **Date:** 2026-09-08
 **Surface:** `/about` (`components/about/`)
 
@@ -1621,3 +1627,147 @@ left out rather than softened.
 portraits on cream, the surname in the dark gold italic. Gone: the label
 above the heading, biographies gated behind hover, hover scale and shadow,
 and "Engineered by Visionaries".
+
+
+## 31. Restraint is not stillness, and a correction is not a licence to flatten
+
+**Date:** 2026-09-09
+**Surface:** `/about`, and the sitewide page invitation
+
+**What was built.** The rebuild in §30: four sections on alternating fields,
+one 1px vertical line as the page's only scroll-tied element, display type at
+section scale, and the argument carried by paragraphs and by a register of
+statement-plus-mechanism rows.
+
+**What was wrong.**
+
+> "This pass moved the About page in the wrong direction."
+
+> "The new page has become too safe, static and conventional. Just terrible."
+
+> "Override any design rules, heuristics, skills, or conclusions from the
+> previous pass that caused that character to be removed. The skills are
+> guidance, not authority. 'Restrained,' 'credible,' 'public-facing,' or
+> 'clear' should not be interpreted as static layouts, conservative
+> typography, reduced motion, or paragraphs sitting inside conventional
+> sections."
+
+> "I am not asking for less content. I'm asking you to stop treating content
+> as paragraphs that need somewhere to sit."
+
+> "I want the final About page to feel like someone actually art-directed it,
+> not like we fed good information into a tasteful design system."
+
+**31.1 The failure was a method, not a section.** Each individual decision in
+§30 was defensible against a written rule, and the sum of them was a page with
+no character. Anti-slop rules describe what not to do; they do not compose a
+design. When every choice on a surface can be justified by a ban, nobody has
+art-directed anything.
+
+**The rule.** The ban list and the language skills are a screen applied to
+work, never a substitute for it. Before invoking a rule to remove something,
+say what takes its place. "Restrained" describes a register, not an absence of
+scale, contrast, or motion.
+
+**31.2 A statement that is merely large is not a scene.**
+
+> "The previous treatment is much closer to the ambition I want: enormous
+> typography, strong contrast, gold emphasis, viewport-scale composition and a
+> sense that this is a moment in the page, not another content section."
+
+> "And bring motion back into the idea. Typography, emphasis, the gold sweep,
+> transitions and scroll should participate in communicating the statement. I
+> don't want a giant sentence that merely happens to be large."
+
+**The rule.** A page's defining scene owns the screen and is built from a
+single idea that the motion carries. THE LINE is now what the manifesto
+became: a pinned stage where three statements travel through the frame at
+viewport scale and cross a gold rule that draws as the scene runs, on cream,
+with the previous scene's photograph receding into the paper as the first
+statement arrives. The section is named for the brand's own mark, which is
+what the reader crosses. "Manifesto" is retired as a word, not as an ambition.
+
+**31.3 Recover a composition before improving it.**
+
+> "Return to the previous Collective implementation as the visual baseline. I
+> don't mean loosely take inspiration from it. Recover the actual previous
+> composition and interaction where possible, understand how it worked, and
+> evolve that."
+
+> "What needed improvement in the old version was primarily the content,
+> hierarchy, responsiveness, polish and storytelling, not the fundamental art
+> direction."
+
+**The rule.** When the owner names a surface as the baseline, read the previous
+implementation out of git and rebuild from it, then improve the named
+dimensions and nothing else. The Collective keeps the large portrait triptych,
+the grayscale plate that returns to colour under the pointer, the display-serif
+name with the family name in gold italic, and the gold micro-label on the role.
+What changed is what was actually broken: the biographies came out from behind
+the hover (they were the only thing establishing credibility, and a phone never
+saw them), the three columns took per-column parallax so they stop reading as a
+row of cards, and the copy became researched and verifiable.
+
+This narrows §1: inherit the system and design the component **unless the owner
+names a specific surface as the baseline**, in which case recover it.
+
+**31.4 Credibility is not a layout.**
+
+> "The page should communicate credibility without looking like it was designed
+> primarily to prove credibility."
+
+**The rule.** Proof belongs on the page, but it is not the composition. The
+seven mechanisms now sit in THE RECORD, deliberately quiet, at document scale
+on ink, directly after the scene that says the three things they back. The
+contrast between the two is the pacing: the claim is a scene, the proof is
+small print that does not perform.
+
+**31.5 The gold line is the pulsing invitation, and it is sitewide.**
+
+> "I specifically said i liked the gold line in the old page and to keep it and
+> you completely changed it and turned it into some weird vertical line."
+
+> "Each page on pholio (unless explicitly told so and outside of the landing
+> page) should have 'Explore our manifesto' or whatever is relevant to that
+> page with the small gold line pulsing just like the old page."
+
+**The rule.** `components/EditorialVerticalDivider.tsx` is restored exactly as
+it was, and `components/ScrollInvitation.tsx` composes it with the label into
+the site's standing page cue: a small tracked line naming what is below, over
+the divider travelling on its 2.5s loop. Every page carries one, written for
+that page, pointing at a real anchor. It is live on `/about` ("Where Pholio
+draws the line"), `/agencies` ("See what each agency asks for", rendered only
+when the register loaded, since a cue pointing at nothing is a dead link) and
+the `/talent` hero ("See the comp card"). The landing page owns its own chrome
+and is excepted.
+
+**Two documents overruled, by the owner, and recorded so nobody restores
+them by citation:** `03-banned-ui.md` §2.3 bans scroll cues and §8.2 bans
+looping animation. Both are generic anti-slop rules aimed at bouncing chevrons
+and shimmering gradients. This is a named brand asset with a written label and
+a real destination, and it stays.
+
+**31.6 The scoped motion bans are scoped.** §14.3, §17 and §18 (no opacity on
+display copy, one mechanism, travel not reveal) were written for the home
+scroll sequence and remain correct there. They are not a sitewide prohibition
+on motion, and reading them as one is part of how §30 happened. What survives
+of them everywhere, because it is about quality rather than quantity: nothing
+parks, nothing pops, and a scene is judged by freezing it at any scroll
+position.
+
+**31.7 A tree that branches on `useReducedMotion` does not hydrate.** Found
+while fixing this: the reduced-motion branch returned a different tree from
+the server's, React discarded it, framer-motion lost its scroll target, and
+the entire page rendered empty for anyone with the preference set.
+
+**The rule.** `useReducedMotion()` is false on the server and on the first
+client render. Where two compositions genuinely differ, the still one is what
+the server sends and what hydrates, and the scroll-driven one mounts after,
+behind a `useSyncExternalStore` hydration gate. Where they differ only in
+values, keep one tree and change the props. Verify by loading the page with
+the preference on and counting the sections, not by reading the code.
+
+**31.8 What was cut.** The "What Pholio makes" section is gone.
+
+> "we have a dedicated 'TALENT' AND 'AGENCIES' page to explain features. This
+> is about pholio as a platform/company."

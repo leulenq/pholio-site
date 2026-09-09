@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ScrollInvitation } from "@/components/ScrollInvitation";
 import { channelPhrase, fetchAgencyRegister } from "@/lib/agency-registry";
 
 export const metadata: Metadata = {
@@ -51,6 +52,21 @@ export default async function AgenciesPage() {
             is the authority if the two ever disagree.
           </p>
 
+          {/* The invitation renders only when there is a register under it:
+              a cue pointing at an element that failed to load is a dead link. */}
+          {agencies && agencies.length > 0 && (
+            <div className="mt-16">
+              <ScrollInvitation
+                label="See what each agency asks for"
+                targetId="register"
+                color="#A8894E"
+                align="left"
+                delay={0.5}
+                muted={false}
+              />
+            </div>
+          )}
+
           {agencies === null ? (
             /* Not "no agencies" — that is a different and false sentence, and it
                would sit in the CDN for half an hour after the app came back. */
@@ -63,7 +79,7 @@ export default async function AgenciesPage() {
               listed, so this says what has been verified, not what exists.
             </p>
           ) : (
-            <ul className="mt-16 border-t border-[#050505]/10">
+            <ul id="register" className="mt-16 border-t border-[#050505]/10">
               {agencies.map((agency) => (
                 <li key={agency.seriesId} className="border-b border-[#050505]/10">
                   <Link

@@ -6,28 +6,11 @@
  * are this page's. See lessons.md §1.
  */
 
-import {
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type ReactNode,
-} from "react";
+import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
-import {
-  motion,
-  useReducedMotion,
-  useTransform,
-  type MotionValue,
-} from "framer-motion";
+import { motion, useReducedMotion, type MotionValue } from "framer-motion";
 
-import {
-  ARRIVE_DURATION,
-  ARRIVE_RISE,
-  ARRIVE_STAGGER,
-  SWEEP_LENGTH,
-  TIP_LENGTH,
-} from "./motion";
+import { ARRIVE_DURATION, ARRIVE_RISE, ARRIVE_STAGGER, EASE as ARRIVAL_EASE } from "./motion";
 
 export const INK = "#050505";
 export const CREAM = "#FAF7F2";
@@ -44,7 +27,7 @@ export const ON_CREAM_SOFT = "rgba(15, 23, 42, 0.66)";
 export const ON_CREAM_FAINT = "rgba(15, 23, 42, 0.62)";
 export const HAIR_CREAM = "rgba(15, 23, 42, 0.12)";
 
-export const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+export const EASE = ARRIVAL_EASE;
 
 /** The page's measure. Same shell as the footer so the two agree on an edge. */
 export const SHELL = "mx-auto w-full max-w-[1440px] px-6 md:px-14";
@@ -119,99 +102,6 @@ export function Arrive({
 }
 
 /* ══════════════════════════════════════════════════════════════════════
-   THE THREAD
-   A 1px vertical line that draws from its top edge as `progress` runs
-   0 to 1. Only transforms move: the solid line scales from the top, and a
-   short gradient tip travels ahead of it so the drawn edge is soft rather
-   than a cut. `lead` leaves the line solid to its final edge so it can hand
-   over across a section boundary; without it the last TIP_LENGTH fades,
-   so the line dissolves into whatever it was pointing at.
-   ══════════════════════════════════════════════════════════════════════ */
-
-export function Thread({
-  progress,
-  color,
-  lead = false,
-  sweep = false,
-}: {
-  progress: MotionValue<number>;
-  color: string;
-  lead?: boolean;
-  sweep?: boolean;
-}) {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(0);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setHeight(entry.contentRect.height);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const solidLength = lead ? height : Math.max(height - TIP_LENGTH, 0);
-  const scaleY = useTransform(progress, (p) =>
-    height > 0 ? (p * solidLength) / height : 0,
-  );
-  const tipY = useTransform(progress, (p) => p * solidLength);
-
-  return (
-    <div ref={ref} aria-hidden className="absolute inset-y-0 left-0 w-px">
-      {sweep && (
-        <span
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: 1,
-            height: SWEEP_LENGTH,
-            background: `linear-gradient(to bottom, transparent, ${color}, transparent)`,
-          }}
-        />
-      )}
-      <motion.span
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: color,
-          transformOrigin: "top",
-          scaleY: reduce ? (lead ? 1 : solidLength / Math.max(height, 1)) : scaleY,
-        }}
-      />
-      {!reduce && (
-        <motion.span
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: 1,
-            height: TIP_LENGTH,
-            background: `linear-gradient(to bottom, ${color}, transparent)`,
-            y: tipY,
-          }}
-        />
-      )}
-      {reduce && !lead && (
-        <span
-          style={{
-            position: "absolute",
-            top: solidLength,
-            left: 0,
-            width: 1,
-            height: TIP_LENGTH,
-            background: `linear-gradient(to bottom, ${color}, transparent)`,
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════════════════
    TEXT
    ══════════════════════════════════════════════════════════════════════ */
 
@@ -268,5 +158,27 @@ export function RuleLink({
       {children}
       {rule}
     </a>
+  );
+}
+
+/** The gold rule that gives THE LINE its name: a hairline that draws across
+    the stage as the scene runs. Transform only, so it costs nothing. */
+export function DrawnRule({
+  progress,
+  color = GOLD_DARK,
+}: {
+  progress: MotionValue<number>;
+  color?: string;
+}) {
+  const reduce = useReducedMotion();
+  return (
+    <motion.span
+      aria-hidden
+      className="absolute left-0 h-px w-full origin-left"
+      style={{
+        background: `linear-gradient(to right, transparent, ${color}, ${color}, transparent)`,
+        scaleX: reduce ? 1 : progress,
+      }}
+    />
   );
 }

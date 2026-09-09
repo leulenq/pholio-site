@@ -1,32 +1,35 @@
 /**
- * /about — the clearest public statement of what Pholio believes, why it
- * exists, who makes it, and why it can be trusted.
+ * /about — what Pholio believes, why it exists, who makes it, and why it can
+ * be trusted, built as a sequence of scenes rather than a stack of sections.
  *
- * Four sections, in the order the argument needs them:
+ *   Hero        ink    the statement, the photograph as a camera, the invitation
+ *   Origin      ink    why it exists, three beats travelling past a plate
+ *   The Line    cream  the defining scene: three statements at viewport scale
+ *   The Record  ink    the proof, deliberately quiet, in document register
+ *   Collective  cream  the triptych, at the scale the portraits deserve
+ *   Close       ink    the one sentence, and the two doors
  *
- *   Hero        ink    the belief, the figure, the invitation, the thread
- *   Position    cream  why it exists, the commitments, the one sentence
- *   Work        ink    the product's own output, so the claims are checkable
- *   Collective  cream  who makes it, and the two doors out
- *
- * Every section carries an opaque field so the header's polarity sampler
- * can read the paper beneath it; every field change has an element carrying
- * it (the thread across the first, the artifact across the second, the
- * people across the third).
+ * The pacing is the design: loud, moving, loud, quiet, loud, still. Every
+ * section carries an opaque field so the header's polarity sampler can read
+ * the paper beneath it.
  */
 
+import Close from "./Close";
 import Collective from "./Collective";
 import Hero from "./Hero";
-import Position from "./Position";
-import Work from "./Work";
+import Origin from "./Origin";
+import Record from "./Record";
+import TheLine from "./TheLine";
 
 export function AboutPage() {
   return (
     <>
       <Hero />
-      <Position />
-      <Work />
+      <Origin />
+      <TheLine />
+      <Record />
       <Collective />
+      <Close />
     </>
   );
 }
