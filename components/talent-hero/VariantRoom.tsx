@@ -21,6 +21,7 @@ import {
   motion,
   type HeroVariantProps,
 } from "./kit";
+import { ScrollInvitation } from "@/components/ScrollInvitation";
 
 export const ROOM_FIELD = "#050505";
 
@@ -108,6 +109,15 @@ export default function VariantRoom({ progress, prm }: HeroVariantProps) {
         <Rise delay={0.88} prm={prm} style={{ marginTop: "clamp(2.2rem, 5vh, 3.2rem)" }}>
           <HeroAction tone="onInk" />
         </Rise>
+      </motion.div>
+
+      {/* The sitewide invitation. It sits in the hero's own exit group so it
+          leaves with the scene rather than hanging over the next one. */}
+      <motion.div
+        className="absolute inset-x-0 bottom-10 z-[3] flex justify-center md:bottom-12"
+        style={{ opacity: prm ? 1 : exit.opacity }}
+      >
+        <ScrollInvitation label="See the comp card" targetId="card" />
       </motion.div>
     </div>
   );

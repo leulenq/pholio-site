@@ -3,146 +3,128 @@
 /**
  * THE HERO
  *
- * One statement, one figure, one invitation, and the thread.
+ * One statement, held over a photograph, with the invitation beneath it.
  *
- * The statement is the page's belief. The figure is the person the whole
- * platform is about, standing in the ink rather than framed by it: the
- * photograph's own black dissolves into the field through a soft mask, so
- * there is no plate edge to read as a crop. The invitation names the section
- * that backs the statement up, and the thread hangs from it: a gold sweep at
- * rest, a line that draws down the text column's left edge as the reader
- * scrolls, and keeps drawing across the field change into the next section
- * until it reaches that section's heading. The scroll reveals the link
- * between the claim and its backing; nothing else on the hero moves.
+ * The photograph is a camera rather than a backdrop: it pushes in for the
+ * whole life of the scene while the composition rises off the top of the
+ * frame, so the hero is still moving when the next scene takes the screen.
+ * The invitation is the owner's kept asset, the label over the pulsing gold
+ * divider, and it names the scene it travels to.
  *
- * The first frame stands on its own. Freeze it at scroll zero and it is a
- * complete composition: statement, figure, sweep.
+ * Freeze the page at scroll zero and this frame stands on its own.
  */
 
 import Image from "next/image";
-import { useRef, type MouseEvent } from "react";
-import { useReducedMotion, useScroll } from "framer-motion";
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
-import { HERO, POSITION } from "./content";
+import { ScrollInvitation } from "@/components/ScrollInvitation";
+
+import { HERO, LINE_ID } from "./content";
+import { GOLD, INK, ON_INK, ON_INK_SOFT, SHELL, Verdict } from "./kit";
 import {
-  Arrive,
-  ArriveGroup,
-  GOLD,
-  INK,
-  ON_INK,
-  ON_INK_SOFT,
-  RuleLink,
-  SHELL,
-  Thread,
-  Verdict,
-} from "./kit";
-import { HERO_THREAD_OFFSET } from "./motion";
+  EASE,
+  HERO_CUE_FADE,
+  HERO_IMAGE_SCALE,
+  HERO_IMAGE_Y,
+  HERO_TEXT_Y,
+} from "./motion";
 
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: [...HERO_THREAD_OFFSET],
+    offset: ["start start", "end start"],
   });
 
-  /* The invitation is a real anchor. The handler only adds the smooth
-     travel; without JavaScript, or with it, the link still lands. */
-  const goToPosition = (event: MouseEvent<HTMLAnchorElement>) => {
-    const target = document.getElementById(POSITION.id);
-    if (!target) return;
-    event.preventDefault();
-    target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-    window.history.replaceState(null, "", `#${POSITION.id}`);
-  };
+  const imageScale = useTransform(scrollYProgress, [0, 1], [...HERO_IMAGE_SCALE]);
+  const imageY = useTransform(scrollYProgress, [0, 1], [...HERO_IMAGE_Y]);
+  const textY = useTransform(scrollYProgress, [0, 1], [...HERO_TEXT_Y]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.82], [1, 0]);
+  const cueOpacity = useTransform(scrollYProgress, [...HERO_CUE_FADE], [1, 0]);
 
   return (
     <section
       ref={ref}
       aria-labelledby="about-hero-title"
-      className="texture-grain relative overflow-hidden"
+      className="texture-grain relative flex min-h-mobile-screen w-full items-center justify-center overflow-hidden"
       style={{ background: INK, color: ON_INK }}
     >
-      <div
-        className={`${SHELL} relative grid min-h-mobile-screen grid-cols-[1px_minmax(0,1fr)] gap-x-6 md:grid-cols-[minmax(0,58fr)_minmax(0,42fr)] md:gap-x-10`}
-        style={{
-          gridTemplateRows: "auto minmax(0, 1fr)",
-          paddingTop: "clamp(7.5rem, 20vh, 12rem)",
-        }}
+      {/* The photograph, and the two washes that let type sit on it: a
+          vertical gradient into the ink at both edges, and a centre veil that
+          holds the headline's contrast wherever her highlights fall. */}
+      <motion.div
+        aria-hidden={false}
+        className="absolute inset-0 z-0"
+        style={reduce ? undefined : { scale: imageScale, y: imageY }}
       >
-        {/* The statement */}
-        <ArriveGroup
-          className="col-span-2 row-start-1 md:col-span-1 md:col-start-1"
-          amount={0}
-        >
-          <Arrive>
-            <h1
-              id="about-hero-title"
-              className="font-editorial"
-              style={{
-                fontSize: "clamp(2.7rem, 6.1vw, 6.5rem)",
-                lineHeight: 1.02,
-                maxWidth: "13.5ch",
-              }}
-            >
-              {HERO.headlineBefore}{" "}
-              <Verdict color={GOLD}>{HERO.verdict}</Verdict>
-              {HERO.headlineAfter}
-            </h1>
-          </Arrive>
-          <Arrive>
-            <p
-              className="mt-8 max-w-[40ch] font-sans text-[15px] font-light leading-relaxed md:mt-10 md:text-[17px]"
-              style={{ color: ON_INK_SOFT }}
-            >
-              {HERO.support}
-            </p>
-          </Arrive>
-          <Arrive className="mt-10 md:mt-12">
-            <RuleLink
-              href={`#${POSITION.id}`}
-              onClick={goToPosition}
-              color={GOLD}
-              className="text-[13px] tracking-[0.02em] md:text-[14px]"
-            >
-              {HERO.invitation}
-            </RuleLink>
-          </Arrive>
-        </ArriveGroup>
-
-        {/* The thread. Its row runs from under the invitation to the section's
-            bottom edge, so the line can hand over to the next section with no
-            measured coordinate involved. */}
+        <Image
+          src="/about/hero.jpg"
+          alt={HERO.imageAlt}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[62%_18%] md:object-[78%_34%]"
+          style={{ filter: "grayscale(1) contrast(1.06)" }}
+        />
         <div
-          className="relative col-start-1 row-start-2 mt-4 md:mt-5"
-          style={{ minHeight: 140 }}
-        >
-          <Thread progress={scrollYProgress} color={GOLD} lead sweep />
-        </div>
-
-        {/* The figure. In the second column beside the thread on a phone; on a
-            desktop it stands the full height of the section at the right,
-            outside the grid, so its scale is set by the viewport and not by
-            the text column. The mask fades its top and foot into the ink so
-            there is no plate edge to read as a crop. */}
-        <div
-          className="relative col-start-2 row-start-2 mt-2 w-full md:absolute md:col-auto md:row-auto md:inset-y-0 md:right-0 md:mt-0 md:w-auto"
+          className="absolute inset-0"
           style={{
-            aspectRatio: "2 / 3",
-            mask: "linear-gradient(to bottom, transparent, #000 10%, #000 84%, transparent) intersect, linear-gradient(to right, transparent, #000 26%, #000 92%, transparent)",
+            background:
+              "linear-gradient(to bottom, rgba(5,5,5,0.82) 0%, rgba(5,5,5,0.42) 34%, rgba(5,5,5,0.56) 66%, #050505 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(112% 72% at 40% 46%, rgba(5,5,5,0.80) 0%, rgba(5,5,5,0.34) 50%, transparent 76%)",
+          }}
+        />
+      </motion.div>
+
+      <motion.div
+        className={`${SHELL} relative z-10 text-center`}
+        style={reduce ? undefined : { y: textY, opacity: textOpacity }}
+      >
+        <motion.h1
+          id="about-hero-title"
+          initial={reduce ? false : { opacity: 0, y: 42 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.4, ease: EASE }}
+          className="font-editorial mx-auto"
+          style={{
+            fontSize: "clamp(2.9rem, 8.6vw, 9.5rem)",
+            lineHeight: 0.95,
+            letterSpacing: "-0.03em",
+            maxWidth: "15ch",
           }}
         >
-          <Image
-            src="/about/origin-dark.jpg"
-            alt={HERO.figureAlt}
-            fill
-            priority
-            sizes="(max-width: 768px) 70vw, 46vw"
-            className="object-cover"
-            style={{ filter: "grayscale(1)" }}
-          />
-        </div>
-      </div>
+          {HERO.headlineBefore}{" "}
+          <Verdict color={GOLD}>{HERO.verdict}</Verdict>
+          {HERO.headlineAfter}
+        </motion.h1>
+
+        <motion.p
+          initial={reduce ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: reduce ? 0 : 0.6, ease: EASE }}
+          className="mx-auto mt-9 max-w-xl font-sans text-[14px] font-light leading-[1.8] tracking-wide md:mt-12 md:text-[16px]"
+          style={{ color: ON_INK_SOFT }}
+        >
+          {HERO.support[0]}
+          <br className="hidden sm:block" />{" "}
+          {HERO.support[1]}
+        </motion.p>
+      </motion.div>
+
+      <motion.div
+        className="absolute bottom-12 left-1/2 z-20 -translate-x-1/2"
+        style={reduce ? undefined : { opacity: cueOpacity }}
+      >
+        <ScrollInvitation label={HERO.invitation} targetId={LINE_ID} color={GOLD} />
+      </motion.div>
     </section>
   );
 }
