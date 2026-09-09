@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 
-import { AboutPageContent } from "@/components/about";
+import { AboutPage } from "@/components/about";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Pholio is building the next standard for creative discovery. Meet the team and read the manifesto.",
+    "Pholio is a free toolkit for applying to agencies, and a free intake link for the agencies that receive them. Where it stands, what it makes, and who makes it.",
 };
 
-export default function AboutPage() {
+export default function About() {
   return (
     <div className="min-h-mobile-screen bg-[#050505]">
-      <AboutPageContent />
+      <AboutPage />
     </div>
   );
 }

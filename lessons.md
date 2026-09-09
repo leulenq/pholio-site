@@ -1537,3 +1537,87 @@ casting." Two lines, one use each, both shipped: the card travels inside
 the application to the agency the talent chose, and it is the thing left
 with the client at a casting. The strategy's "gets you considered" line was
 tried as the close and rejected here; it belongs to prose, not to the beat.
+
+## 30. The About page is a position, not a manifesto, and the founding year may be stated
+
+**Date:** 2026-09-08
+**Surface:** `/about` (`components/about/`)
+
+**The direction.** Rebuild the page from first principles. Keep three
+ideas as starting points, not designs: The Collective, the general idea of
+a stated point of view (with the word "manifesto" in doubt), and the hero's
+invitation to read that point of view with its vertical gold sweep. Diagnose
+and fix the hero and manifesto bugs. Rewrite every word, including the
+words the owner liked. Research the three people and verify anything
+published; no résumé dumps, nothing overly personal. **Pholio was
+established in 2025.**
+
+**What was wrong with the page that shipped.** Diagnosed in a browser, not
+inferred:
+
+- The hero's photograph overflowed its section (`bottom: -24dvh`, scaled
+  to 1.25) and bled through the next section's 90%-alpha background.
+- A radial gold glow pulsed on a timer; a travelling dot looped under a
+  "scroll to explore" cue; a circle breathed in the closing section. All
+  three are looping motion, and two are the scroll cue the ban list names.
+- Display copy faded and rose on every section, and the manifesto's lines
+  slid in from alternating sides while a second wrapper faded the whole
+  block: two fades stacked on one element, the "PowerPoint" motion §14.3
+  retired.
+- `tracking-[ -0.04em]` contained a space, so the class never applied.
+- Two vertical rules ran the full height of the manifesto at 10% gold, a
+  giant `P` at 3% opacity sat behind it as a stain, and the word `Human`
+  at 30vw was cut to `uman` by its own right edge.
+- Two copies of `EditorialVerticalDivider` existed, one of them imported
+  from the wrong path. The hero photograph was a 10483 × 7862 source.
+- `ESTABLISHED 2024` appeared twice, and the year was wrong.
+- The copy was the corporate-visionary register the language skill's
+  worked example already condemns ("The Architecture of Human Discovery",
+  "Engineered by Visionaries", "discovery engine"), with two
+  procurement-flavoured claims in the biographies.
+
+**The rules.**
+
+**30.1 A brand page states a position and publishes its refusals.** The
+language system gives an About page one sentence of philosophy and no
+manifesto. What replaces the manifesto is the industry's native trust
+surface: the things Pholio will not do, each paired with the mechanism
+that makes it checkable. The section is called what it is, "Where Pholio
+stands", and it opens with why the company exists in three paragraphs of
+fact. "Manifesto" is retired as a word and as a shape.
+
+**30.2 The thread is the page's one scroll-tied element.** The vertical
+gold sweep the owner kept is now the hero's invitation made physical: a
+short sweep at rest under the link, a 1px line that draws down the text
+column's left edge as the reader scrolls, crosses the field change from ink
+to cream, and dissolves at the heading of the section the link names.
+The scroll reveals the connection between the claim and its backing.
+Nothing else on the page moves with scroll; everything else arrives once
+and holds, in the register of the legal documents.
+
+**30.3 Copy and motion are one design.** The statement is the belief, the
+figure is the person the platform is about, the invitation names the
+backing, and the thread takes the reader to it. Freeze the hero at scroll
+zero and it is a finished composition.
+
+**30.4 The founding year may be stated.** This supersedes the founding-date
+clause of §6, by the owner's instruction on 2026-09-08. "Pholio began in
+2025" appears on the page, from one constant (`FOUNDED` in
+`components/about/content.ts`). The rest of §6 stands: no entity, no
+jurisdiction, no registration, no address. The shared language references
+(`product-facts.md` §3, `judgment.md` §4) still carry the older clause and
+are byte-identical with pholio-app's copies, so they are corrected in both
+repos together, not here alone.
+
+**30.5 A biography is one or two verifiable sentences about why this
+person is credible for this product.** Nothing is published about a
+person that a public source does not support: the App Store listing for
+PXI Labs, Paperjam's profile of Alexander Rieder as co-producer of Fashion
+Week Brooklyn, the University of Kentucky lab page and the public
+repositories for Leul Enquanhone. Claims that could not be verified were
+left out rather than softened.
+
+**30.6 The Collective keeps its concept and loses its furniture.** Three
+portraits on cream, the surname in the dark gold italic. Gone: the label
+above the heading, biographies gated behind hover, hover scale and shadow,
+and "Engineered by Visionaries".
