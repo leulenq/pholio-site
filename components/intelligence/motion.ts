@@ -7,14 +7,9 @@
  * out.** Nothing is revealed, nothing fades, nothing splits, and no line is
  * uncovered by an edge belonging to it (`lessons.md` §17, §18).
  *
- * The message is the talent line from `pholio-strategic-analysis-2026-08.md`
- * §9.1, split across the three beats: "sees the frame" (the camera bridge) /
- * "Every agency, right." (spec conformance — the digitals are correct for
- * wherever they're going) / "The truth, where you stand." (the tracker —
- * silence made legible instead of a void). Revised 2026-08-15 from an earlier
- * "sees you / Understood before you send" version that was atmospheric but
- * didn't say what was understood; see `lessons.md` for the reasoning if that
- * line ever looks worth reviving.
+ * Three remarks against the camera: "sees the frame" / "Every agency, its
+ * own set." / "The wait has a date." The photograph, the packet that changes
+ * with the desk, the wait with a calendar instead of a void (`lessons.md` §33).
  *
  * Beats differ in where they rest, how big they are, how far they come from
  * and how long they hold. They do not differ in mechanism.
@@ -85,7 +80,7 @@ export type Beat = {
  * roughly 2.2 : 1 with her filling most of it, and the type layer sits behind
  * her, so the only place a line is reliably readable is the band above her
  * head. Scattering the wide placements into a narrow frame put fragments where
- * she is: at 390 the closing verdict `stand.` was rendering behind her hair for
+ * she is: at 390 the closing verdict `date.` was rendering behind her hair for
  * most of its hold, which is the one thing §13.3 rules out.
  *
  * So the narrow stage keeps the band and varies the *lockup inside it*, which
@@ -128,11 +123,11 @@ export const BEATS: Beat[] = [
     ],
   },
   {
-    key: "you",
+    key: "set",
     frames: [114, 136, 152, 168],
     lockups: [
       {
-        id: "you-small",
+        id: "set-small",
         delay: 0,
         // Narrow: the quiet half sits low and left on the band's own baseline,
         // so the two halves read as one line with a size jump rather than as
@@ -142,7 +137,7 @@ export const BEATS: Beat[] = [
         exit: [34, 48],
         pieces: [
           {
-            words: [{ t: "Every agency," }],
+            words: [{ t: "Every agency, its own" }],
             small: true,
             type: [
               "text-[clamp(1.05rem,4.6vw,1.6rem)] tracking-[-0.015em]",
@@ -152,7 +147,7 @@ export const BEATS: Beat[] = [
         ],
       },
       {
-        id: "you-verdict",
+        id: "set-verdict",
         delay: 0.26,
         pos: [
           "right-6 top-[14%] text-right",
@@ -162,7 +157,7 @@ export const BEATS: Beat[] = [
         exit: [40, 72],
         pieces: [
           {
-            words: [{ t: "right.", verdict: true }],
+            words: [{ t: "set.", verdict: true }],
             type: [
               "text-[clamp(3rem,20vw,5rem)]",
               "text-[clamp(3.6rem,9vw,10.8rem)]",
@@ -173,18 +168,18 @@ export const BEATS: Beat[] = [
     ],
   },
   {
-    key: "understood",
+    key: "wait",
     frames: [160, 184, 193, null],
     lockups: [
       {
-        id: "understood-large",
+        id: "wait-large",
         delay: 0,
         pos: ["left-6 top-[15%]", "left-6 top-[46%] md:left-12"],
         enter: [104, 64],
         exit: null,
         pieces: [
           {
-            words: [{ t: "The truth," }],
+            words: [{ t: "The wait" }],
             type: [
               "text-[clamp(2.2rem,13.5vw,3.6rem)] tracking-[-0.045em]",
               "text-[clamp(3rem,6.8vw,8rem)] tracking-[-0.045em]",
@@ -193,7 +188,7 @@ export const BEATS: Beat[] = [
         ],
       },
       {
-        id: "understood-small",
+        id: "wait-small",
         delay: 0.3,
         // Narrow: hangs directly off the large line's baseline, indented. At
         // 17% it was a third of a viewport lower, which on a phone is her hair
@@ -203,7 +198,7 @@ export const BEATS: Beat[] = [
         exit: null,
         pieces: [
           {
-            words: [{ t: "where you " }, { t: "stand.", verdict: true }],
+            words: [{ t: "has a " }, { t: "date.", verdict: true }],
             small: true,
             type: [
               "text-[clamp(1.05rem,4.4vw,1.5rem)] tracking-[-0.015em]",

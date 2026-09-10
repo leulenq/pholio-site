@@ -95,7 +95,7 @@ export const CARD_VH = 520;
  * rise over the card's close rather than arriving after an unpin. See
  * components/studio-site/motion.ts.
  */
-export const SITE_VH = 1400;
+export const SITE_VH = 1800;
 
 export const HOME_STAGE_VH = STAGE_VH + CARD_VH + SITE_VH;
 
@@ -242,11 +242,12 @@ export const INTELLIGENCE_ENTER = {
 //
 //   wide    she holds the right of the stage, small, while the first line reads
 //   centre  the camera pans onto her and begins to close, and the second line
-//           brackets her: "Then it sees" left, "you." right, her in between
+//           brackets her: "Every agency, its own" left, "set." right, her in
+//           between
 //   close   she takes the right of the frame again, chest up, for the last line
 //
-// Panning back toward the middle at the exact moment the copy says the system
-// sees *her* is the point of the move, not a compositional convenience.
+// Panning back toward the middle as the packet is named is the point of the
+// move, not a compositional convenience.
 //
 // Scaling happens about the plate's centre, so the rise below is what keeps her
 // head in frame as the scale climbs. These three arrays share FIGURE_STOPS and

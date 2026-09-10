@@ -1532,11 +1532,9 @@ card leaving turned toward the deck) was tried and read worse. Physical
 does not mean more motion; the simplest motion that is still an object is
 the one to keep.
 
-**29.3 The close is the two uses.** "Sent to the agency. Left at the
-casting." Two lines, one use each, both shipped: the card travels inside
-the application to the agency the talent chose, and it is the thing left
-with the client at a casting. The strategy's "gets you considered" line was
-tried as the close and rejected here; it belongs to prose, not to the beat.
+**29.3 The close is the two uses.** Superseded by §33. The caption "Sent to
+the agency. Left at the casting." is gone. The card still comes forward;
+the object finishes without a line.
 
 ## 30. The About page is a position, not a manifesto, and the founding year may be stated
 
@@ -1793,3 +1791,66 @@ lifts on hover, grayscale returning to colour with a slow push, the gold role
 label above the name, the given name and gold-italic family on one line. Copy
 that was retired stays retired. The one change that is not the old file: on a
 narrow stage the biographies are already open, because a phone has no hover.
+
+---
+
+## 33. Homepage language is speech, not the positioning document
+
+**Date:** 2026-09-09
+**Surface:** the home stage above Studio+ (hero wheel, intelligence, comp-card)
+
+**What was built.** The opening wheel inventoried five product nouns
+(`Digitals · Portfolio · Comp Card · Applications · Tracker`). The
+intelligence sequence transcribed the strategy talent line: `Every agency,
+right.` / `The truth, where you stand.` The card close named two uses the
+scene does not show: `Sent to the agency. Left at the casting.`
+
+**What was wrong.**
+
+> "The underlying product narrative is mostly right, but I don't like most of
+> the actual copy anymore. It feels like we've optimized too hard for
+> strategic defensibility and internal product logic, and some of the
+> resulting lines aren't natural, immediate or memorable."
+
+> "Write for a serious aspiring model encountering Pholio publicly, not for
+> someone reading our positioning document."
+
+> "Digitals · Portfolio · Comp Card · Applications · Tracker feels like five
+> random product nouns." "The words should form one coherent idea rather
+> than inventory features."
+
+> "`Every agency, right.` — replace. It doesn't make intuitive sense."
+
+> "`The truth, where you stand.` — replace. The interesting problem is what
+> happens after someone applies, especially the silence." "Don't imply we
+> know an agency's intent when we don't."
+
+> "I don't like: Sent to the agency. Left at the casting."
+
+A first pass that named the situation without the product (`Depends where
+it's going.` / `If they don't reply.`) was also rejected: the first was
+vague without a positioning gloss, the second did not say why Pholio
+matters in the wait.
+
+**The rule.** The animation proves. The copy names what matters, in speech
+a serious visitor already has. Do not compress the positioning document
+until it becomes a slogan. Do not write a line that only works if you have
+already read the explanation.
+
+- **The wheel is one kit, not a feature list.** `your digitals` / `your
+  book` / `your comp card`: one photograph, three jobs. Applications and
+  Tracker are later beats; they do not belong in the opening.
+- **`sees the frame` stays.** Short, visual, the camera proves it.
+- **Beat two names the objects.** `Every agency, its own set.` The packet
+  changes with the desk. No "right." No spec. The split is two noun
+  phrases, so she in the middle is not an object of wanting.
+- **Beat three names what Pholio adds to the wait.** `The wait has a date.`
+  A record, not a reading of their mind. Not "where you stand." Not only
+  the ache.
+- **The card close has no caption.** Keep `The frame that leads.` / `A real
+  front.` / `A real back.` / `Same book. New direction.` The hand-over is
+  the motion; a line about agencies and castings explains what Studio+ then
+  has to climb out of.
+
+Studio+ copy is a separate pass. Metadata still recites the old talent line
+until that is asked for.

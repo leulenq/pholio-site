@@ -56,7 +56,9 @@ import {
  * that timing lives in `motion.ts`, authored in frame numbers.
  */
 
-const HERO_WORDS = ["Digitals", "Portfolio", "Comp Card", "Applications", "Tracker"];
+/* One photograph, three jobs: the kit a serious aspirant already knows
+   they will need. Not a product inventory. */
+const HERO_WORDS = ["your digitals", "your book", "your comp card"];
 const WORD_INTERVAL = 2400;
 const N = HERO_WORDS.length;
 const ROW_H = 46; // px
@@ -497,7 +499,7 @@ export default function Hero({
               className="absolute bottom-10 right-6 hidden md:bottom-14 md:right-12 md:block"
               style={{
                 height: ROW_H * 3,
-                width: 260,
+                width: 300,
                 overflow: "hidden",
                 WebkitMaskImage:
                   "linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)",

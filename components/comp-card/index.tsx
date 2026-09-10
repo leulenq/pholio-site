@@ -137,7 +137,7 @@ function Head({ head }: { head: Caption["head"] }) {
  * A caption travels into the stage and travels out of it. No opacity on
  * display copy (`lessons.md` §14.3). Where it stands and which way it
  * travels are the caption's own (`motion.ts` CAPTIONS): the halves of the
- * front/back line ride the turn, the closing line comes in beside the card.
+ * front/back line ride the turn.
  */
 function ScrollCaption({
   caption,
@@ -465,6 +465,10 @@ function LeadCard({ progress, stage }: { progress: MotionValue<number>; stage: S
 
   return (
     <motion.div
+      // A geometry hook, not styling: the Studio+ beat opens its light from
+      // inside this card's face and reads the card's rest position off this
+      // element (`lessons.md` §16.3).
+      data-lead-card
       className="pointer-events-none absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2"
       style={{ x, y, scale, willChange: "transform" }}
     >
@@ -500,7 +504,6 @@ function StaticHeading({ head }: { head: Caption["head"] }) {
 function ReducedMotionSection() {
   const selection = captionByKey("selection");
   const direction = captionByKey("direction");
-  const uses = captionByKey("uses");
 
   return (
     <section className="relative overflow-hidden bg-[#080808] text-[#FAF7F2]">
@@ -550,13 +553,6 @@ function ReducedMotionSection() {
                 </figcaption>
               </figure>
             ))}
-          </div>
-        </article>
-
-        <article className="space-y-12">
-          <StaticHeading head={uses.head} />
-          <div className="mx-auto w-[min(21rem,78vw)] overflow-hidden rounded-[0.45rem]">
-            <CompCardFront loading="lazy" />
           </div>
         </article>
       </div>

@@ -11,7 +11,8 @@ import { cubicBezier } from "framer-motion";
  *   1. From the book, one frame leads.
  *   2. It becomes a card: a real front, and a real back, which is a document.
  *   3. The same book, composed again, is a different card: a new direction.
- *   4. The card goes out into the world: to the agency, and to the casting.
+ *   4. The card comes toward you. The object finishes. No caption: the
+ *      hand-over is the motion (`lessons.md` §33).
  *
  * Its physical rules:
  *
@@ -22,8 +23,7 @@ import { cubicBezier } from "framer-motion";
  *     lead, where a fade is invisible and merely releases a layer.
  *   - Type rides the object. "A real front." stands on the side the front
  *     turns away toward and leaves with it; "A real back." arrives from the
- *     side the back turns in from. The closing line comes in beside the card
- *     as it is handed forward.
+ *     side the back turns in from.
  *   - One phase, one ease. A property moves across a phase in a single
  *     segment so it never comes to a dead stop between two adjacent
  *     keyframes. Stops are authored, not incidental.
@@ -296,17 +296,6 @@ export const CAPTIONS: readonly Caption[] = [
     place: { wide: "top", compact: "top" },
     travel: { wide: "up", compact: "up" },
     range: [0.64, 0.7, 0.84, 0.88],
-  },
-  {
-    // The close is the artifact's two real uses, and nothing about what
-    // follows them: it goes to the agency inside the application, and it
-    // is the thing left with the client at a casting (lexicon, "comp
-    // card"). Two lines by design, one use each; "\n" is a line break.
-    key: "uses",
-    head: ["Sent to the agency.\nLeft at the ", "casting", "."],
-    place: { wide: "left", compact: "bottom" },
-    travel: { wide: "left", compact: "down" },
-    range: [0.91, 0.97, 1, 1],
   },
 ];
 

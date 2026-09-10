@@ -99,18 +99,18 @@ lands in her hair on a 390 frame.
 `components/intelligence/motion.ts`. The wide beats compose against horizontal
 distance. The narrow beats cannot: the type layer is behind her, and on a phone
 the only reliably readable region is the band above her head. Scattering the
-wide placements into it put the closing verdict `stand.` behind her hair for
+wide placements into it put the closing verdict `date.` behind her hair for
 most of its hold, which is exactly what `lessons.md` §13.3 forbids.
 
 The narrow stage keeps the band and varies the **lockup inside it**, which is
 where §13.2's three distinct compositions come from:
 
 1. `sees the frame` — one line set to the full measure, left, one weight.
-2. `Every agency,` / `right.` — split across the measure on one optical line,
-   the quiet half left and the verdict right at four times its size. One
+2. `Every agency, its own` / `set.` — split across the measure on one optical
+   line, the quiet half left and the verdict right at four times its size. One
    sentence with a size jump, not two fragments at opposite corners
    (`lessons.md` §14.2).
-3. `The truth,` / `where you stand.` — a hanging indent, the small half tucked
+3. `The wait` / `has a date.` — a hanging indent, the small half tucked
    under the large one at its baseline.
 
 The band starts below the index marks. A line resting at 6% of a phone viewport

@@ -51,35 +51,51 @@ static page with a native horizontal book.
 
 ## The Studio+ beat on the home stage
 
-The beat is where the home stage changes worlds. Everything before it is
-Pholio doing things with the book (seeing the frame, composing the card,
-sending it out) and it is deliberately not continued: the Studio+
-introduction is the break between the card story and this one, and the
-subject becomes Zofia because what is shown is no longer the book on Pholio
-but a site of one's own. The object on stage is the real `/zofia`, framed
-same-origin with `?embed`, never a picture of it.
+The beat changes worlds: from the card story into Zofia's, and through the
+plus into her site. Everything before it is Pholio doing things with the
+book; the subject becomes Zofia because what is shown from here is a site
+of one's own. The object on stage is the real `/zofia`, framed same-origin
+with `?embed`, never a picture of it.
 
-1. **The light.** Cream rises from the foot of the stage carrying "Studio+"
-   at its head, ink on paper at viewport scale. It covers the card story as
-   it rises; at every position the frame is a clean split, velvet and the
-   card above the edge, paper and the word below. When the light reaches the
-   top the Pholio header stands down, and it stays down until the closing
-   panel.
-2. **The lines.** Two lines arrive beneath the word: "Until now, your book has
-   been kept. From here, it is published, under your name."
-3. **The site.** Word and lines leave upward; a beat of empty paper; Zofia's
-   page arrives from below as a small live object, holds, then grows until it
-   is the viewport.
-4. **The walk.** The home page's scroll drives her page's scroll through the
-   masthead, the statement and along the book.
-5. **The step back.** The site recedes into a live window, and beside it only
-   "Not a profile. A site." and one link to open her site. No paragraph, no
-   price, no feature list: the site was the argument, and selling Studio+
-   belongs to the labelled pricing surface.
+One mechanism carries the entrance: a camera travelling forward. Nothing
+fades, nothing wipes, nothing slides in from an edge.
 
-In `?embed` mode the site runs no smooth-scroll layer and no intro, hides its
-scrollbar, and speaks two origin-checked messages: `zn:scroll` in, `zn:ready`
-with the scene marks out. The channel is documented in
+1. **The push, into the card.** The card is held out to us at the close of
+   its own beat. The move begins at the one part of it that is already blank
+   stock, the masthead band its name is printed in, with the mark taking the
+   place of the name. The band opens down the card's face, taking the
+   photograph, and then the whole card comes toward the viewer, its rounded
+   corners sweeping outward, until the card's own stock is the whole frame
+   and we are inside it. Nothing is swapped for anything: the material never
+   changes, only the distance. The card is paper, and the page it becomes is
+   the same paper. STUDIO settles into its own size as the paper lands, set
+   in caps of the display serif and filled with a navy duotone cut from the
+   taffeta of the dress Zofia stands in when her site composes
+   (`public/studio-plus/taffeta-navy.webp`). The Pholio header stands down
+   as the paper takes the frame, and stays down until the closing panel.
+2. **The plus.** Gold, the serif's own cross drawn geometrically from the
+   glyph's measurements, in along the axis. Punctuation, until it is not.
+3. **The plus opens.** Its arms extend until the cross divides the frame. As
+   they extend the solid gold hollows to a hairline rim, and inside the rim
+   is the first blank page of her site. The rim widens and turns as it
+   widens, taking the letters from the centre outward, and inside it her
+   masthead composes. When the rim has left the frame there is no mark and
+   no plus. The visitor is on her page and never saw it arrive.
+4. **The walk.** The scroll drives her page through the masthead, the
+   statement and along the book.
+5. **The step back.** The site recedes into a live window on the stage's own
+   paper, and beside it only "Not a profile. A site." and one link.
+
+The card's rest position is read off `[data-lead-card]`, a geometry hook on
+the lead card carrying no styling, accepted only once six consecutive frames
+agree and the reading matches the authored rest. The mark is SVG text with a
+pattern fill rather than a clipped background, so the fabric travels with the
+glyphs under any transform in every engine.
+
+In `?embed` mode the site runs no smooth-scroll layer, holds its masthead
+intro as a paused timeline, hides its scrollbar, and speaks three
+origin-checked messages: `zn:scroll` and `zn:intro` in, `zn:ready` with the
+scene marks out. The channel is documented in
 `components/studio-site/useSiteFrame.ts`; every number the beat moves on is
 in `components/studio-site/motion.ts`; the scroll budget is `SITE_VH` in
 `components/hero/motion.ts`.
