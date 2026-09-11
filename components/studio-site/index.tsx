@@ -68,6 +68,8 @@ function useFrame() {
 }
 
 const vh = (v: number) => `${v}vh`;
+/** A clip with no area: the sheet is not on the stage yet. */
+const NO_PAPER = "inset(50% 50% 50% 50%)";
 const vwPx = (s: string, w: number) => (parseFloat(s) / 100) * w;
 
 // ── Measuring the mark ────────────────────────────────────────────────────
@@ -235,6 +237,13 @@ export function StudioSiteLayers({
   const pushK = useTransform(smooth, [T.push[0], T.push[1]], [0, 1], { ease: push });
   const paperClip = useTransform(() => {
     const k = pushK.get();
+    // Nothing of this beat is on the stage before the push begins. The
+    // first shape is the card's masthead band, which is the card's own
+    // paper wherever the card happens to be; held at rest from the top of
+    // the page it was a cream band with the mark on it, sitting over the
+    // hero, the intelligence beat and the whole card sequence. The sheet
+    // is cut to nothing until the push has something to travel.
+    if (k <= 0) return NO_PAPER;
     // The band opens down the card's face, then the whole card comes
     // toward us. One travel, two shapes, and the second begins exactly
     // where the first ends.

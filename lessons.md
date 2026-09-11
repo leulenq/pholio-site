@@ -1854,3 +1854,40 @@ already read the explanation.
 
 Studio+ copy is a separate pass. Metadata still recites the old talent line
 until that is asked for.
+
+## 34. A beat's first shape is not on the stage before the beat
+
+**Date:** 2026-09-11
+**Surface:** the Studio+ beat's push (`components/studio-site`)
+
+**What was built.** The push into the card opens from the card's masthead
+band: one full-bleed sheet of cream, clipped to that band, with the STUDIO
+mark printed in it. The clip was derived from the beat's own timeline with
+no lower bound, so timeline zero was still a shape — the band, at its
+printed size, with the mark on it. Every beat before this one holds that
+timeline clamped at zero (`components/hero/index.tsx`, `siteProgress`), so
+the sheet was painted from the first frame of the page: a cream rectangle
+reading STUDIO, over the hero's velvet, over the intelligence type, over
+the whole comp-card sequence, twelve viewports before the beat it belongs
+to.
+
+**What was wrong.**
+
+> "Studio shouldn't show outside of the studio+ section in the landing
+> page"
+
+**The rule.** A scene's opening pose is a pose only once its own timeline
+is running. Layers that share the home stage's single pinned container
+(§20) read a clamped zero for the whole of every beat above them, so **zero
+must paint nothing** — not "the first shape, held". Before calling a beat
+done, read every layer it owns at timeline zero *on the stage*, not in the
+beat: a clip, a transform, an offset or a colour that is right as an
+opening state is a leak for as long as the beats above it run.
+
+**34.1 The substitution happens where the beat says it does.** The mark
+takes the place of the card's printed name at the push's first frame, which
+is what `studio-site/motion.ts` always described. It is a cut, and it is
+allowed because it is simultaneous with the band beginning to travel down
+the card's face — the card is otherwise at rest there. Do not move it
+earlier to hide it: earlier is the card beat, and the card beat is not
+Studio+.
