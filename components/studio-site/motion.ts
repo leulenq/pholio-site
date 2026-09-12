@@ -1,8 +1,8 @@
 import { cubicBezier } from "framer-motion";
 
 /**
- * Tunable keyframes for the Studio+ beat: we push into the card, and the
- * plus is the door into Zofia's site.
+ * Tunable keyframes for the Studio+ beat: the camera leaves the card behind,
+ * and the room it was lit in comes up until we are standing on her page.
  *
  * Everything before this on the stage was Pholio doing things with the book:
  * seeing the frame, composing the card, sending it out. This beat changes
@@ -10,35 +10,44 @@ import { cubicBezier } from "framer-motion";
  * longer the book on Pholio but a site of one's own, and the site itself is
  * the demonstration.
  *
+ * **The card is finished when this beat starts, and it stays finished.**
+ * Nothing is printed on it, nothing opens out of it, and no part of this
+ * chapter's identity is set on its stock. It is a completed artifact from
+ * the chapter before. The way out of that chapter is to travel past it and
+ * let the room change, which is why every move here is a camera, a light, or
+ * a thing travelling — never a graphic applied to the card.
+ *
  * The sequence, in order:
  *
- *   1. The push. The card is held out to us at the close of its own beat.
- *      It begins at the one part of the card that is already blank stock:
- *      the masthead band its name is printed in. The band opens down the
- *      card's face, taking the photograph, and then the whole card comes
- *      toward the viewer, its rounded corners sweeping outward, until the
- *      card's own stock is the whole frame and we are inside it. There is
- *      no wipe and no boundary, and nothing is swapped for anything: the
- *      material never changes, only the distance. The card is paper, and
- *      the page it becomes is the same paper. The mark takes the place of
- *      the name in the band and comes with it, settling into its own size
- *      as the paper lands: STUDIO in caps cut from the navy of her
- *      taffeta.
- *   2. The plus. Gold, the serif's own cross, in along the axis. Punctuation.
- *   3. The plus opens. Its arms extend until the cross divides the frame.
+ *   1. The light. The card is held out to us at the close of its own beat,
+ *      finished, and it holds there while the room comes up around it:
+ *      velvet to paper, on the curve a dimmer actually has — almost nothing
+ *      for the first third, then quick, then settling into the cream. The
+ *      film grain the dark carried goes with it. There is no edge anywhere
+ *      in this. The field the last chapter stood on is the field this one
+ *      stands on, at a different exposure, and for a moment the card is a
+ *      printed sheet lying on a lit one: the same artifact, a new room.
+ *   2. The lift. Then the camera travels forward and the card goes with the
+ *      move: it grows as it passes the lens, drifts off axis as near things
+ *      do, and leaves through the top of the frame, the way the figure left
+ *      the hero. It is the same object it was, at a different distance.
+ *   3. The mark. STUDIO+ is one thing — the word and its cross, never
+ *      introduced apart — thrown up into the frame by the same scroll that
+ *      sent the card out, crossing its exit: in fast, settling slow. It
+ *      travels less far and changes size less than the card does, because
+ *      it is the far thing in the frame and the card was the near one. That
+ *      difference is the only depth cue the beat needs.
+ *   4. The plus opens. Its arms extend until the cross divides the frame.
  *      As they extend the solid gold hollows to a hairline rim, and what is
  *      inside the rim is the first blank page of her site. The rim widens
  *      and turns as it widens, taking the letters from the centre outward,
  *      and inside it her masthead composes. When the rim has left the frame
  *      there is no word and no plus. The visitor is on her page and never
  *      saw it arrive.
- *   4. The walk. This page's scroll drives her page's scroll: masthead,
+ *   5. The walk. This page's scroll drives her page's scroll: masthead,
  *      statement, and along the book.
- *   5. The step back. The site recedes into a window on the stage's own
+ *   6. The step back. The site recedes into a window on the stage's own
  *      paper, and one line stands beside it with one link.
- *
- * One mechanism carries the whole entrance: a camera travelling forward.
- * Nothing fades, nothing wipes, nothing slides in from an edge.
  *
  * Every value is in timeline units, `t` in 0..1 across `SITE_VH` of scroll
  * (`components/hero/motion.ts`), and every stage value is authored twice,
@@ -52,12 +61,11 @@ export const glide = cubicBezier(0.65, 0, 0.35, 1);
 /** Opening: gathers, then commits. */
 export const open = cubicBezier(0.7, 0, 0.3, 1);
 /**
- * The push. A camera does not travel linearly toward a thing: it eases off
- * the mark, accelerates as the subject fills more of the frame, and settles
- * long. This is the shape of that, and it is why the move reads as distance
- * rather than as a shape growing.
+ * Away. Eases off the mark and keeps accelerating, with no settle at the
+ * end: a thing passing the lens is not arriving anywhere, and easing it out
+ * both ends makes it park in the corner of the frame instead of leaving.
  */
-export const push = cubicBezier(0.62, 0, 0.28, 1);
+export const away = cubicBezier(0.5, 0, 0.88, 0.42);
 
 /** The same shared inertia as the card beat, so the two read as one stage. */
 export const TIMELINE_SPRING = {
@@ -76,22 +84,20 @@ export type Stage<T> = { readonly wide: T; readonly compact: T };
 // Read top to bottom: this is the beat. Pairs are [start, end].
 
 export const T = {
-  /** Into the card: its paper grows until it is the frame. */
-  push: [0.03, 0.26],
-  /** The mark comes with it, and settles a little after the paper lands. */
-  mark: [0.03, 0.3],
-  /** The plus arrives along the axis. Then the mark is read. */
-  plusIn: [0.33, 0.42],
+  /** The card leaves: past the lens and up out of the frame. */
+  lift: [0.14, 0.38],
+  /** STUDIO+ is thrown up into the frame, crossing the card's exit. */
+  lock: [0.22, 0.5],
   /** The plus opens: arms, then the rim widens, turning as it goes. */
-  grow: [0.5, 0.72],
+  grow: [0.56, 0.76],
   /** Her masthead composes inside the opening. */
-  compose: [0.57, 0.76],
+  compose: [0.62, 0.8],
   /** Her page scrolls under this page's scroll. */
-  walk: [0.79, 0.89],
+  walk: [0.82, 0.9],
   /** The step back, into the window. */
-  stepBack: [0.89, 0.94],
+  stepBack: [0.9, 0.945],
   /** The line and the link arrive beside it. */
-  end: [0.92, 0.98],
+  end: [0.925, 0.98],
 } as const;
 
 /**
@@ -108,16 +114,17 @@ export const OPENING = {
 } as const;
 
 /**
- * The header stands down from the moment the card's paper has taken the
- * frame until the stage unpins into the closing panel, which stands it down
- * itself. Measured against the same 40% line the closing panel uses, via
- * the same hook (`components/header/kit.tsx`, `useFooterTakeover`): a
- * `data-footer-trigger` marker at the top of the stage during the takeover
- * and at its foot otherwise, where it coincides with the closing panel's
- * own trigger once the stage unpins.
+ * The header stands down from early in the light, before the field is bright
+ * enough for a bar sampled against velvet to be wrong, until the stage
+ * unpins into the closing panel, which stands it down itself. Measured
+ * against the same 40% line the closing panel uses, via the same hook
+ * (`components/header/kit.tsx`, `useFooterTakeover`): a `data-footer-trigger`
+ * marker at the top of the stage during the takeover and at its foot
+ * otherwise, where it coincides with the closing panel's own trigger once
+ * the stage unpins.
  */
 export const TAKEOVER = {
-  start: T.push[1] - 0.04,
+  start: 0.05,
   end: 1.01,
 } as const;
 
@@ -129,50 +136,57 @@ export const GOLD_ON_PAPER = "#A8894E";
 /** Her paper, warmer than the stage's, so the window reads as another sheet. */
 export const SITE_PAPER = "#F2EFE9";
 
-// ── The card ──────────────────────────────────────────────────────────────
-//
-// The push starts from the lead card's rest position, read off
-// `[data-lead-card]` once the card beat has settled. If the visitor arrives
-// too fast for a reading, this is the card's authored rest, from
-// `components/comp-card/motion.ts` (READY_X, READY_Y, READY_SCALE) and the
-// card's width classes.
+// ── The light ─────────────────────────────────────────────────────────────
 
-export const CARD_FALLBACK: Stage<{ cx: number; dy: number; w: number }> = {
-  /** cx as a fraction of the width; dy in px off the frame's centre line. */
-  wide: { cx: 0.62, dy: -2, w: 22.75 * 16 * 1.12 },
-  compact: { cx: 0.5, dy: -44, w: 16 * 16 * 1.04 },
+/**
+ * The room coming up, authored as the stage's own field at a rising
+ * exposure rather than as a mix toward white.
+ *
+ * Two reasons it is a curve with four stops and not two. A dimmer on a
+ * paper surface holds near black for the first third of its travel and then
+ * moves fast, so a linear ramp reads as a cross-fade between two colours
+ * rather than as a light. And a straight interpolation from velvet to cream
+ * passes through a blue neutral, which is not a colour this site has: these
+ * stops are the cream itself, underexposed, so every frame of the travel is
+ * warm.
+ *
+ * `at` is in this beat's timeline; the two are one table, read together.
+ */
+export const LIGHT = {
+  at: [0.02, 0.06, 0.095, 0.12, 0.14] as const,
+  field: ["#050505", "#140F0C", "#2E261F", "#6E6459", CREAM] as const,
+} as const;
+
+/** The dark room's film grain, gone by the time the paper is lit. */
+export const GRAIN = { from: 0.02, to: 0.1 } as const;
+
+// ── The card's exit ───────────────────────────────────────────────────────
+
+/**
+ * Applied to the whole card layer, so the book gathered behind the lead
+ * leaves with it and the scene keeps one object where it had one object.
+ *
+ * The scale is the camera still travelling forward — the card passes the
+ * lens, it does not shrink away — and the layer scales about the frame's
+ * centre, so the card, which rests off centre, drifts outward as it grows
+ * the way a near thing does under a dolly. The rise is measured against the
+ * card's own height at that scale, so its bottom edge clears the top of the
+ * frame rather than parking just past it (`lessons.md` §20.2).
+ */
+export const LIFT: Stage<{ rise: number; scale: number }> = {
+  wide: { rise: -122, scale: 1.46 },
+  compact: { rise: -108, scale: 1.34 },
 };
-export const CARD_ASPECT = 5.5 / 8.5;
-
-/**
- * The card's own corner radius, and the width its stock is set at, both from
- * `components/comp-card` (`rounded-[0.55rem]`, and the `CARD_WIDTH` classes).
- * The radius is a fixed rem on a card that is scaled, so it is recovered as
- * a ratio of the width actually measured. The corners are the whole tell of
- * the push: they are what says this is the card coming toward us and not a
- * rectangle being drawn.
- */
-export const CARD_RADIUS_PX = 0.55 * 16;
-export const CARD_BASE_W: Stage<number> = { wide: 22.75 * 16, compact: 16 * 16 };
-
-/**
- * Where the lead edition's masthead band ends, as a fraction of the card's
- * height: the strip of blank stock its name is printed in, measured off
- * `ola-editorial-masthead-front.png` and shared with
- * `components/comp-card/motion.ts` (MASTHEAD_BAND). The push starts here
- * because it is the only part of the card that is already this paper.
- */
-export const CARD_BAND = 220 / 1632;
-
-/** How much of the push opens the band down the card's face. */
-export const BAND_OPEN = 0.2;
 
 // ── The mark ──────────────────────────────────────────────────────────────
 //
-// STUDIO in tracked caps of the display serif, filled with a navy duotone
-// cut from the taffeta of the dress she stands in when her site composes.
-// Then the plus, gold, the serif's own cross, drawn geometrically from the
-// glyph's measurements so that it can open.
+// STUDIO+ in tracked caps of the display serif, the word filled with a navy
+// duotone cut from the taffeta of the dress she stands in when her site
+// composes, and the plus in gold, the serif's own cross, drawn geometrically
+// from the glyph's measurements so that it can open.
+//
+// The word and the plus are one mark. They arrive together, on one
+// transform, and nothing in this beat ever shows one without the other.
 
 export const WORDS = {
   name: "STUDIO",
@@ -190,11 +204,6 @@ export const WORDS = {
   size: { wide: "12.4vw", compact: "15.2vw" } as Stage<string>,
   /** The mark's right edge, in vw, before the plus. */
   right: { wide: 71.5, compact: 78 } as Stage<number>,
-  /**
-   * How much of the card's width the mark spans when it is still printed on
-   * the card at the start of the push. Small: it is a line on a comp card.
-   */
-  onCard: 0.62,
   fill: "/studio-plus/taffeta-navy.webp",
   fillUnder: "#101a33",
 } as const;
@@ -208,6 +217,20 @@ export const PLUS = {
   rim: 1.5,
   reach: 0.62,
 } as const;
+
+/**
+ * The mark's arrival, as one object: how far below its place it starts, in
+ * vh, and the size it starts at. The rise clears the frame — the mark is
+ * outside the composition before it is in it, never sitting low in it
+ * waiting (`lessons.md` §18). Both are small next to `LIFT`, and that is
+ * the point — the card is the near thing and the mark is the far one, so the
+ * same camera moves it less. Scaling about the lockup's own centre, not the
+ * word's, is what keeps the plus attached to the word through the travel.
+ */
+export const LOCK: Stage<{ rise: number; scale: number }> = {
+  wide: { rise: 72, scale: 0.9 },
+  compact: { rise: 70, scale: 0.9 },
+};
 
 // ── The site ──────────────────────────────────────────────────────────────
 

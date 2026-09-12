@@ -1884,10 +1884,84 @@ done, read every layer it owns at timeline zero *on the stage*, not in the
 beat: a clip, a transform, an offset or a colour that is right as an
 opening state is a leak for as long as the beats above it run.
 
-**34.1 The substitution happens where the beat says it does.** The mark
-takes the place of the card's printed name at the push's first frame, which
-is what `studio-site/motion.ts` always described. It is a cut, and it is
-allowed because it is simultaneous with the band beginning to travel down
-the card's face — the card is otherwise at rest there. Do not move it
-earlier to hide it: earlier is the card beat, and the card beat is not
-Studio+.
+**34.1 — superseded by §35.1.** This said the mark takes the place of the
+card's printed name at the push's first frame, and argued the cut was
+allowed because it rode the band's own travel. There is no substitution any
+more: nothing from this chapter is printed on the card at any frame. The
+rule above it — zero paints nothing — still holds and is why §35's own
+layers start off the stage rather than parked in it.
+
+
+## 35. The card is finished. Change the room, not the artifact — and STUDIO+ is one mark
+
+**Date:** 2026-09-12
+**Surface:** the comp-card to Studio+ transition (`components/studio-site`,
+and the home stage that carries it)
+
+**What was built.** The Studio+ beat entered *through* the card. The push
+began at the lead card's masthead band — the one strip of blank stock on it
+— and opened that band down the card's face until the card's paper was the
+whole frame. The mark came with it, printed on the card in place of the
+model's name, at the card's own size. The plus then arrived separately,
+travelling in along the axis after the word had settled, and opened into
+her site.
+
+**What was wrong.**
+
+> "never put STUDIO or STUDIO+ on the comp card. The comp card is a
+> completed artifact from the previous chapter. Studio should not appear
+> printed on it"
+
+> "Find a different transition from the final comp-card moment into the
+> Studio+ world. The transition should come from composition, space, light,
+> scale, photography, typography, camera movement, or the changing
+> environment, not by branding the card."
+
+> "Treat the final comp-card frame as something complete. Then find an
+> art-directed way for the world around it to change until we realize we've
+> entered something new. There should still be no obvious hard boundary or
+> generic 'next section' wipe."
+
+> "STUDIO and + are one identity: STUDIO+. Do not introduce STUDIO and then
+> bring the + in separately."
+
+**The rules.**
+
+**35.1 A finished artifact never carries the next chapter's mark.** The comp
+card closes its own beat complete. Nothing from a later chapter is printed
+on it, substituted into it, grown out of it, or morphed from it — not its
+masthead, not its stock, not one line of it. It is the previous chapter's
+object and it leaves as itself. This overrules the entrance authored in
+`components/studio-site/motion.ts` before this date, which is rewritten.
+
+**35.2 Change the room, not the object.** A chapter break is made from what
+a camera and a set can do: the light in the room, the distance to the
+subject, what passes the lens, and what is still in frame when the subject
+has gone. So the card holds at rest, finished, while the field comes up from
+velvet to paper — for a moment it is a printed sheet lying on a lit one, the
+same artifact in a new room — and only then does the camera travel forward
+and take it out through the top of the frame, the way the figure left the
+hero. No wipe, no edge, no section boundary anywhere in it.
+
+**35.3 A light is a curve, not a mix.** Velvet to cream in two stops is a
+cross-fade between two colours, and it passes through a blue neutral this
+site does not have. Author the stops as the cream itself underexposed, so
+every frame of the travel is warm, and weight them the way a dimmer actually
+behaves: almost nothing for the first third, then quick, then settling. The
+mid-tones are a travel, not a resting value, which is the one place the ban
+list's "every colour resolves to velvet, cream or gold" is about exposure
+rather than palette.
+
+**35.4 STUDIO+ is one mark.** The word and its cross arrive together, on one
+transform, scaled about the lockup's own centre so the plus cannot drift off
+the word on the way in, and no beat ever shows one without the other. The
+plus is not punctuation that lands after the name and it is not a separate
+object that happens to open: it is part of the identity, and the identity is
+what opens.
+
+**35.5 Moving a layer moves everything parked outside it.** The card beat
+leaves its captions a viewport below the floor when they are done, which is
+invisible until something translates the whole layer 122vh upward and walks
+them back through the composition. A layer that a later beat transforms is
+clipped to the stage's own frame. That is the one clipping edge this site
+has (§18), and it is the frame, not a slot.
