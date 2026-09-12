@@ -29,8 +29,9 @@ import { useMediaQuery } from "./useMediaQuery";
 import {
   FRAMES,
   FRAME_HEIGHT,
-  FRAME_STRIDE,
+  FRAME_PLATE,
   FRAME_WIDTH,
+  FRAME_STRIDE,
   FIGURE_DRIFT,
   FIGURE_RISE,
   FIGURE_SCALE,
@@ -103,15 +104,23 @@ export default function Hero({
   const narrow = useMediaQuery("(max-width: 767px)");
   const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
-  // A phone loads every second frame. The sequence is 10.5MB and 127 decodes
-  // at 970x1640, which measured as a 130ms median frame time on a throttled
-  // mobile profile against 17ms for the beat next to it. See
-  // ./useFrameSequence for the measurements and why decode, not drawImage, is
-  // the cost. The timing model is unchanged; only how densely it is sampled.
+  // A phone takes the small plate: the same footage at 582x984, which is the
+  // widest this stage ever paints it there. Decode is the entire cost of this
+  // scrub and decode is paid per source pixel, so the phone was spending
+  // three quarters of it on pixels it then threw away. See ./useFrameSequence
+  // for the trace, and motion.ts FRAME_PLATE for the measurement. The timing
+  // model is untouched: same frames, same cues, same numbering.
+  // Only the scrubbed canvas takes the plate. The stills either side of it
+  // are next/image and are already sized by `sizes`; branching their src on a
+  // media query would preload the wide frame from a server that has no
+  // viewport and then fetch the narrow one again after hydration.
+  const plate = FRAME_PLATE[narrow ? "narrow" : "wide"];
   const { canvasRef, draw, posterReady, openingReady } = useFrameSequence(
     FRAMES,
-    frameSrc,
+    plate.src,
     narrow ? FRAME_STRIDE.narrow : FRAME_STRIDE.wide,
+    plate.width,
+    plate.height,
   );
 
   // The comp-card beat's ~7MB of plates are held back until the hero's own
@@ -218,9 +227,11 @@ export default function Hero({
     if (p > 0 && !cardAssetsArmed) setCardAssetsArmed(true);
   });
 
+  // Also on a plate swap: crossing the narrow breakpoint resizes the canvas,
+  // which clears it, and nothing else repaints until the next scroll event.
   useEffect(() => {
     if (posterReady) draw(frameIndexAtProgress(scrollYProgress.get()));
-  }, [posterReady, draw, scrollYProgress]);
+  }, [posterReady, draw, scrollYProgress, plate]);
 
   // ── Wordmark: holds while she holds, then rises as she does ──────────────
   const wordmarkY = useTransform(
@@ -535,8 +546,8 @@ export default function Hero({
           />
           <canvas
             ref={canvasRef}
-            width={FRAME_WIDTH}
-            height={FRAME_HEIGHT}
+            width={plate.width}
+            height={plate.height}
             aria-hidden
             className="h-full w-full"
             style={{ objectFit: "contain", objectPosition: "bottom center" }}

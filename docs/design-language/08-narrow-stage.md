@@ -138,29 +138,93 @@ at all on its right.
 
 ## 4. Performance, measured
 
-Numbers from the home stage at 390x844 under a 4x CPU throttle, with the whole
-sequence already downloaded so nothing waits on the network.
+The hero is a scroll-scrubbed frame sequence, and on a phone that scrub is one
+cost with a long tail of consequences. Numbers below are one pass over the hero
+and intelligence beats at 390x844, DPR 3, under a 4x CPU throttle, against a
+**production build** with the sequence already downloaded so nothing waits on
+the network. Measure this way or the numbers are not comparable: a dev build
+and a dev-mode React tree move them by more than any change here does.
 
-**Before.** Scrubbing the hero and intelligence beats held a *median* frame
-time of 130ms, against 17ms across the comp-card beat immediately after it,
-which scrubs no footage. 84 long tasks in one pass, the longest 168ms. A CPU
-profile put 78% of samples in native work rather than in any script.
+### 4.1 The median is not the measurement
 
-The cause is decode, not `drawImage`. 127 frames at 970x1640 is roughly 800MB
-of decoded bitmap if a browser held them all, so it holds almost none, and every
-scroll step decodes its frame again on the main thread.
+The scrub held a median frame time of 17ms and felt broken in the hand, because
+the median is not where the cost is:
 
-**After.** `FRAME_STRIDE.narrow = 2` loads every second frame. Median frame time
-17ms, long tasks 84 to 60, page weight 18.8MB to 13.9MB, requests 161 to 101.
+| | p50 | p75 | p90 | p99 | worst frame | blocking |
+|---|---|---|---|---|---|---|
+| 970 plate | 17ms | 50ms | 250ms | 433ms | 467ms | 11.1s |
+| 728 plate | 17ms | 33ms | 100ms | 133ms | 183ms | 3.1s |
 
-Two things to know before touching this:
+**Report p90, p99 and total blocking time.** A median that never moves across a
+change that takes the worst frame from 467ms to 183ms is a median measuring the
+frames where nothing happened.
 
-- It is **not** a timing change. Every cue in `motion.ts` is authored against
-  the full `FRAMES` array and stays where it is; `draw` already snaps to the
-  nearest frame it has, which is the same path that carries a slow network.
-- Strides above 2 keep cutting long tasks (60 / 43 / 33 at strides 2 / 3 / 4)
-  but the returns on frame time flatten, and the scrub visibly coarsens: at
-  stride 4 the intelligence beat advances one frame per 200px of scroll.
+### 4.2 The cost is decode, and decode is paid per source pixel
+
+Traced, the pass before this change was:
+
+```
+Decode Image      9045ms across 59 events   (153ms each, ~38ms of real phone)
+Commit           12211ms
+RasterTask        1301ms
+FunctionCall      1319ms
+```
+
+With the sequence blocked and everything else identical, the same pass is 484ms
+of decode and 2202ms of commit. The footage is the scrub; the decode is the
+footage; script, raster, layout and the observers together are a rounding error
+against it. A CPU profile agrees from the other side: 89% of samples in
+`(program)`, not in any script.
+
+Decode is charged per source pixel, and the wide plate is 970x1640. **This stage
+never paints the figure wider than 569 CSS px on a 390 phone** — measured at the
+intelligence close, where `FIGURE_SCALE.mobile` peaks at 1.46 — so two thirds of
+every pixel decoded there was decoded to be thrown away.
+
+### 4.3 The narrow plate
+
+`public/hero/seq-sm` is the same footage at 728x1231, built by
+`scripts/build-hero-plate.cjs`, selected in `motion.ts` by `FRAME_PLATE`, and it
+is also the canvas's backing store, so `drawImage` is a blit rather than a
+rescale into four times the pixels.
+
+728 was chosen by looking, not by arithmetic: each candidate was scaled up to
+1707px — what a DPR 3 phone asks for at that 569 — and set beside the original
+at 1:1. At 582 her hair breaks into blocks and the lashes go. At 728 the two are
+hard to tell apart, and it is 56% of the pixels. **If the footage is ever
+re-extracted, re-run that comparison rather than trusting the number.**
+
+Result: blocking 11.1s to 3.1s, worst frame 467ms to 183ms, longest task 478ms
+to 136ms, page weight 13.5MB to 10.8MB. Nothing about the timing model moved.
+
+### 4.4 Two things that were measured and are not here
+
+- **`FRAME_STRIDE.narrow` is no longer the lever.** It was 2 — every second
+  frame — for as long as the phone was decoding the wide plate, which cost the
+  phone half the temporal resolution of a desktop. Against the small plate the
+  stride is nearly free either way: 3.5s blocking at stride 2, 3.8s at stride 1.
+  It is kept at 2 because the bytes are real (2.9MB against 5.8MB) and the
+  difference on a phone is not visible; raise it to 1 if the finer scrub is ever
+  wanted, and know that it costs bandwidth, not frames.
+- **Read-ahead decoding does not help.** `drawImage` on a loaded-but-undecoded
+  image records a lazy reference that the compositor resolves in `Commit` —
+  which is why the stall lands where it does — and `HTMLImageElement.decode()`
+  resolves it in advance, off the main thread. Priming four frames ahead took
+  blocking from 1829ms to 2111ms; two frames, to 2238ms. Under a throttle the
+  decode cannot finish before the scroll has consumed the frames it was primed
+  for, so every prime is work done twice. Details in `useFrameSequence.ts`.
+
+### 4.5 The plate must not be requested before it is known
+
+`useMediaQuery` has no server answer and hydrates `false`, so a phone's first
+client render is the wide stage. Starting the sequence synchronously meant six
+full-size frames — 544KB and the six most expensive decodes on the page — were
+already in flight before React corrected it. The loader starts on the next
+animation frame instead, and the effect's own cleanup cancels it, so the wrong
+plate is never requested at all. The posters either side of the canvas stay on
+the wide source deliberately: they are `next/image` and are already sized by
+`sizes`, and branching their `src` on a media query preloads the wide frame and
+then fetches the narrow one again.
 
 ## 5. Checks, for a narrow stage specifically
 
@@ -177,6 +241,13 @@ Run these in addition to `03-banned-ui.md` §12.
 - [ ] **No frame is more than about a third empty field.** Emptiness on a phone
       is a composition that was authored for a wider one.
 - [ ] The index opens, and is reachable, **at every scroll position**.
-- [ ] Frame time under a 4x throttle: median at or under ~17ms across the
-      scrubbed beats.
+- [ ] Frame time under a 4x throttle, on a **production build**: p90 at or
+      under ~100ms and no frame past ~200ms across the scrubbed beats. Report
+      the tail, not the median (§4.1).
+- [ ] A phone requests the narrow plate and **only** the narrow plate. Watch
+      the network, not the code (§4.5).
+- [ ] Crossing the breakpoint — a resize, or a phone turned on its side —
+      repaints the canvas rather than blanking it. Changing a canvas's width
+      clears it, and a stage the visitor is reading rather than scrolling has
+      no next scroll event to recover on.
 - [ ] The wide stage is unchanged. Screenshot 1440 before and after.

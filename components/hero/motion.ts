@@ -39,19 +39,61 @@ function buildFrames(): number[] {
 /** Every frame the page actually loads, in order. */
 export const FRAMES = buildFrames();
 
+/**
+ * The sequence, at two resolutions.
+ *
+ * The frames were extracted at 970x1640, which is the plate a landscape stage
+ * wants: there the figure is painted up to about 1000 CSS px wide. On a 390
+ * phone this stage never paints her wider than **569 CSS px** — measured at
+ * the intelligence close, where `FIGURE_SCALE.mobile` peaks at 1.46 — so two
+ * thirds of every pixel in the wide plate is decoded and thrown away, on the
+ * device least able to afford it. Decode is the whole cost of this scrub
+ * (`useFrameSequence.ts`) and decode is paid per source pixel.
+ *
+ * `seq-sm` is the same footage at 728x1231. The size was chosen by looking,
+ * not by arithmetic: each candidate was scaled up to 1707px — what a DPR 3
+ * phone asks for at that 569 — and put beside the original at 1:1. At 582 her
+ * hair separates into blocks and the lashes go; at 728 the two are hard to
+ * tell apart, and it is 56% of the pixels. Every frame at 728 also costs
+ * fewer bytes than every second frame at 970 did, which is what buys the
+ * stride back (`FRAME_STRIDE`).
+ *
+ * Regenerate with `scripts/build-hero-plate.mjs` if the footage ever changes.
+ * Nothing else about the sequence moves: same frames, same numbering, same
+ * timing.
+ */
 export const frameSrc = (frame: number) =>
   `/hero/seq/seq-${String(frame).padStart(3, "0")}.webp`;
+
+export const frameSrcNarrow = (frame: number) =>
+  `/hero/seq-sm/seq-${String(frame).padStart(3, "0")}.webp`;
 
 export const FRAME_WIDTH = 970;
 export const FRAME_HEIGHT = 1640;
 
 /**
+ * The plate each stage loads, and the canvas it is painted into. The backing
+ * store matches the plate, so `drawImage` is a blit rather than a rescale and
+ * the composited texture is the size of the footage rather than four times it.
+ */
+export const FRAME_PLATE = {
+  wide: { src: frameSrc, width: FRAME_WIDTH, height: FRAME_HEIGHT },
+  narrow: { src: frameSrcNarrow, width: 728, height: 1231 },
+} as const;
+
+/**
  * How densely each stage samples `FRAMES`.
  *
  * Not a timing change: every cue below is authored against the full array and
- * stays where it is. This is only how many of those frames a given device
+ * stays where it is. This is only how many of those frames a given stage
  * actually fetches and decodes, and the scrub snaps to the nearest one it has.
- * The measurements behind the narrow value are in `useFrameSequence.ts`.
+ *
+ * The narrow stage ran at 2 for as long as it was decoding the wide plate,
+ * which was the only way to halve a 38ms decode it could not otherwise
+ * afford, at the price of scrubbing a phone at half the temporal resolution
+ * of a desktop. The small plate removes the reason: every frame at 728 costs
+ * less to fetch and less to decode than every second frame at 970 did. The
+ * measurements are in `useFrameSequence.ts`.
  */
 export const FRAME_STRIDE = { wide: 1, narrow: 2 } as const;
 
