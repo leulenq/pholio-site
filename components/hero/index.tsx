@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import {
   motion,
   useScroll,
+  useSpring,
   useTransform,
   useMotionValueEvent,
 } from "framer-motion";
@@ -12,6 +13,14 @@ import Image from "next/image";
 import Intelligence from "@/components/intelligence";
 import SceneCompCard, { CompCardLayers } from "@/components/comp-card";
 import { StaticStudioSite, StudioSiteLayers } from "@/components/studio-site";
+import {
+  GRAIN,
+  LIFT,
+  LIGHT,
+  TIMELINE_SPRING,
+  T as SITE_T,
+  away,
+} from "@/components/studio-site/motion";
 import { leave } from "@/components/intelligence/ease";
 import Ribbon from "@/components/intelligence/Ribbon";
 import HeroChrome from "./HeroChrome";
@@ -65,6 +74,14 @@ const ROW_H = 46; // px
 
 /** A frame from the settled standing stretch, for the reduced-motion still. */
 const STILL_FRAME = 97;
+
+/** Film grain: the dark room's, one texture, two copies. */
+const GRAIN_REST = 0.025;
+const GRAIN_STYLE = {
+  backgroundImage:
+    "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
+  backgroundSize: "150px 150px",
+} as const;
 
 export default function Hero({
   ready = true,
@@ -247,11 +264,28 @@ export default function Hero({
     () => `${figureRise.get() + handoverY.get()}vh`,
   );
 
-  const bgColor = useTransform(
-    scrollYProgress,
-    [0, FIGURE_STOPS[1], FIGURE_STOPS[2], 1],
-    ["#050505", "#050505", "#050505", "#050505"]
-  );
+  // ── The room ─────────────────────────────────────────────────────────────
+  //
+  // One field under the whole stage. It is velvet for the hero and the card,
+  // and it comes up to paper across the Studio+ beat: the last chapter ends
+  // by the light in the room changing, not by anything being printed on the
+  // card. The curve and the reasoning are in components/studio-site/motion.ts.
+  //
+  // The Studio+ beat's own inertia is read once, here, and the card's exit
+  // and the mark's arrival are derived from it, so the two halves of the
+  // hand over are one move rather than two that nearly agree (§26.5).
+  const siteSmooth = useSpring(siteProgress, TIMELINE_SPRING);
+  const bgColor = useTransform(siteSmooth, [...LIGHT.at], [...LIGHT.field]);
+  const grainOpacity = useTransform(siteSmooth, [GRAIN.from, GRAIN.to], [GRAIN_REST, 0]);
+
+  // The card leaves by passing the lens: the whole card layer, so the book
+  // gathered behind the lead goes with it. See LIFT.
+  const lift = LIFT[narrow ? "compact" : "wide"];
+  const liftK = useTransform(siteSmooth, [SITE_T.lift[0], SITE_T.lift[1]], [0, 1], {
+    ease: away,
+  });
+  const cardLiftY = useTransform(liftK, (k) => `${k * lift.rise}vh`);
+  const cardLiftScale = useTransform(liftK, (k) => 1 + k * (lift.scale - 1));
 
   // The gold radial gradient fades out as soon as she starts to move (FIGURE_STOPS[1]),
   // leaving the solid black base.
@@ -265,12 +299,18 @@ export default function Hero({
   const grain = (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 z-[1] opacity-[0.025]"
-      style={{
-        backgroundImage:
-          "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
-        backgroundSize: "150px 150px",
-      }}
+      className="pointer-events-none absolute inset-0 z-[1]"
+      style={{ ...GRAIN_STYLE, opacity: GRAIN_REST }}
+    />
+  );
+
+  /* The same grain on the scrubbed stage, where it is the dark room's and
+     leaves with the dark: on paper it reads as dirt rather than as film. */
+  const scrubGrain = (
+    <motion.div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 z-[1]"
+      style={{ ...GRAIN_STYLE, opacity: grainOpacity }}
     />
   );
 
@@ -418,7 +458,7 @@ export default function Hero({
           />
         </motion.div>
 
-        {grain}
+        {scrubGrain}
 
         {/* ── Under the figure: the intelligence section's whole type layer,
               mounted in the hero's own z-stack so she occludes it and so the
@@ -432,15 +472,30 @@ export default function Hero({
           <Intelligence progress={scrollYProgress} isMobile={isMobile} />
         </motion.div>
 
-        {/* ── The comp-card beat. Same pinned stage, second timeline. ── */}
-        <div className="pointer-events-none absolute inset-0 z-30">
-          <CompCardLayers progress={cardTimeline} assetsArmed={cardAssetsArmed} />
-        </div>
+        {/* ── The comp-card beat. Same pinned stage, second timeline, and a
+              third move on top of it: the Studio+ beat takes the camera
+              forward and the finished card leaves with it.
 
-        {/* ── The Studio+ beat. Same pinned stage, third timeline: her site
-              rises over the card's close as a sheet, is walked through by
-              this scroll, and pulls back to the offer. ── */}
-        <div className="pointer-events-none absolute inset-0 z-40">
+              Clipped to the stage's own frame, because moving the layer
+              moves everything parked outside it too: the beat's captions
+              rest a viewport below the floor when they are done, and a
+              122vh rise brings them back up through the composition. The
+              frame is the only clipping edge on this site, and this is it
+              (`docs/design-language/03-banned-ui.md`, `lessons.md` §18). ── */}
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-30 overflow-hidden"
+          style={{ y: cardLiftY, scale: cardLiftScale, willChange: "transform" }}
+        >
+          <CompCardLayers progress={cardTimeline} assetsArmed={cardAssetsArmed} />
+        </motion.div>
+
+        {/* ── The Studio+ beat. Same pinned stage, third timeline.
+
+              Under the card layer, not over it: the mark is on the far wall
+              of the room and the card is the near thing passing the lens,
+              so the card occludes it on the way out. Once the card has
+              left, nothing above this is in frame. ── */}
+        <div className="pointer-events-none absolute inset-0 z-[29]">
           <StudioSiteLayers progress={siteProgress} armed={cardAssetsArmed} />
         </div>
 

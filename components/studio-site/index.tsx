@@ -13,17 +13,12 @@ import { CARD_FRACTION } from "@/components/hero/motion";
 import { useMediaQuery } from "@/components/hero/useMediaQuery";
 
 import {
-  BAND_OPEN,
-  CARD_ASPECT,
-  CARD_BAND,
-  CARD_BASE_W,
-  CARD_FALLBACK,
-  CARD_RADIUS_PX,
   CREAM,
   DRIVE_STOPS,
   END,
   GOLD_ON_PAPER,
   INK,
+  LOCK,
   OPENING,
   PLUS,
   SITE_PAPER,
@@ -40,7 +35,6 @@ import {
   open,
   plusPoints,
   polygon,
-  push,
   type StageKind,
 } from "./motion";
 import { useSiteFrame } from "./useSiteFrame";
@@ -68,8 +62,6 @@ function useFrame() {
 }
 
 const vh = (v: number) => `${v}vh`;
-/** A clip with no area: the sheet is not on the stage yet. */
-const NO_PAPER = "inset(50% 50% 50% 50%)";
 const vwPx = (s: string, w: number) => (parseFloat(s) / 100) * w;
 
 // ── Measuring the mark ────────────────────────────────────────────────────
@@ -109,26 +101,6 @@ function useMarkWidth(stage: StageKind, w: number) {
   );
 
   return { width, measurer };
-}
-
-// ── Reading the card ──────────────────────────────────────────────────────
-
-type CardRect = { cx: number; cy: number; w: number; h: number };
-
-/**
- * The lead card's rest position: read off `[data-lead-card]` while the card
- * is at rest at the start of this beat, keyed to the frame it was read in;
- * the authored rest otherwise.
- */
-function useCardRect(stage: StageKind, w: number, h: number) {
-  const key = `${stage}:${w}x${h}`;
-  const [measured, setMeasured] = useState<{ key: string; rect: CardRect } | null>(null);
-  const fallback = CARD_FALLBACK[stage];
-  const rect: CardRect =
-    measured && measured.key === key
-      ? measured.rect
-      : { cx: fallback.cx * w, cy: h / 2 + fallback.dy, w: fallback.w, h: fallback.w / CARD_ASPECT };
-  return { rect, key, setMeasured };
 }
 
 // ── The end ───────────────────────────────────────────────────────────────
@@ -218,102 +190,70 @@ export function StudioSiteLayers({
   const smooth = useSpring(progress, TIMELINE_SPRING);
   const { ref, marks, marksRef, scrollTo, intro, requestMarks } = useSiteFrame();
   const { width: markW, measurer } = useMarkWidth(stage, w);
-  const { rect: card, key: cardKey, setMeasured: setCard } = useCardRect(stage, w, h);
 
-  // ── 1: the push, into the card ──
+  // ── The mark, as one object ──
   //
-  // The card's paper is a rounded rectangle in frame coordinates that grows
-  // about the card's own centre. Expressed as a clip on a full-bleed sheet
-  // of cream rather than as a scaled element, so nothing in the DOM is ever
-  // at sixty times its size and the corners stay exact.
-  const radius = CARD_RADIUS_PX * (card.w / CARD_BASE_W[stage]);
-  const reach =
-    Math.max(
-      Math.max(card.cx, w - card.cx) / (card.w / 2),
-      Math.max(card.cy, h - card.cy) / (card.h / 2),
-    ) * 1.08;
-  const bandH = card.h * CARD_BAND;
-  const bandCy = card.cy - card.h / 2 + bandH / 2;
-  const pushK = useTransform(smooth, [T.push[0], T.push[1]], [0, 1], { ease: push });
-  const paperClip = useTransform(() => {
-    const k = pushK.get();
-    // Nothing of this beat is on the stage before the push begins. The
-    // first shape is the card's masthead band, which is the card's own
-    // paper wherever the card happens to be; held at rest from the top of
-    // the page it was a cream band with the mark on it, sitting over the
-    // hero, the intelligence beat and the whole card sequence. The sheet
-    // is cut to nothing until the push has something to travel.
-    if (k <= 0) return NO_PAPER;
-    // The band opens down the card's face, then the whole card comes
-    // toward us. One travel, two shapes, and the second begins exactly
-    // where the first ends.
-    let cy: number;
-    let hw: number;
-    let hh: number;
-    let r: number;
-    if (k < BAND_OPEN) {
-      const u = k / BAND_OPEN;
-      cy = lerp(bandCy, card.cy, u);
-      hw = card.w / 2;
-      hh = lerp(bandH, card.h, u) / 2;
-      r = radius;
-    } else {
-      const s = lerp(1, reach, (k - BAND_OPEN) / (1 - BAND_OPEN));
-      cy = card.cy;
-      hw = (card.w / 2) * s;
-      hh = (card.h / 2) * s;
-      r = radius * s;
-    }
-    const top = cy - hh;
-    const left = card.cx - hw;
-    const right = w - (card.cx + hw);
-    const bottom = h - (cy + hh);
-    // Once every corner is off the frame there is no shape left to cut.
-    if (top <= -r && left <= -r && right <= -r && bottom <= -r) return "none";
-    return `inset(${top.toFixed(1)}px ${right.toFixed(1)}px ${bottom.toFixed(1)}px ${left.toFixed(1)}px round ${r.toFixed(1)}px)`;
-  });
-
-  // The mark, printed on the card, coming toward us with the paper and
-  // settling into its place a little after the paper lands.
+  // Where the word sits, where the plus sits, and the centre of the two
+  // together. Everything in the arrival is expressed about that centre, so
+  // the plus cannot drift off the word on the way in: one scale, one
+  // translation, one object.
   const em = vwPx(WORDS.size[stage], w);
   const markWidth = markW ?? em * 4.6;
   const markLeft = (WORDS.right[stage] / 100) * w - markWidth;
   const markTop = (WORDS.axis[stage] / 100) * h - WORDS.capMid * em;
-  const markScale0 = (card.w * WORDS.onCard) / markWidth;
-  const markDx0 = card.cx - (markLeft + markWidth / 2);
-  const markDy0 = bandCy - (markTop + em / 2);
-  const markK = useTransform(smooth, [T.mark[0], T.mark[1]], [0, 1], { ease: push });
-  const markTransform = useTransform(() => {
-    const k = markK.get();
-    const s = lerp(markScale0, 1, k);
-    const dx = markDx0 * (1 - k);
-    const dy = markDy0 * (1 - k);
-    return `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) scale(${s.toFixed(4)})`;
-  });
-
-  // ── 2, 3: the plus, arriving along the axis, then opening ──
+  const axis = (WORDS.axis[stage] / 100) * h;
+  const plusCxRest = (WORDS.right[stage] / 100) * w + PLUS.after * em;
   const g = {
-    cx: (WORDS.right[stage] / 100) * w + PLUS.after * em,
-    cy: (WORDS.axis[stage] / 100) * h,
     l0: PLUS.halfLen * em,
     t0: PLUS.halfThick * em,
     reach: PLUS.reach * Math.hypot(w, h) + Math.max(w, h),
   };
-  const plusIn = useTransform(smooth, [T.plusIn[0], T.plusIn[1]], [1, 0], { ease: arrive });
+  /** The lockup's own centre: the word's left edge to the plus's right. */
+  const lockCx = (markLeft + plusCxRest + g.l0) / 2;
+
+  // ── 1: the arrival ──
+  //
+  // Thrown up into the frame by the same scroll that is sending the card out
+  // above it, and further away than the card is, so it travels a third as
+  // far and changes size a tenth as much (`lessons.md` §27.2, and LOCK).
+  const lock = LOCK[stage];
+  const lockK = useTransform(smooth, [T.lock[0], T.lock[1]], [0, 1], { ease: arrive });
+  const lockScale = useTransform(lockK, (k) => lerp(lock.scale, 1, k));
+  const lockDy = useTransform(lockK, (k) => (1 - k) * (lock.rise / 100) * h);
+
+  // The word's own box scales about its own centre, so its translation
+  // carries the difference between that centre and the lockup's.
+  const markTransform = useTransform(() => {
+    const s = lockScale.get();
+    const dx = (lockCx - (markLeft + markWidth / 2)) * (1 - s);
+    const dy = lockDy.get();
+    return `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) scale(${s.toFixed(4)})`;
+  });
+
+  // ── 2: the plus, opening ──
+  //
+  // The same affine map as the word, applied to the plus's geometry rather
+  // than to a box: its centre and its half-lengths are read through the
+  // arrival, which is the identity by the time the opening starts.
   const u = useTransform(smooth, [T.grow[0], T.grow[1]], [0, 1]);
   const halfLen = useTransform(u, [0, OPENING.armsEnd], [g.l0, g.reach], { ease: open });
   const halfThick = useTransform(u, [OPENING.widenStart, 1], [g.t0, g.reach], { ease: open });
   const rim = useTransform(u, [0, OPENING.hollowEnd], [g.t0, PLUS.rim], { ease: glide });
   const turn = useTransform(u, [OPENING.turn[0], OPENING.turn[1]], [0, OPENING.turnDegrees], { ease: glide });
-  const plusCx = useTransform(() => g.cx + plusIn.get() * (w - g.cx + g.l0 * 2));
-  const goldClip = useTransform(() => polygon(plusPoints(plusCx.get(), g.cy, halfLen.get(), halfThick.get(), turn.get())));
+  const plusCx = useTransform(() => lockCx + (plusCxRest - lockCx) * lockScale.get());
+  const plusCy = useTransform(() => axis + lockDy.get());
+  const goldClip = useTransform(() => {
+    const s = lockScale.get();
+    return polygon(plusPoints(plusCx.get(), plusCy.get(), halfLen.get() * s, halfThick.get() * s, turn.get()));
+  });
   const siteClip = useTransform(() => {
     if (u.get() >= 1) return "none";
+    const s = lockScale.get();
     const r = rim.get();
-    const l = halfLen.get() - r;
-    const t = halfThick.get() - r;
+    const l = halfLen.get() * s - r;
+    const t = halfThick.get() * s - r;
     if (t <= 0) return "polygon(0px 0px, 0px 0px, 0px 0px)";
-    return polygon(plusPoints(plusCx.get(), g.cy, l, t, turn.get()));
+    return polygon(plusPoints(plusCx.get(), plusCy.get(), l, t, turn.get()));
   });
   // Once the rim has left the frame the mark and the gold have no place left
   // to be; they are released while fully covered.
@@ -323,7 +263,7 @@ export function StudioSiteLayers({
   const composeP = useTransform(smooth, [T.compose[0], T.compose[1]], [0, 1], { ease: glide });
   useMotionValueEvent(composeP, "change", (p) => intro(p));
 
-  // ── 4: her page's scroll, from this page's scroll ──
+  // ── 3: her page's scroll, from this page's scroll ──
   const siteY = useTransform(smooth, (p) => {
     const m = marksRef.current;
     if (!m) return 0;
@@ -346,7 +286,7 @@ export function StudioSiteLayers({
     }
   }, [marks, scrollTo, intro, siteY, composeP]);
 
-  // ── 5: the step back, and the end ──
+  // ── 4: the step back, and the end ──
   const win = WINDOW[stage];
   const siteScale = useTransform(smooth, [T.stepBack[0], T.stepBack[1]], [1, win.scale], { ease: glide });
   const siteX = useTransform(smooth, [T.stepBack[0], T.stepBack[1]], [0, win.x], { ease: glide });
@@ -360,67 +300,29 @@ export function StudioSiteLayers({
   // hers to scroll; while the page is composed and walked, the stage owns it.
   const pointer = useTransform(smooth, (p) => (p >= T.stepBack[1] ? "auto" : "none"));
 
-  // The header's stand-down marker, and the reading of the card. Both from
-  // the scroll event itself, not from a motion value: the header measures
-  // the marker in its own scroll handler, and the card is read from the
-  // stage's own geometry rather than from the spring's opinion of it.
+  // The header's stand-down marker, from the scroll event itself rather than
+  // from a motion value: the header measures the marker in its own scroll
+  // handler, so the marker is placed from the stage's own geometry.
   const markerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const marker = markerRef.current;
     const section = marker?.closest("section");
     if (!marker || !section) return;
-    // The card beat is spring smoothed, so the first frames after a jump
-    // still show where the card was. A reading is accepted only after six
-    // frames in a row agree, and only if it is near the authored rest: a
-    // settled reading of the dealt row is not the card at rest.
-    let readCard = false;
-    let watching = 0;
-    let last: DOMRect | null = null;
-    let agreed = 0;
-    let frames = 0;
-    const near = (r: DOMRect) => {
-      const fb = CARD_FALLBACK[stage];
-      const cx = r.left + r.width / 2;
-      return Math.abs(cx - fb.cx * w) < w * 0.2 && Math.abs(r.width - fb.w) < fb.w * 0.35;
-    };
-    const watch = () => {
-      watching = 0;
-      const el = document.querySelector<HTMLElement>("[data-lead-card]");
-      const r = el?.getBoundingClientRect();
-      if (!r || r.width < 40 || readCard || frames++ > 240) return;
-      const still =
-        !!last && Math.abs(last.top - r.top) < 0.5 && Math.abs(last.left - r.left) < 0.5 && Math.abs(last.width - r.width) < 0.5;
-      agreed = still ? agreed + 1 : 0;
-      if (agreed >= 6 && near(r)) {
-        readCard = true;
-        setCard({ key: cardKey, rect: { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: r.width, h: r.height } });
-        return;
-      }
-      last = r;
-      watching = requestAnimationFrame(watch);
-    };
     const place = () => {
       const rect = section.getBoundingClientRect();
       const travel = rect.height - window.innerHeight;
       const stageP = travel > 0 ? -rect.top / travel : 0;
       const p = (stageP - CARD_FRACTION) / (1 - CARD_FRACTION);
       marker.style.top = p > TAKEOVER.start && p < TAKEOVER.end ? "0px" : "100vh";
-      if (!readCard && !watching && p >= 0 && p < T.push[0] + 0.005) {
-        last = null;
-        agreed = 0;
-        frames = 0;
-        watching = requestAnimationFrame(watch);
-      }
     };
     place();
     window.addEventListener("scroll", place, { passive: true });
     window.addEventListener("resize", place);
     return () => {
-      cancelAnimationFrame(watching);
       window.removeEventListener("scroll", place);
       window.removeEventListener("resize", place);
     };
-  }, [cardKey, setCard, stage, w]);
+  }, []);
 
   return (
     <>
@@ -433,30 +335,25 @@ export function StudioSiteLayers({
       />
 
       {measurer}
+      <h2 className="sr-only">{WORDS.label}</h2>
 
-      {/* The card's paper, coming toward us until it is the frame, with the
-          mark printed on it. One sheet, clipped to the card's own rounded
-          rectangle; the clip is what travels. */}
+      {/* The word. Travelling in from under the frame with the plus, on one
+          transform about the lockup's centre. */}
       <motion.div
-        className="absolute inset-0 z-[40]"
-        style={{ clipPath: paperClip, backgroundColor: CREAM, willChange: "clip-path" }}
+        aria-hidden
+        className="absolute origin-center"
+        style={{
+          left: markLeft,
+          top: markTop,
+          width: markWidth,
+          height: em,
+          transform: markTransform,
+          visibility: covered,
+          willChange: "transform",
+          zIndex: 41,
+        }}
       >
-        <h2 className="sr-only">{WORDS.label}</h2>
-        <motion.div
-          aria-hidden
-          className="absolute origin-center"
-          style={{
-            left: markLeft,
-            top: markTop,
-            width: markWidth,
-            height: em,
-            transform: markTransform,
-            visibility: covered,
-            willChange: "transform",
-          }}
-        >
-          <Mark width={markWidth} size={em} />
-        </motion.div>
+        <Mark width={markWidth} size={em} />
       </motion.div>
 
       {/* The end, on the paper beside the window. */}
@@ -473,8 +370,8 @@ export function StudioSiteLayers({
         </div>
       </motion.div>
 
-      {/* The plus. Solid gold at rest, the serif's own cross; it arrives along
-          the axis, and opens by hollowing to a rim that widens past the frame. */}
+      {/* The plus. The word's own cross, arriving with it and never before
+          it; it opens by hollowing to a rim that widens past the frame. */}
       <motion.div
         aria-hidden
         className="pointer-events-none absolute left-0 top-0 z-[42] h-[100dvh] w-[100vw]"
