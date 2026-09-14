@@ -37,11 +37,12 @@
  */
 
 import type { CSSProperties, ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-import { TOKENS, Wordmark } from "@/components/header/kit";
+import { TOKENS, Wordmark, type Field } from "@/components/header/kit";
 import CookiePreferencesButton from "@/components/CookiePreferencesButton";
 import { Instagram, Linkedin } from "lucide-react";
 
@@ -58,18 +59,125 @@ export interface FooterVariantProps {
    the shared ink ladder; everything about how they are *set* is local.
    ══════════════════════════════════════════════════════════════════════ */
 
-const T = TOKENS.ink;
+/* The page's own paper. The footer is one component under every route, so it
+   does not own a colour: it prints on whatever the page above it ended on, ink
+   under the home stage and cream under the legal corpus. An attempt at giving
+   it a lifted paper of its own was reverted, because a near-match reads as a
+   grey panel sitting on the page rather than as the same sheet. The footer's
+   personality comes from the mark and the standing rules instead.
 
-/* The page's own ink. An attempt at giving the footer a warmer paper of its
-   own was reverted: a lifted black reads as a grey panel sitting on a black
-   page rather than as a separate sheet, and it is off-brand. The footer's
-   personality comes from the watermark and the standing rules instead. */
-export const PAPER = T.surface;
-export const INK = T.text;
-export const MUTED = T.textMuted;
-export const LABEL_MUTED = "rgba(250,247,242,0.40)";
-export const HAIRLINE = T.rule;
-export const GOLD = T.gold;
+   Every colour below is a custom property set on the surface from the field's
+   token ladder (see `FooterSurface`), so nothing in here names a polarity. */
+export const PAPER = "var(--footer-paper)";
+export const INK = "var(--footer-ink)";
+export const MUTED = "var(--footer-muted)";
+export const LABEL_MUTED = "var(--footer-label)";
+export const HAIRLINE = "var(--footer-rule)";
+export const GOLD = "var(--footer-gold)";
+
+/** The group label's strength on each field. Fainter than `textFaint`: the
+    label is the least important text in its own column. */
+const LABEL_ALPHA: Record<Field, string> = {
+  ink: "rgba(250,247,242,0.3)",
+  cream: "rgba(15,23,42,0.36)",
+};
+
+function fieldVars(field: Field, paper: string | null): CSSProperties {
+  const t = TOKENS[field];
+  return {
+    "--footer-paper": paper ?? t.surface,
+    "--footer-ink": t.text,
+    "--footer-muted": t.textMuted,
+    "--footer-label": LABEL_ALPHA[field],
+    "--footer-rule": t.rule,
+    "--footer-gold": t.gold,
+  } as CSSProperties;
+}
+
+const SKIP_BG = new Set(["rgba(0, 0, 0, 0)", "transparent"]);
+
+/**
+ * The paper the page ends on.
+ *
+ * Walks down from `<main>` along whichever in-flow child reaches its parent's
+ * bottom edge, keeping the deepest opaque background found on the way. That is
+ * the surface a visitor was reading immediately before the footer arrives,
+ * which is the one the footer has to continue. Geometry rather than DOM order,
+ * because routes end in fixed banners and null-rendering helpers as often as in
+ * their last section.
+ *
+ * Returns the exact colour as well as the polarity, for the same reason the
+ * header does: `/agency` is #08080c, not #050505, and the difference is a seam.
+ */
+function readPageEnd(): { field: Field; paper: string } | null {
+  let node: Element | null = document.querySelector("main");
+  let found: { field: Field; paper: string } | null = null;
+
+  while (node) {
+    const bg = window.getComputedStyle(node).backgroundColor;
+    const match = SKIP_BG.has(bg)
+      ? null
+      : bg.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)/);
+    if (match && (match[4] === undefined || Number(match[4]) >= 0.85)) {
+      const [r, g, b] = [match[1], match[2], match[3]].map(Number);
+      const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      found = {
+        field: luminance > 0.55 ? "cream" : "ink",
+        paper: `rgb(${r}, ${g}, ${b})`,
+      };
+    }
+
+    const bottom = node.getBoundingClientRect().bottom;
+    let next: Element | null = null;
+    for (const child of Array.from(node.children).reverse()) {
+      const rect = child.getBoundingClientRect();
+      if (rect.height === 0) continue;
+      const position = window.getComputedStyle(child).position;
+      if (position === "fixed" || position === "absolute") continue;
+      if (rect.bottom >= bottom - 2) next = child;
+      break;
+    }
+    node = next;
+  }
+
+  return found;
+}
+
+/** Re-reads the page end on navigation and whenever the page changes height,
+    since most routes finish laying out after the footer has mounted. */
+function usePageEndField(): { field: Field; paper: string | null } {
+  const pathname = usePathname();
+  const [state, setState] = useState<{ field: Field; paper: string | null }>({
+    field: "ink",
+    paper: null,
+  });
+
+  useEffect(() => {
+    const main = document.querySelector("main");
+    if (!main) return;
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const end = readPageEnd();
+        setState((prev) =>
+          end && (prev.field !== end.field || prev.paper !== end.paper)
+            ? end
+            : prev,
+        );
+      });
+    };
+    /* A ResizeObserver reports once on `observe`, which is the first read. */
+    const observer = new ResizeObserver(update);
+    observer.observe(main);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [pathname]);
+
+  return state;
+}
 
 const SERIF = "var(--font-serif)";
 const SANS = "var(--font-sans)";
@@ -89,12 +197,15 @@ export function FooterSurface({
   children: ReactNode;
   className?: string;
 }) {
+  const { field, paper } = usePageEndField();
   return (
     <footer
       data-site-footer
       data-footer-trigger
+      data-field={field}
       className={`relative z-20 flex min-h-[100dvh] w-full flex-col justify-between overflow-hidden texture-grain ${className}`}
       style={{
+        ...fieldVars(field, paper),
         background: PAPER,
         color: INK,
       }}
@@ -302,7 +413,7 @@ export function GroupLabel({
         letterSpacing: "0.26em",
         textTransform: "uppercase",
         lineHeight: 1,
-        color: "rgba(250,247,242,0.3)",
+        color: LABEL_MUTED,
         margin: 0,
       }}
     >

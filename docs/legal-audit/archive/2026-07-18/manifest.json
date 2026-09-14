@@ -1,0 +1,16 @@
+{
+  "captured": "2026-09-14",
+  "note": "Working-tree source capture before rewrite; not proof of historic production deployment.",
+  "sha256": {
+    "components/legal/CookiesContent.tsx": "1dd3173f1598adfc269c94a94adad9c0226aa52457a8abbef88117b83ea3207d",
+    "components/legal/TakeItDownContent.tsx": "07cc0505cb7ab24b52f3b10bb928a3a21b3c7d765f85c971691b0e35c844f642",
+    "components/legal/SubmissionProgramNoticeContent.tsx": "d2cf464b474f71a9450b2a48db764ac5686ce8c55488ae72683da132f0cd0b83",
+    "components/legal/CommunityGuidelinesContent.tsx": "fdbfc55c6e714df31a9997b8b3a39331da2dd41ee310ba4de2e78573eaf4199e",
+    "components/legal/DmcaContent.tsx": "276b622774a4efe227f097cee95b353d460f4c901bc6ab3235c38b18c5136c4d",
+    "components/legal/TermsContent.tsx": "44da5f2d94f5a0ebd7cba170d6af213fe2e68c1e433a26d0d4dd9fd75c66bf40",
+    "components/legal/PrivacyContent.tsx": "be7f6039c98e3523cd9ae3f48368fc0eee0856edaf5ff2c75211c74d6224a2b7",
+    "components/legal/AiNoticeContent.tsx": "1c01754f796ada3c2a36dc123908ed9c023de23c8eda24240293570b1a3d0456",
+    "components/legal/LegalDocumentLayout.tsx": "8769abe7713cdd14fd434b863377b4e33b05b7973879be5a90a63f704fc650bc",
+    "lib/legal-constants.ts": "7ca2be84ccc5fa9ca9eb0768903f137fb38c4b58152a13e2b5b473973aae7b89"
+  }
+}

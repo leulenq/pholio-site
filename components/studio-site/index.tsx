@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import {
   motion,
   useMotionValueEvent,
@@ -15,26 +15,28 @@ import { useMediaQuery } from "@/components/hero/useMediaQuery";
 import {
   CREAM,
   DRIVE_STOPS,
-  END,
+  CLOSE,
+  FACE,
   GOLD_ON_PAPER,
   INK,
-  LOCK,
   OPENING,
   PLUS,
   SITE_PAPER,
   T,
   TAKEOVER,
   TIMELINE_SPRING,
-  WINDOW,
   WORDS,
   arrive,
   clamp01,
+  closeLayout,
+  exposureAt,
+  inTheRoom,
   driveTargets,
   glide,
-  lerp,
   open,
   plusPoints,
   polygon,
+  type CloseLayout,
   type StageKind,
 } from "./motion";
 import { useSiteFrame } from "./useSiteFrame";
@@ -71,7 +73,7 @@ const vwPx = (s: string, w: number) => (parseFloat(s) / 100) * w;
  * one word rather than as letters: nothing in this beat moves a letter on
  * its own any more, so the mark is one object.
  */
-function useMarkWidth(stage: StageKind, w: number) {
+function useMarkWidth(stage: StageKind, w: number, size: string = WORDS.size[stage]) {
   const ref = useRef<HTMLSpanElement>(null);
   const [width, setWidth] = useState<number | null>(null);
 
@@ -87,14 +89,14 @@ function useMarkWidth(stage: StageKind, w: number) {
     return () => {
       cancelled = true;
     };
-  }, [stage, w]);
+  }, [stage, w, size]);
 
   const measurer = (
     <span
       ref={ref}
       aria-hidden
       className="pointer-events-none invisible absolute left-0 top-0 whitespace-nowrap font-editorial"
-      style={{ fontSize: WORDS.size[stage], lineHeight: 1, letterSpacing: WORDS.tracking }}
+      style={{ fontSize: size, lineHeight: 1, letterSpacing: WORDS.tracking }}
     >
       {WORDS.name}
     </span>
@@ -103,33 +105,96 @@ function useMarkWidth(stage: StageKind, w: number) {
   return { width, measurer };
 }
 
-// ── The end ───────────────────────────────────────────────────────────────
+// ── The close ─────────────────────────────────────────────────────────────
 
-function End({ stage, className, style }: { stage: StageKind; className?: string; style?: CSSProperties }) {
-  const compact = stage === "compact";
+/** The set line's width in em, read off the face once it is in hand. */
+function useTitleEm() {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [em, setEm] = useState(8.1);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let cancelled = false;
+    const measure = () => {
+      if (!cancelled) setEm(el.getBoundingClientRect().width / 100);
+    };
+    if (document.fonts?.ready) document.fonts.ready.then(measure, measure);
+    else measure();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  const measurer = (
+    <span
+      ref={ref}
+      aria-hidden
+      className="pointer-events-none invisible absolute left-0 top-0 whitespace-nowrap"
+    >
+      <TitleText size={100} />
+    </span>
+  );
+  return { em, measurer };
+}
+
+function TitleText({ size }: { size: number }) {
   return (
-    <div className={className} style={{ color: INK, ...style }}>
-      <h2
-        className={`font-editorial ${
-          compact ? "text-[clamp(2rem,8.6vw,2.6rem)]" : "text-[clamp(2.4rem,4.6vw,4rem)]"
-        }`}
+    <span className="font-editorial whitespace-nowrap" style={{ fontSize: size, lineHeight: 1, letterSpacing: "0" }}>
+      {CLOSE.before}
+      <span className="font-editorial-italic" style={{ color: GOLD_ON_PAPER, letterSpacing: "0" }}>
+        {CLOSE.verdict}
+      </span>
+      {CLOSE.after}
+    </span>
+  );
+}
+
+/** The masthead: the line, standing on her site's top edge. */
+function CloseTitle({ layout }: { layout: CloseLayout }) {
+  const { title } = layout;
+  return (
+    <h2
+      className="absolute m-0 whitespace-nowrap"
+      style={{ left: title.x, top: title.baseline - FACE.baseline * title.size, color: INK, lineHeight: 1 }}
+    >
+      <TitleText size={title.size} />
+    </h2>
+  );
+}
+
+/**
+ * The action, pinned to her site. The Studio+ cross is centred on the site's
+ * bottom-right corner — the cross that opened onto her page, now the thing
+ * that opens it. The text CTA is removed to avoid marketing clutter.
+ * On hover the cross turns a quarter, the way it turned as it opened.
+ */
+function CloseAction({ layout }: { layout: CloseLayout }) {
+  const { size, corner } = layout.action;
+  const arm = size * 1.5;
+  const bar = Math.max(1.5, size * 0.085);
+  const hit = Math.max(44, arm * 1.5);
+  return (
+    <a
+      href={SITE_URL}
+      target="_blank"
+      rel="noopener"
+      aria-label={CLOSE.open}
+      className="group pointer-events-auto absolute flex items-center justify-center outline-none"
+      style={{
+        left: corner.x - hit / 2,
+        top: corner.y - hit / 2,
+        width: hit,
+        height: hit,
+      }}
+    >
+      <span
+        aria-hidden
+        className="relative block transition-transform duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] group-hover:rotate-90 group-focus-visible:rotate-90"
+        style={{ width: arm, height: arm }}
       >
-        {END.head[0]}
-        <span className="font-editorial-italic" style={{ color: GOLD_ON_PAPER }}>
-          {END.head[1]}
-        </span>
-        {END.head[2]}
-      </h2>
-      <a
-        href={SITE_URL}
-        target="_blank"
-        rel="noopener"
-        className={`${compact ? "mt-5 text-[0.92rem]" : "mt-8 text-[1rem]"} inline-block border-b pb-[3px] font-sans transition-colors duration-300`}
-        style={{ borderColor: GOLD_ON_PAPER }}
-      >
-        {END.open}
-      </a>
-    </div>
+        <span className="absolute left-0 top-1/2 w-full -translate-y-1/2" style={{ height: bar, backgroundColor: GOLD_ON_PAPER }} />
+        <span className="absolute left-1/2 top-0 h-full -translate-x-1/2" style={{ width: bar, backgroundColor: GOLD_ON_PAPER }} />
+      </span>
+    </a>
   );
 }
 
@@ -191,73 +256,48 @@ export function StudioSiteLayers({
   const { ref, marks, marksRef, scrollTo, intro, requestMarks } = useSiteFrame();
   const { width: markW, measurer } = useMarkWidth(stage, w);
 
-  // ── The mark, as one object ──
+  // ── The mark, in the room ──
   //
-  // Where the word sits, where the plus sits, and the centre of the two
-  // together. Everything in the arrival is expressed about that centre, so
-  // the plus cannot drift off the word on the way in: one scale, one
-  // translation, one object.
+  // It does not move. It stands on the paper for the whole
+  // beat, lit by the same light as the paper, so in the dark room it is black
+  // on black and the room's light is what shows it (`lessons.md` §36). It is
+  // off the stage entirely until the light begins, so it paints nothing over
+  // the beats above this one (§34).
   const em = vwPx(WORDS.size[stage], w);
   const markWidth = markW ?? em * 4.6;
   const markLeft = (WORDS.right[stage] / 100) * w - markWidth;
   const markTop = (WORDS.axis[stage] / 100) * h - WORDS.capMid * em;
-  const axis = (WORDS.axis[stage] / 100) * h;
-  const plusCxRest = (WORDS.right[stage] / 100) * w + PLUS.after * em;
+  const plusCx = (WORDS.right[stage] / 100) * w + PLUS.after * em;
+  const plusCy = (WORDS.axis[stage] / 100) * h;
   const g = {
     l0: PLUS.halfLen * em,
     t0: PLUS.halfThick * em,
     reach: PLUS.reach * Math.hypot(w, h) + Math.max(w, h),
   };
-  /** The lockup's own centre: the word's left edge to the plus's right. */
-  const lockCx = (markLeft + plusCxRest + g.l0) / 2;
+  const lit = useTransform(smooth, (p) => `brightness(${exposureAt(p).toFixed(4)})`);
 
-  // ── 1: the arrival ──
-  //
-  // Thrown up into the frame by the same scroll that is sending the card out
-  // above it, and further away than the card is, so it travels a third as
-  // far and changes size a tenth as much (`lessons.md` §27.2, and LOCK).
-  const lock = LOCK[stage];
-  const lockK = useTransform(smooth, [T.lock[0], T.lock[1]], [0, 1], { ease: arrive });
-  const lockScale = useTransform(lockK, (k) => lerp(lock.scale, 1, k));
-  const lockDy = useTransform(lockK, (k) => (1 - k) * (lock.rise / 100) * h);
-
-  // The word's own box scales about its own centre, so its translation
-  // carries the difference between that centre and the lockup's.
-  const markTransform = useTransform(() => {
-    const s = lockScale.get();
-    const dx = (lockCx - (markLeft + markWidth / 2)) * (1 - s);
-    const dy = lockDy.get();
-    return `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) scale(${s.toFixed(4)})`;
-  });
-
-  // ── 2: the plus, opening ──
-  //
-  // The same affine map as the word, applied to the plus's geometry rather
-  // than to a box: its centre and its half-lengths are read through the
-  // arrival, which is the identity by the time the opening starts.
+  // ── The plus, opening ──
   const u = useTransform(smooth, [T.grow[0], T.grow[1]], [0, 1]);
   const halfLen = useTransform(u, [0, OPENING.armsEnd], [g.l0, g.reach], { ease: open });
   const halfThick = useTransform(u, [OPENING.widenStart, 1], [g.t0, g.reach], { ease: open });
   const rim = useTransform(u, [0, OPENING.hollowEnd], [g.t0, PLUS.rim], { ease: glide });
   const turn = useTransform(u, [OPENING.turn[0], OPENING.turn[1]], [0, OPENING.turnDegrees], { ease: glide });
-  const plusCx = useTransform(() => lockCx + (plusCxRest - lockCx) * lockScale.get());
-  const plusCy = useTransform(() => axis + lockDy.get());
-  const goldClip = useTransform(() => {
-    const s = lockScale.get();
-    return polygon(plusPoints(plusCx.get(), plusCy.get(), halfLen.get() * s, halfThick.get() * s, turn.get()));
-  });
+  const goldClip = useTransform(() =>
+    polygon(plusPoints(plusCx, plusCy, halfLen.get(), halfThick.get(), turn.get())),
+  );
   const siteClip = useTransform(() => {
     if (u.get() >= 1) return "none";
-    const s = lockScale.get();
     const r = rim.get();
-    const l = halfLen.get() * s - r;
-    const t = halfThick.get() * s - r;
+    const l = halfLen.get() - r;
+    const t = halfThick.get() - r;
     if (t <= 0) return "polygon(0px 0px, 0px 0px, 0px 0px)";
-    return polygon(plusPoints(plusCx.get(), plusCy.get(), l, t, turn.get()));
+    return polygon(plusPoints(plusCx, plusCy, l, t, turn.get()));
   });
   // Once the rim has left the frame the mark and the gold have no place left
   // to be; they are released while fully covered.
-  const covered = useTransform(u, (v) => (v >= 1 ? "hidden" : "visible"));
+  const shown = useTransform(smooth, (p) =>
+    inTheRoom(p) && p < T.grow[1] ? "visible" : "hidden",
+  );
 
   // ── Her masthead composes inside the opening ──
   const composeP = useTransform(smooth, [T.compose[0], T.compose[1]], [0, 1], { ease: glide });
@@ -287,12 +327,12 @@ export function StudioSiteLayers({
   }, [marks, scrollTo, intro, siteY, composeP]);
 
   // ── 4: the step back, and the end ──
-  const win = WINDOW[stage];
+  const { em: titleEm, measurer: titleMeasurer } = useTitleEm();
+  const layout = closeLayout(stage, w, h, titleEm);
+  const win = layout.window;
   const siteScale = useTransform(smooth, [T.stepBack[0], T.stepBack[1]], [1, win.scale], { ease: glide });
-  const siteX = useTransform(smooth, [T.stepBack[0], T.stepBack[1]], [0, win.x], { ease: glide });
-  const backVh = useTransform(smooth, [T.stepBack[0], T.stepBack[1]], [0, win.y], { ease: glide });
-  const siteXs = useTransform(siteX, (v) => `${v}vw`);
-  const siteYs = useTransform(backVh, vh);
+  const siteXs = useTransform(smooth, [T.stepBack[0], T.stepBack[1]], [0, win.x], { ease: glide });
+  const siteYs = useTransform(smooth, [T.stepBack[0], T.stepBack[1]], [0, win.y], { ease: glide });
   const endTravel = useTransform(smooth, [T.end[0], T.end[1]], [100, 0], { ease: arrive });
   const endY = useTransform(endTravel, vh);
 
@@ -337,46 +377,54 @@ export function StudioSiteLayers({
       {measurer}
       <h2 className="sr-only">{WORDS.label}</h2>
 
-      {/* The word. Travelling in from under the frame with the plus, on one
-          transform about the lockup's centre. */}
+      {/* The word, on the paper, lit with the room. */}
       <motion.div
         aria-hidden
-        className="absolute origin-center"
+        className="absolute"
         style={{
           left: markLeft,
           top: markTop,
           width: markWidth,
           height: em,
-          transform: markTransform,
-          visibility: covered,
-          willChange: "transform",
+          filter: lit,
+          visibility: shown,
           zIndex: 41,
         }}
       >
         <Mark width={markWidth} size={em} />
       </motion.div>
 
-      {/* The end, on the paper beside the window. */}
+      {titleMeasurer}
+      {/* The masthead, standing on her site's top edge. It travels in from
+          below the frame as her site steps back into place. */}
       <motion.div
-        className={
-          stage === "compact"
-            ? "absolute inset-x-0 top-[60vh] z-[41] px-6"
-            : "absolute left-[7%] top-1/2 z-[41] w-[min(34vw,32rem)] -translate-y-1/2"
-        }
+        className="absolute inset-0 z-[41]"
         style={{ y: endY, willChange: "transform" }}
       >
-        <div className="pointer-events-auto">
-          <End stage={stage} />
-        </div>
+        <CloseTitle layout={layout} />
       </motion.div>
 
-      {/* The plus. The word's own cross, arriving with it and never before
-          it; it opens by hollowing to a rim that widens past the frame. */}
+      {/* The plus. The word's own cross, lit with it; it opens by hollowing
+          to a rim that widens past the frame. */}
       <motion.div
         aria-hidden
         className="pointer-events-none absolute left-0 top-0 z-[42] h-[100dvh] w-[100vw]"
-        style={{ clipPath: goldClip, visibility: covered, backgroundColor: GOLD_ON_PAPER, willChange: "clip-path" }}
+        style={{
+          clipPath: goldClip,
+          filter: lit,
+          visibility: shown,
+          backgroundColor: GOLD_ON_PAPER,
+          willChange: "clip-path",
+        }}
       />
+
+      {/* The action, over her site's corner, with the masthead's travel. */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 z-[44]"
+        style={{ y: endY, willChange: "transform" }}
+      >
+        <CloseAction layout={layout} />
+      </motion.div>
 
       {/* Her site, inside the plus. A full viewport of her paper, clipped
           to the opening; the document inside it is the real /zofia, and its
@@ -411,8 +459,8 @@ export function StudioSiteLayers({
 // ── The still composition ─────────────────────────────────────────────────
 
 /**
- * For when the stage is not scrubbing: the mark at rest on paper, then her
- * page live in a window, and the end.
+ * For when the stage is not scrubbing: the mark at rest on paper, then the
+ * closing composition with her page live in its window.
  */
 export function StaticStudioSite() {
   const stage = useStageKind();
@@ -424,6 +472,8 @@ export function StaticStudioSite() {
   const cx = (WORDS.right[stage] / 100) * w + PLUS.after * em;
   const cy = (WORDS.axis[stage] / 100) * h;
   const rest = polygon(plusPoints(cx, cy, PLUS.halfLen * em, PLUS.halfThick * em, 0));
+  const { em: titleEm, measurer: titleMeasurer } = useTitleEm();
+  const close = closeLayout(stage, w, h, titleEm);
   return (
     <section aria-label="Studio+" className="relative w-full" style={{ backgroundColor: CREAM, color: INK }}>
       {measurer}
@@ -438,21 +488,29 @@ export function StaticStudioSite() {
         </div>
         <div aria-hidden className="absolute left-0 top-0 h-[100vh] w-[100vw]" style={{ clipPath: rest, backgroundColor: GOLD_ON_PAPER }} />
       </div>
-      <div className="px-6 pb-[12vh] pt-[4vh] md:px-12">
-        <div className={`mx-auto flex max-w-[1440px] ${compact ? "flex-col gap-10" : "flex-row items-center gap-[6vw]"}`}>
-          <End stage={stage} className={compact ? "" : "w-[34%] shrink-0"} />
-          <div
-            className="relative w-full overflow-hidden"
-            style={{ aspectRatio: compact ? "390 / 700" : "16 / 10", backgroundColor: SITE_PAPER }}
-          >
-            <iframe
-              src={SITE_EMBED_URL}
-              title={SITE_TITLE}
-              className="absolute inset-0 block h-full w-full border-0"
-              style={{ backgroundColor: SITE_PAPER }}
-              loading="lazy"
-            />
-          </div>
+      <div className="relative w-full overflow-hidden" style={{ height: "100vh" }}>
+        <div
+          className="absolute left-0 top-0 h-[100vh] w-[100vw] origin-top-left overflow-hidden"
+          style={{
+            transform: `translate(${close.window.x}px, ${close.window.y}px) scale(${close.window.scale})`,
+            backgroundColor: SITE_PAPER,
+            zIndex: 2,
+          }}
+        >
+          <iframe
+            src={SITE_EMBED_URL}
+            title={SITE_TITLE}
+            className="block h-full w-full border-0"
+            style={{ backgroundColor: SITE_PAPER }}
+            loading="lazy"
+          />
+        </div>
+        {titleMeasurer}
+        <div className="absolute inset-0" style={{ zIndex: 1 }}>
+          <CloseTitle layout={close} />
+        </div>
+        <div className="pointer-events-none absolute inset-0" style={{ zIndex: 3 }}>
+          <CloseAction layout={close} />
         </div>
       </div>
     </section>

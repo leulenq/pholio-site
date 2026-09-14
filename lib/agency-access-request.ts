@@ -12,14 +12,14 @@
  * 15/min on serverless, keyed by session user or client IP).
  *
  * ────────────────────────────────────────────────────────────────────────────
- * The page that uses this — `/agency/request-access` — is a HARD DEPENDENCY of
- * pholio-app, not an optional marketing page:
+ * The page that uses this, `app/agency/request-access`, is a HARD DEPENDENCY
+ * of pholio-app, not an optional marketing page:
  *
  *   • `GET  /partners` on the app 302s to `${MARKETING_SITE_URL}/agency/request-access`
  *   • `POST /partners` returns 410 Gone with that same URL in the body
  *
- * Until that route exists on this site, both of those hand off to a 404. It is
- * the highest-priority page in the rebuild. See docs/app-integration.md.
+ * The route now exists here and is what those handoffs land on. See
+ * docs/app-integration.md.
  * ────────────────────────────────────────────────────────────────────────────
  *
  * What the endpoint stores: agency and requester metadata only. No roster
@@ -102,9 +102,9 @@ export const REQUIRED_FIELDS = [
  * migrations, not copy tweaks.
  */
 export const AGENCY_TYPES = [
+  "Modeling agency",
   "Mother agency",
-  "Placement agency",
-  "Model management",
+  "Placement or scouting agency",
   "Talent management",
   "Casting organization",
   "Event producer",
@@ -114,25 +114,35 @@ export const AGENCY_TYPES = [
 export const BOARDS = [
   "Women",
   "Men",
-  "Development",
+  "New faces",
   "Curve",
-  "Kids",
+  "Kids and teens",
   "Classic",
   "Commercial",
+  "Fit and parts",
   "Talent",
 ] as const;
 
-export const ROSTER_SIZES = ["1–25", "26–75", "76–150", "151–400", "400+"] as const;
+export const ROSTER_SIZES = ["1-25", "26-75", "76-150", "151-400", "400+"] as const;
 
-export const TEAM_SIZES = ["1–3", "4–10", "11–25", "26+"] as const;
+export const TEAM_SIZES = ["1-3", "4-10", "11-25", "26+"] as const;
 
 export const USE_CASES = [
-  "Reviewing inbound submissions",
-  "Scouting and discovery",
-  "Managing an existing roster",
-  "Running castings or open calls",
-  "Building comp cards and packages",
-  "Migrating from another system",
+  "Reviewing applications",
+  "Running open calls",
+  "Casting an event",
+  "Sharing shortlists with clients",
+  "Working as a team",
+  "Moving off a form or a shared inbox",
+] as const;
+
+export const CONTACT_ROLES = [
+  "Owner or director",
+  "Head booker",
+  "Booker or agent",
+  "Scout",
+  "Operations",
+  "Other",
 ] as const;
 
 /** Field name → message. `"Required"` is the server's marker for a missing field. */
@@ -178,7 +188,12 @@ export async function submitAgencyAccessRequest(
     return { ok: true, message: body.data?.message ?? DEFAULT_SUCCESS_MESSAGE };
   }
 
-  if (response.status === 400 && body?.errors) {
+  if (
+    response.status === 400 &&
+    body?.errors &&
+    typeof body.errors === "object" &&
+    Object.keys(body.errors).length > 0
+  ) {
     return { ok: false, kind: "validation", errors: body.errors };
   }
 

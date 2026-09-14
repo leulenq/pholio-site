@@ -1934,7 +1934,7 @@ masthead, not its stock, not one line of it. It is the previous chapter's
 object and it leaves as itself. This overrules the entrance authored in
 `components/studio-site/motion.ts` before this date, which is rewritten.
 
-**35.2 Change the room, not the object.** A chapter break is made from what
+**35.2 Change the room, not the object.** *(Its second half — the camera taking the card out through the top — is superseded by §36: the card stays.)* A chapter break is made from what
 a camera and a set can do: the light in the room, the distance to the
 subject, what passes the lens, and what is still in frame when the subject
 has gone. So the card holds at rest, finished, while the field comes up from
@@ -1943,7 +1943,7 @@ same artifact in a new room — and only then does the camera travel forward
 and take it out through the top of the frame, the way the figure left the
 hero. No wipe, no edge, no section boundary anywhere in it.
 
-**35.3 A light is a curve, not a mix.** Velvet to cream in two stops is a
+**35.3 A light is a curve, not a mix.** *(Built as an exposure with a warming dimmer, §36.2.)* Velvet to cream in two stops is a
 cross-fade between two colours, and it passes through a blue neutral this
 site does not have. Author the stops as the cream itself underexposed, so
 every frame of the travel is warm, and weight them the way a dimmer actually
@@ -1965,3 +1965,368 @@ invisible until something translates the whole layer 122vh upward and walks
 them back through the composition. A layer that a later beat transforms is
 clipped to the stage's own frame. That is the one clipping edge this site
 has (§18), and it is the frame, not a slot.
+
+
+## 36. One transition is one event: the dark world becomes the light one
+
+**Date:** 2026-09-13
+**Surface:** the comp-card to Studio+ transition (`components/hero/index.tsx`,
+`components/studio-site`)
+
+**What was built, three times.** §35's version: the field lit under the
+card, then the card flew up past the lens while STUDIO+ rose beneath it.
+Then a pull back that shrank the whole velvet stage to a dark rectangle hung
+above the mark. Then a push into the velvet until the frame was black, a cut,
+and a pull back out of the taffeta inside the letter D.
+
+**What was wrong.**
+
+> "If I can point at the thing being animated and say 'that's the
+> transition element,' the transition is probably still too literal."
+
+> "Absolutely not, do better" (the pull back)
+
+> "Right now I can clearly perceive three separate states: dark comp-card
+> section → empty/dark transition void → oversized Studio+ typography. That
+> is not the experience."
+
+> "The transition has one simple narrative: the dark comp-card world becomes
+> the light Studio+ world. Start from that."
+
+Each version was built from a device (a lift, a frame, a camera cut) and the
+narrative was fitted to it afterwards. Every device added a state, and the
+visitor saw the states rather than the change.
+
+**The rules.**
+
+**36.1 Write the transition as one sentence, and build only that sentence.**
+If the sentence is "the dark world becomes the light world", the build is a
+room being lit. Nothing leaves, nothing arrives, nothing is emptied first.
+Freeze any frame and it is the same composition at a different exposure.
+
+**36.2 A light multiplies; it does not mix.** Every lit thing in the room is
+its own colour times one exposure (`exposureAt`): the paper comes up from
+velvet to cream, and the dark cloth of STUDIO+ barely comes up at all. That
+is how the mark enters — it was on the paper beside the card the whole beat,
+black on black, and the lit paper shows it by contrast. No fade, no travel,
+no reveal edge. The exposure's stops are a dimmer's, and the paper warms as
+it dims (`WARMTH`), phased in from exactly #050505 so the stage above is not
+tinted; a neutral ramp reads as concrete in the middle.
+
+**36.3 The finished object stays.** The card carried its own light in the
+dark world, so the room's light does not change it. It ends as a finished
+card lying in a lit room beside the next chapter's name, and is released
+only when her site covers the whole frame.
+
+**36.4 Devices are how a transition gets pointed at.** A shrinking frame is a
+picture-in-picture; a cut through black is a void; a camera flying through
+giant type is three scenes. None of them is the sentence.
+
+## 37. A form page is not a form beside an explanation. Design the entering.
+
+**Date:** 2026-09-14
+**Surface:** `/agency/request-access` (`components/agency-access/`)
+
+**What was built.** A cream page in two columns: an explanatory column on
+the left ("Free, and it stays free." / "What Pholio will not do." / "After
+you submit." / a storage note) and one long white sheet on the right holding
+fourteen controls in the clerical register: 10px mono labels, 16px sans
+underline inputs, 13px text choices with a gold rule for the chosen one, and
+three group headings ("The agency." / "You." / "First use.").
+
+**What was wrong.**
+
+> "The page structure and the form interaction model are both too
+> conventional."
+
+> "It feels like a luxury-styled application document: a large explanatory
+> column on the left and one long white form sheet on the right. There is
+> too much defensive copy before someone has even requested access, the form
+> feels bureaucratic, and the repeated underline inputs/tiny text options
+> don't feel like a premium digital product."
+
+> "Free, and it stays free. / What Pholio will not do. / After you submit.
+> all appearing simultaneously makes Pholio sound like it's defending
+> itself." "The current page is trying to answer objections nobody has raised
+> yet."
+
+> "I don't like the multi select and selection input fields. 'You.' is
+> bizarre."
+
+> "Don't automatically make it a generic stepper with 1 of 3 and Next
+> buttons either." "The first interaction should be extremely easy. Let the
+> commitment build naturally."
+
+> "The page should feel like the threshold between Pholio's editorial public
+> world and its professional agency workspace."
+
+> "Don't make a prettier form. Design the experience of an agency entering
+> Pholio."
+
+**The rules.**
+
+**37.1 Facts go where they are used, not where there is room.** A request
+page carries, before anything, one line: who reads it and what it costs.
+Beside a field, only what changes how that field is answered. What happens
+after submission is disclosed after submission, and the process is below
+the request for the reader who wants it before committing, reached by the
+page's invitation, never printed beside the controls. The never-block, the
+storage note and the review mechanics are not on this page at all: they
+answer questions the reader has not asked, and three of them at once read as
+a defence. Preserve the facts; move them to the moment they are useful.
+
+**37.2 The page is the threshold, and it is built the way this site already
+crosses worlds.** The public site is velvet; the agency workspace is cream
+paper and a ledger. So the request opens on velvet with one trivial question
+(the agency's name and website), and completing it lights the room to the
+workspace's paper (§36: one exposure moves every colour; the paper is the
+cream underexposed so the mid-tones stay warm; the type turns over in a
+narrow band of the exposure because two colours that swap luminance must
+meet somewhere, and the dimmer's curve crosses that band fastest). The rest
+of the request is drawn up on the lit paper. Nothing leaves, nothing arrives,
+no wipe, no section boundary.
+
+**37.3 Grouped questions become the page; there is no stepper.** One group
+is open at a time, set at display scale. Groups already answered settle
+above it into the same rows with the answers as text and one quiet "Change"
+action. Groups not yet reached are not on the page. No numbering, no panel,
+no progress bar: the page grows as the request does, and the reviewer's
+document is what the agency watches take shape. The underlying progression
+(the agency, its profile, the person, the first use) is never printed as a
+heading. "You." is not a heading.
+
+**37.4 Answers are typeset, not entered.** *(The "run of words the agency
+inks" is superseded by §39.1; the rest stands.)* The form language is the
+site's own type: a name is typed in the display serif at headline scale, and
+a chosen answer is set the same way. One rule under a text answer at that
+scale is a control; the same rule under 13px sans in a sheet of fourteen was
+a caption. No boxes, no pills, no checkmarks, and no field set in the
+clerical 16px sans. Term left, answer right, the same row whether the answer
+is a control or settled text.
+
+**37.5 One solid control, and it inverts with the room.** The action is the
+page's type colour filled: cream on velvet at the door, ink on paper inside.
+"Continue" per group and "Submit request" at the end are the only labels;
+"Submit request" remains flagged against the one-CTA rule (§23,
+`site-mechanics.md` §5) as the app's own handoff asked for it, and
+"Continue" is a second added label, flagged the same way.
+
+**37.6 A photograph would be decoration here.** `03-banned-ui.md` §7.1 is
+about marketing sections. A request being drawn up is the one surface where
+a talent photograph reads as a listing beside an intake form. Recorded so
+nobody adds one by citing the rule.
+
+**The test.** Freeze the page at any point in the request. It must read as
+one document with one open question, on one paper, and never as a form
+beside an explanation.
+
+---
+
+## 38. A finished editorial cover needs no marketing text CTA
+
+**Date:** 2026-09-14
+**Surface:** the close of the Studio+ beat (`components/studio-site/`)
+
+**What was built.** When Zofia's site stepped back into its window under the
+masthead ("A site of her *own*."), the Studio+ cross pinned to the
+bottom-right corner carried an explicit text link reading "Open Zofia's site"
+running along the bottom edge into the open margin.
+
+**What was wrong.**
+
+> "Remove the Open Zofia's site text, the large text CTA at the bottom-right is
+> pulling too much attention and making the frame feel like marketing UI
+> again."
+
+The editorial cover had already made its statement: the masthead above, the
+live publication in the frame, and the Studio+ cross anchored at the corner.
+Adding an explicit text CTA ("Open Zofia's site") shattered the magazine-cover
+register and made the frame feel like SaaS landing page marketing UI.
+
+**The rule.** Never append an explicit text CTA to a finished editorial
+cover. The live site in the frame is already interactive to scroll, and the
+corner mark quietly anchors the outbound action without competing with the
+editorial composition.
+
+
+## 39. Options are not content, and explanation is on demand
+
+**Date:** 2026-09-14
+**Surface:** `/agency/request-access`, the choice fields and the section
+after the request (`components/agency-access/kit.tsx`, `Process.tsx`)
+
+**What was built.** Every option of every choice field rendered at once as
+display-serif words in a wrapping run (seven types, nine boards, six uses),
+with the chosen ones inked and ruled. A helper sentence sat permanently under
+each field that had one, and "optional" was written beside the term of each
+optional field. Below the request: the sitewide invitation (label over the
+pulsing gold line, left-aligned), a hairline, a heading, and a two-column
+term/paragraph table.
+
+**What was wrong.**
+
+> "The selector interaction for fields like Type and Boards is confusing and
+> visually cramped. Right now all options are rendered simultaneously as
+> large inline typography. They read more like editorial text than
+> interactive controls, and the density gets especially bad for multi-select
+> fields."
+
+> "There should be a clear distinction between: an unanswered field, a field
+> being interacted with, selected value(s), optional versus required,
+> validation/error, without adding visual clutter."
+
+> "Helper sentences such as Every board the agency runs. should not
+> permanently consume space beneath each field." "The form stays visually
+> quiet; explanation is available exactly when someone wants it."
+
+> "I also don't like Country optional. The word optional hanging beside the
+> label feels awkward and repetitive. Develop a subtle system-level indicator
+> for optional fields."
+
+> "Completely redesign the 'How access is granted' section from first
+> principles. The current section feels inherited from the rest of the site
+> rather than designed for this moment: the small gold intro/shimmer is
+> awkwardly left-aligned, the horizontal rule is decorative without doing
+> much, and the content underneath resolves into a conventional heading +
+> two-column information table."
+
+**The rules.**
+
+**38.1 A choice is one line, and its options exist only while choosing.**
+Options rendered permanently are content, and content has no states. Every
+choice field is the same object as a text field: a term, a rule, a value.
+Unanswered is a muted prompt where the value will go; interacting is the
+gold rule, the gold term and an open panel; answered is the value in the
+serif; wrong is the ink rule and one line. The panel is a solid paper panel
+with a hairline and no shadow, rows wearing a small square (filled when
+chosen), and a first line that says whether one or several may be chosen.
+Keyboard: arrows, Space, Enter, Escape, Tab, with focus returned to the line.
+This supersedes the "run of words the agency inks" in §37.4.
+
+**38.2 Nothing sits under a field except an error.** A field that needs a
+note carries the information mark beside its term. The note opens on hover,
+focus and tap, closes on Escape and on a pointer landing elsewhere, and is
+always in the document as the control's accessible description, so it is
+never hover-only and never needs to be there for the sighted reader who did
+not ask.
+
+**38.3 Optional is a mark, not a word, and the mark is the form's own.** A
+required term is ink; an optional term is muted and carries the empty
+square, the same square an unchosen row wears, so it reads "may stay
+empty" on its first appearance. Its note says so. The word "optional" is
+never printed beside a term.
+
+**38.4 What happens after the request is a fork, and the section is its
+shape.** The section after the request is the one place the page speaks in
+a voice rather than in rows, so it changes register: centred, no heading,
+no rule, no cue, no invitation, the first fact set as the title ("A person
+reads it."), then the sequence down the centre, then the two outcomes side
+by side at the same weight. The setup list (profile, boards and markets,
+team, routing, defaults, minors) is gone: it belongs after activation.
+
+**38.5 The page invitation is not universal.** §31.5's "each page carries
+one" is scoped by this: the invitation points at a scene. On a page whose
+remainder is short and read in order, a cue pointing at the next paragraph
+is furniture, and the owner named it as awkward here. A page that carries
+no invitation says why in its shell comment.
+
+**The test.** With every panel closed, the form is a list of lines with
+nothing under them. With every panel open, the reader is choosing and can
+see nothing else they need. Below it, no line, no label: a voice.
+
+## 40. Copy is performative when it sounds authored and says nothing
+
+**Date:** 2026-09-14
+**Surface:** `/agency/request-access`, every visible string, and the section
+after the request (`components/agency-access/content.ts`, `Process.tsx`)
+
+**What was built.** The section after the request read `A person reads it.`
+/ `Sometimes a short call comes first.` / `If there is a fit,` / `If there
+is not,`, set centred at display scale as a fork. The send note read `Read
+by a person. No account is created today.` The received page read
+`Received.` / `Nothing else is sent today. What happens to the request is
+below, and the address it can reach you at is ...`. A field was called
+`First use`. A prompt read `Choose what comes first`.
+
+**What was wrong.**
+
+> "There is a broader Pholio copy problem showing up clearly here: the
+> writing is becoming performative. We're taking straightforward product
+> information and trying so hard to make it sound editorial, luxurious or
+> clever that it becomes less meaningful."
+
+> "This sounds authored, but it doesn't communicate particularly well. A
+> professional agency shouldn't have to decode our copy."
+
+> "What does the agency actually need to understand here? Write that clearly
+> first. Only then give it Pholio's voice."
+
+> "If someone reads the sentence once, do they know something they didn't
+> know before? If not, rewrite or remove it."
+
+> "Don't make the copy sterile or generic. Personality should come from
+> precision, rhythm and restraint rather than obscurity."
+
+> "Make the access-review explanation collapsed by default. It's secondary
+> information for agencies that want to understand what happens after
+> submitting."
+
+**The rules.**
+
+**40.1 Meaning first, then voice.** For every line, write what the reader
+needs to understand in plain nouns and verbs, then remove what does not
+survive the test above. `A person reads it.` became `A person at Pholio
+reviews the request and checks it against the agency's website and public
+records.` `If there is a fit,` became `If the request is approved, the
+contact named on it receives one email with a link to set up the agency.
+The link is valid for one hour.` Every rewritten line carries a fact the
+old one implied or withheld.
+
+**40.2 The list of what not to do, in the owner's words.** No fragments
+written to sound dramatic. No statements that need context to be
+understood. No grand brand language for ordinary product behaviour. No
+artificial suspense (`If there is not,`). No luxury or fashion cliché. No
+unnecessary metaphor. No defensive explanation. No internal product
+terminology (`First use` is now `Intended use`). No sentence that sounds
+good and tells the reader almost nothing.
+
+**40.3 Secondary information is collapsed.** What happens after submitting
+is one line, `What happens after you submit`, a native disclosure closed by
+default, opened by the agency that wants it. It is not a scene, not a
+section, not a composition. This supersedes §39.4's centred fork.
+
+**40.4 This is a sitewide rule, not a page rule.** The owner named it as a
+broader Pholio copy problem. It applies to every surface and to the
+language skill: `.claude/skills/pholio-site-language/references/` (the
+shared layer with `pholio-app`) should carry the read-once test as a
+pre-flight item, edited in both repos together. Not done in this session;
+recorded here so it is not lost.
+
+**The test.** Read each visible string once, cold, and say what the agency
+now knows that it did not. If the answer is "how Pholio sounds", cut it.
+
+## 41. New pictures come from Unsplash, never from the frames another section already carries
+
+**Date:** 2026-09-14
+**Surface:** the off-Pholio application section (`components/prepared-for/`)
+
+**What was about to be built.** The section needed a digitals set of one
+person. The seven digitals frames Zofia's site already hotlinks
+(`public/zofia/index.html`, one sitting, one person) fit the shot lists
+exactly, and the plan was to reuse them.
+
+**What was wrong.**
+
+> "Pick new source images from unsplash. Remember this for the future: if
+> you're wanting to add pictures then go to unsplash and find relevant source
+> images instead of reusing locally available imagery."
+
+**The rule.** A section that needs photographs goes to Unsplash and finds
+frames chosen for that section's own need. It does not lift the Ola
+comp-card set, the Zofia digitals, the Mara Voss frames, the hero sequence,
+or anything in `public/images/`. A photograph already carrying one
+section's story reads as that section again, however well it fits the new
+shot list. Talent imagery from the app keeps its one sanctioned source
+(`03-banned-ui.md` §7.4); Unsplash is for site art direction. The method is
+in the memory note `unsplash-research-technique` (search and user catalogues
+over `/napi`, contact sheets, one person across many frames).

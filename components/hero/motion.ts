@@ -87,15 +87,13 @@ export const STAGE_VH = SCRUB_VH + 100;
 export const CARD_VH = 520;
 
 /**
- * The Studio+ beat's scroll: the break where the stage changes worlds, from
- * velvet to light, then Zofia's site entered and walked by this page's own
- * scroll, then the step back to the close. Long on purpose: the beat is
- * paced for air after the dense card sequence. Appended to the same stage
- * for the same reason as the card: one pinned container, so the word can
- * rise over the card's close rather than arriving after an unpin. See
- * components/studio-site/motion.ts.
+ * The Studio+ beat's scroll: the dark room the card was shown in is lit, then
+ * the plus opens onto Zofia's site, which this page's own scroll walks, then
+ * the step back to the close. Appended to the same stage for the same reason
+ * as the card: one pinned container, so the light comes up around the card
+ * where its beat left it, with no unpin. See components/studio-site/motion.ts.
  */
-export const SITE_VH = 1800;
+export const SITE_VH = 1220;
 
 export const HOME_STAGE_VH = STAGE_VH + CARD_VH + SITE_VH;
 

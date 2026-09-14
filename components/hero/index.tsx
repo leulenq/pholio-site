@@ -15,11 +15,12 @@ import SceneCompCard, { CompCardLayers } from "@/components/comp-card";
 import { StaticStudioSite, StudioSiteLayers } from "@/components/studio-site";
 import {
   GRAIN,
-  LIFT,
-  LIGHT,
+  LEAVE,
   TIMELINE_SPRING,
   T as SITE_T,
   away,
+  exposureAt,
+  paperAt,
 } from "@/components/studio-site/motion";
 import { leave } from "@/components/intelligence/ease";
 import Ribbon from "@/components/intelligence/Ribbon";
@@ -267,25 +268,34 @@ export default function Hero({
   // ── The room ─────────────────────────────────────────────────────────────
   //
   // One field under the whole stage. It is velvet for the hero and the card,
-  // and it comes up to paper across the Studio+ beat: the last chapter ends
-  // by the light in the room changing, not by anything being printed on the
-  // card. The curve and the reasoning are in components/studio-site/motion.ts.
+  // and it is paper: the Studio+ beat is this room being lit, and nothing
+  // else. The field is the paper at the room's exposure, and the mark on it
+  // is lit by the same curve, so the two come up as one room
+  // (components/studio-site/motion.ts, `lessons.md` §36).
   //
-  // The Studio+ beat's own inertia is read once, here, and the card's exit
-  // and the mark's arrival are derived from it, so the two halves of the
-  // hand over are one move rather than two that nearly agree (§26.5).
+  // The Studio+ beat's own inertia is read here with the same spring as its
+  // layers, so the paper and the mark agree frame for frame (§26.5).
   const siteSmooth = useSpring(siteProgress, TIMELINE_SPRING);
-  const bgColor = useTransform(siteSmooth, [...LIGHT.at], [...LIGHT.field]);
-  const grainOpacity = useTransform(siteSmooth, [GRAIN.from, GRAIN.to], [GRAIN_REST, 0]);
+  const bgColor = useTransform(siteSmooth, (p) => paperAt(exposureAt(p)));
+  const grainOpacity = useTransform(
+    siteSmooth,
+    [
+      SITE_T.light[0] + GRAIN.from * (SITE_T.light[1] - SITE_T.light[0]),
+      SITE_T.light[0] + GRAIN.to * (SITE_T.light[1] - SITE_T.light[0]),
+    ],
+    [GRAIN_REST, 0],
+  );
 
-  // The card leaves by passing the lens: the whole card layer, so the book
-  // gathered behind the lead goes with it. See LIFT.
-  const lift = LIFT[narrow ? "compact" : "wide"];
-  const liftK = useTransform(siteSmooth, [SITE_T.lift[0], SITE_T.lift[1]], [0, 1], {
-    ease: away,
-  });
-  const cardLiftY = useTransform(liftK, (k) => `${k * lift.rise}vh`);
-  const cardLiftScale = useTransform(liftK, (k) => 1 + k * (lift.scale - 1));
+  // The card belongs to the dark world and leaves with it: the whole card
+  // layer travels on up and out of the frame as the light starts, and is
+  // clear of it before the paper is bright enough to show the mark.
+  const cardLeaveY = useTransform(
+    siteSmooth,
+    [SITE_T.leave[0], SITE_T.leave[1]],
+    ["0vh", `${LEAVE[narrow ? "compact" : "wide"]}vh`],
+    { ease: away },
+  );
+  const cardShown = useTransform(siteSmooth, (p) => (p >= SITE_T.leave[1] ? "hidden" : "visible"));
 
   // The gold radial gradient fades out as soon as she starts to move (FIGURE_STOPS[1]),
   // leaving the solid black base.
@@ -305,7 +315,7 @@ export default function Hero({
   );
 
   /* The same grain on the scrubbed stage, where it is the dark room's and
-     leaves with the dark: on paper it reads as dirt rather than as film. */
+     goes as the room is lit: on paper it reads as dirt rather than as film. */
   const scrubGrain = (
     <motion.div
       aria-hidden
@@ -472,29 +482,22 @@ export default function Hero({
           <Intelligence progress={scrollYProgress} isMobile={isMobile} />
         </motion.div>
 
-        {/* ── The comp-card beat. Same pinned stage, second timeline, and a
-              third move on top of it: the Studio+ beat takes the camera
-              forward and the finished card leaves with it.
-
+        {/* ── The comp-card beat. Same pinned stage, second timeline. When
+              the light starts the card leaves the frame upward, as itself.
               Clipped to the stage's own frame, because moving the layer
-              moves everything parked outside it too: the beat's captions
-              rest a viewport below the floor when they are done, and a
-              122vh rise brings them back up through the composition. The
-              frame is the only clipping edge on this site, and this is it
-              (`docs/design-language/03-banned-ui.md`, `lessons.md` §18). ── */}
+              moves everything parked outside it too (§35.5). ── */}
         <motion.div
           className="pointer-events-none absolute inset-0 z-30 overflow-hidden"
-          style={{ y: cardLiftY, scale: cardLiftScale, willChange: "transform" }}
+          style={{ y: cardLeaveY, visibility: cardShown, willChange: "transform" }}
         >
           <CompCardLayers progress={cardTimeline} assetsArmed={cardAssetsArmed} />
         </motion.div>
 
         {/* ── The Studio+ beat. Same pinned stage, third timeline.
 
-              Under the card layer, not over it: the mark is on the far wall
-              of the room and the card is the near thing passing the lens,
-              so the card occludes it on the way out. Once the card has
-              left, nothing above this is in frame. ── */}
+              Under the card layer: the mark is on the paper and the card is
+              the near thing leaving, so it passes over the mark, which is
+              still black on black while it does. ── */}
         <div className="pointer-events-none absolute inset-0 z-[29]">
           <StudioSiteLayers progress={siteProgress} armed={cardAssetsArmed} />
         </div>

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Hero from "@/components/hero";
+import PreparedFor from "@/components/prepared-for";
 import Preloader from "@/components/Preloader";
 
 export default function HomePageClient() {
@@ -52,6 +53,10 @@ export default function HomePageClient() {
             one pinned container and one scroll, so there is no unpin between
             the scenes. See components/hero/motion.ts. */}
         <Hero ready={preloaderDone} onReady={handleHeroReady} />
+        {/* The application beat, on the paper the stage ends on: one set of
+            digitals prepared for three agencies that are not on Pholio. See
+            components/prepared-for/motion.ts. */}
+        <PreparedFor />
       </div>
     </>
   );

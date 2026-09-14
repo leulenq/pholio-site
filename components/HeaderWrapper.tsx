@@ -24,7 +24,9 @@ const STORAGE_KEY = "pholio:header-variant";
  * wrong polarity — not to describe the page.
  *
  * Ink is the default because the document canvas is velvet. Legal documents are
- * the site's cream surfaces: long-form reading is set on paper.
+ * the site's cream surfaces: long-form reading is set on paper. The agency
+ * request page opens on velvet and lights to cream while it is used, so it is
+ * deliberately not listed: the live sampler follows it.
  */
 const CREAM_ROUTES = [
   "/terms",

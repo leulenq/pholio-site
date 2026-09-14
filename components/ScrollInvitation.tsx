@@ -15,9 +15,24 @@
  *
  * The label is a real anchor. The click adds smooth travel; without it the
  * link still lands.
+ *
+ * Reduced motion: framer's `useReducedMotion()` is already true on the first
+ * client render when the preference is set, while the server rendered the
+ * moving version, so branching on it directly is a hydration mismatch
+ * (lessons.md §31.7). The moving markup is what hydrates; the preference is
+ * honoured after hydration, behind a `useSyncExternalStore` gate, and the
+ * still version then remounts at rest so nothing fades.
  */
 
-import type { MouseEvent } from "react";
+const subscribeToNothing = () => () => {};
+const useHydrated = () =>
+  useSyncExternalStore(
+    subscribeToNothing,
+    () => true,
+    () => false,
+  );
+
+import { useSyncExternalStore, type MouseEvent } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import { EditorialVerticalDivider } from "@/components/EditorialVerticalDivider";
@@ -38,7 +53,9 @@ export function ScrollInvitation({
   /** Ink fields carry the label at 60%; cream needs the full dark gold. */
   muted?: boolean;
 }) {
-  const reduce = useReducedMotion();
+  const hydrated = useHydrated();
+  const prefersReduced = useReducedMotion();
+  const reduce = hydrated && prefersReduced === true;
 
   const travel = (event: MouseEvent<HTMLAnchorElement>) => {
     const target = document.getElementById(targetId);
@@ -50,6 +67,7 @@ export function ScrollInvitation({
 
   return (
     <motion.a
+      key={reduce ? "still" : "moving"}
       href={`#${targetId}`}
       onClick={travel}
       initial={reduce ? false : { opacity: 0 }}

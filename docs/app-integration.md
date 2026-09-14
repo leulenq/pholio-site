@@ -30,17 +30,31 @@ The app links to these paths from emails, acceptance gates, and redirects. A
 | `/ai-notice` | ✅ live | every transactional email footer, `LegalAcceptanceGate.jsx` |
 | `/cookies` and `/cookies#preferences` | ✅ live | the app's own cookie banner "Manage" control |
 | `/` | ✅ placeholder | `POST /api/logout` redirect target; email footers |
-| **`/agency/request-access`** | ❌ **MISSING** | `GET /partners` 302s here; `POST /partners` returns 410 with this URL |
+| `/agency/request-access` | ✅ live | `GET /partners` 302s here for anonymous visitors; `POST /partners` returns 410 with this URL |
 
-### The one live breakage
+### The agency request page
 
-`/agency/request-access` was a page on the old site and is not on this one. Both
-of pholio-app's `/partners` handlers currently hand off to a 404.
+`/agency/request-access` is the request-to-join form for agencies and is the
+site's one write path to the app. What the app does with it, so the page's copy
+stays true:
 
-The API contract for it is preserved in `lib/agency-access-request.ts` — the
-eleven required fields, the length limits, the option vocabularies, and the
-201/202/400 handling — so rebuilding the page is a UI job, not a
-reverse-engineering job. **It is the highest-priority page in the rebuild.**
+- The flow is anonymous. `GET /partners` only redirects here when there is no
+  session; a signed-in `AGENCY` user is sent to their dashboard instead, and the
+  page mirrors that by showing an "already has access" state from
+  `/api/public/session`.
+- Submission stores the request with status `submitted` and writes one audit
+  event. **No email is sent on submission**, to the requester or to ops. The
+  page's success state is the only acknowledgement, and the copy says so.
+- Review is manual in the app's internal queue (`/internal/agency-requests`).
+  Real statuses: `submitted`, `qualification_call`, `approved`, `declined`.
+- Approval provisions the agency (`PENDING_SETUP`), an `AGENCY` owner user, and
+  sends one activation email with a 60-minute link into a six-step setup:
+  Agency profile, Boards and markets, Team and permissions, Open call routing,
+  Operating defaults, Privacy and minors. Declines send nothing.
+- There is no honeypot, captcha, or enum validation server-side; the page's
+  option vocabularies in `lib/agency-access-request.ts` are what lands in the
+  database, and over-long strings are truncated rather than rejected, so the
+  page enforces `maxLength` itself.
 
 ### Broken anchors (pre-existing, inherited)
 
