@@ -70,9 +70,19 @@ function describedBy(...ids: Array<string | undefined>): string | undefined {
 export const noteIdFor = (termId: string) => `${termId}-note`;
 
 /**
- * The term. Required terms are ink and carry a gold asterisk; optional ones
- * are muted with no asterisk. Both turn gold while their field has focus.
- * A term with a note carries the information mark after it.
+ * The term, and the two things that can sit with it, in order of weight.
+ *
+ * The label is the only thing set in ink. The required mark is part of the
+ * word, not a badge beside it: an 11px superscript asterisk in the label's
+ * own colour at 70%, so `Agency*` reads as one word and the mark is found by
+ * anyone looking for it and noticed by no one else. Optional terms are muted
+ * and carry no mark; their absence of the mark is the convention.
+ *
+ * The information mark is a control, so it stands apart from the word (a
+ * clear gap), smaller than the type, and rests at 75%. It comes up to full
+ * presence when the row is hovered or has focus, when it is hovered or
+ * focused itself, and while its note is open. It is available, not
+ * mandatory.
  */
 export function Term({
   id,
@@ -99,8 +109,7 @@ export function Term({
       {required && (
         <span
           aria-hidden="true"
-          className="ml-1 select-none font-sans text-[14px] font-medium leading-none"
-          style={{ color: "var(--gold, #C9A55A)" }}
+          className="relative -top-[0.35em] ml-[1px] select-none text-[11px] leading-none opacity-70"
         >
           *
         </span>
@@ -119,7 +128,7 @@ export function Term({
   );
 
   return (
-    <div className="flex items-start gap-2 md:pt-[0.55em]">
+    <div className="flex items-center gap-2.5 md:pt-[0.55em]">
       {label}
       {info && (
         <InfoMark noteId={noteIdFor(id)} term={children}>
@@ -193,11 +202,13 @@ function MarkWithNote({
   noteId,
   label,
   glyph,
+  className = "",
   children,
 }: {
   noteId: string;
   label: string;
   glyph: (open: boolean) => ReactNode;
+  className?: string;
   children: ReactNode;
 }) {
   const [hovering, setHovering] = useState(false);
@@ -222,7 +233,7 @@ function MarkWithNote({
           setHovering(false);
           setPinned(false);
         }}
-        className="inline-flex h-5 w-4 items-center justify-center transition-colors duration-300 focus-visible:outline-none"
+        className={`inline-flex h-5 w-4 items-center justify-center transition-colors duration-300 focus-visible:outline-none ${className}`}
         style={{ color: open ? "var(--gold)" : "var(--muted)" }}
       >
         {glyph(open)}
@@ -246,7 +257,8 @@ function InfoMark({ noteId, term, children }: { noteId: string; term: string; ch
     <MarkWithNote
       noteId={noteId}
       label={`${MARKS.aboutPrefix}${term}`}
-      glyph={() => <Info size={14} strokeWidth={1.5} aria-hidden="true" />}
+      glyph={() => <Info size={12} strokeWidth={1.5} aria-hidden="true" />}
+      className="opacity-75 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100 hover:opacity-100 focus-visible:opacity-100 aria-expanded:opacity-100"
     >
       {children}
     </MarkWithNote>

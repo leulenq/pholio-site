@@ -95,7 +95,25 @@ export const CARD_VH = 520;
  */
 export const SITE_VH = 1220;
 
-export const HOME_STAGE_VH = STAGE_VH + CARD_VH + SITE_VH;
+/**
+ * The application beat's scroll: the card the previous beat handed forward
+ * is one piece of her work, and the work is prepared for three agencies that
+ * are not on Pholio, then sent through Pholio. Appended to the same stage so
+ * the card is picked up where it lies and put back for the light.
+ * See components/prepared-for/motion.ts.
+ */
+export const APPLY_VH = 820;
+
+/**
+ * How far the application beat's send runs on into the Studio+ beat, in vh
+ * of the Studio+ scroll: the digitals leave up through the room as the
+ * light comes up, so the send and the light are one transition. The
+ * Studio+ timeline is unchanged; this only lets the application's own
+ * timeline overlap its start.
+ */
+export const APPLY_OVERRUN_VH = 240;
+
+export const HOME_STAGE_VH = STAGE_VH + CARD_VH + APPLY_VH + SITE_VH;
 
 /**
  * Where the hero's timeline ends inside the shared stage. The hero keeps
@@ -103,8 +121,15 @@ export const HOME_STAGE_VH = STAGE_VH + CARD_VH + SITE_VH;
  */
 export const HERO_FRACTION = SCRUB_VH / (HOME_STAGE_VH - 100);
 
-/** Where the comp-card beat ends and the Studio+ beat begins. */
+/** Where the comp-card beat ends and the application beat begins. */
 export const CARD_FRACTION = (SCRUB_VH + CARD_VH) / (HOME_STAGE_VH - 100);
+
+/** Where the Studio+ beat begins. */
+export const APPLY_FRACTION = (SCRUB_VH + CARD_VH + APPLY_VH) / (HOME_STAGE_VH - 100);
+
+/** Where the application beat's own timeline ends, inside the Studio+ beat. */
+export const APPLY_END_FRACTION =
+  (SCRUB_VH + CARD_VH + APPLY_VH + APPLY_OVERRUN_VH) / (HOME_STAGE_VH - 100);
 
 const HERO_END_P = BEAT_VH.hero / SCRUB_VH;
 const TRANSITION_END_P = (BEAT_VH.hero + BEAT_VH.transition) / SCRUB_VH;

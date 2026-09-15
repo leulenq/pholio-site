@@ -46,13 +46,15 @@ export const arrive = cubicBezier(0.22, 1, 0.36, 1);
 /**
  * Scroll input is stepped (a wheel notch is ~100px) and the scene is scrubbed
  * 1:1, so the raw timeline moves in jumps. The spring gives the whole scene
- * one shared inertia: it trails the scroll by roughly a tenth of a second and
- * never overshoots (damping ratio ≈ 1.2). Everything in the beat reads the
- * same smoothed value, so nothing detaches from anything else.
+ * one shared yield on top of the page's own weight (`components/scroll-inertia`):
+ * it trails the weighted scroll by about a tenth of a second and never
+ * overshoots (damping ratio ≈ 1.2). Everything in the beat reads the same
+ * smoothed value, so nothing detaches from anything else. The two cascade,
+ * so retune against the simulation in `lessons.md` §45.3, not by eye.
  */
 export const TIMELINE_SPRING = {
-  stiffness: 180,
-  damping: 32,
+  stiffness: 320,
+  damping: 42,
   mass: 1,
   restDelta: 0.0002,
   restSpeed: 0.002,

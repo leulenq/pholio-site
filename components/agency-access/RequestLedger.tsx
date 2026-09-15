@@ -17,8 +17,9 @@
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
+import { scrollPageTo } from "@/components/scroll-inertia";
 import { usePholioAuth } from "@/lib/pholio-auth/PholioAuthProvider";
 import {
   AGENCY_TYPES,
@@ -47,7 +48,6 @@ import {
 import {
   Action,
   ActionLink,
-  Answer,
   QuietAction,
   ROW_GRID,
   Choice,
@@ -115,6 +115,10 @@ const GROUP_FIELDS: Record<GroupId, readonly Field[]> = {
 const OPTIONAL: ReadonlySet<Field> = new Set(["primaryMarketCountry", "notes", "refcode"]);
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** How long a group takes to settle into its compact record. */
+const SETTLE_MS = 620;
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 function normalizeWebsite(raw: string): string | null {
   const trimmed = raw.trim();
@@ -273,14 +277,23 @@ export function RequestLedger({
     pendingFocus.current = null;
     const node = groupRefs.current[target.group];
     if (!node) return;
-    node.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    /* The group above settles first (SETTLE_MS); the scroll follows it, so it
+       lands on a page that has finished moving. */
+    const settle = reduce ? 0 : SETTLE_MS;
+    const timers = [
+      window.setTimeout(
+        () => scrollPageTo(node, { reduce }),
+        settle,
+      ),
+    ];
     const field = target.field ?? GROUP_FIELDS[target.group][0];
     const control = document.getElementById(field);
     if (control instanceof HTMLElement) {
-      const delay = reduce ? 0 : 420;
-      const timer = window.setTimeout(() => control.focus({ preventScroll: true }), delay);
-      return () => window.clearTimeout(timer);
+      timers.push(
+        window.setTimeout(() => control.focus({ preventScroll: true }), settle + (reduce ? 0 : 420)),
+      );
     }
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
   }, [open, reduce]);
 
   const setField = useCallback(<K extends Field>(field: K, value: FormValues[K]) => {
@@ -443,7 +456,13 @@ export function RequestLedger({
       <section id="request" className="scroll-mt-28">
         <Arrive>
           {GROUP_IDS.map((group, index) => (
-            <SettledGroup key={group} rows={settledRows(group, values)} first={index === 0} />
+            <div
+              key={group}
+              className={index === 0 ? "" : "border-t pt-5 md:pt-6"}
+              style={{ borderColor: "var(--hair)" }}
+            >
+              <SettledGroup rows={settledRows(group, values)} />
+            </div>
           ))}
           <Link
             href="/"
@@ -482,19 +501,9 @@ export function RequestLedger({
       </div>
 
       {groupsOnPage.map((group, index) => {
-        if (group !== open) {
-          /* The frontier has never been completed; while an earlier group is
-             reopened it is not on the page, and its values wait. */
-          if (index === reached) return null;
-          return (
-            <SettledGroup
-              key={group}
-              rows={settledRows(group, values)}
-              first={index === 0}
-              onChange={() => openGroup(group)}
-            />
-          );
-        }
+        /* The frontier has never been completed; while an earlier group is
+           reopened it is not on the page, and its values wait. */
+        if (group !== open && index === reached) return null;
 
         const isLast = group === "use";
         const label = isLast
@@ -503,16 +512,30 @@ export function RequestLedger({
             : ACTIONS.submitLabel
           : ACTIONS.continueLabel;
 
+        /* One box per group, whatever it holds. When a group settles, its
+           compact record arrives in place and every group below it slides up
+           to the new position over SETTLE_MS rather than jumping: that slide
+           is the settling. */
         return (
-          <Arrive key={group}>
-            <section
-              ref={(node) => {
-                groupRefs.current[group] = node;
-              }}
-              className={`scroll-mt-40 ${index === 0 ? "" : "border-t pt-10 md:pt-12"}`}
-              style={{ borderColor: "var(--hair)" }}
-            >
-              <div className="space-y-9 md:space-y-10">
+          <motion.section
+            key={group}
+            layout={reduce ? false : "position"}
+            transition={{ layout: { duration: SETTLE_MS / 1000, ease: EASE } }}
+            ref={(node) => {
+              groupRefs.current[group] = node;
+            }}
+            className={`scroll-mt-40 ${index === 0 ? "" : "border-t"} ${
+              group === open ? "pt-10 pb-10 md:pt-12 md:pb-12" : "pt-5 md:pt-6"
+            }`}
+            style={{ borderColor: "var(--hair)" }}
+          >
+            {group !== open ? (
+              <Arrive key={`${group}-settled`}>
+                <SettledGroup rows={settledRows(group, values)} onChange={() => openGroup(group)} />
+              </Arrive>
+            ) : (
+              <Arrive key={`${group}-open`}>
+                <div className="space-y-9 md:space-y-10">
                 {group === "agency" && (
                   <>
                     <Row
@@ -748,7 +771,7 @@ export function RequestLedger({
                     </Row>
                   </>
                 )}
-              </div>
+                </div>
 
               <div className={`${ROW_GRID} mt-12`}>
                 <span className="hidden md:block" aria-hidden="true" />
@@ -774,8 +797,9 @@ export function RequestLedger({
                   )}
                 </div>
               </div>
-            </section>
-          </Arrive>
+              </Arrive>
+            )}
+          </motion.section>
         );
       })}
     </form>
@@ -813,40 +837,46 @@ function Row({
 }
 
 /**
- * A group that has been drawn up. The same rows, the answers as text, and one
- * quiet action to reopen it. On the received page there is no action.
+ * A group that has settled: the same rows, compact. Terms at 12px, answers
+ * in the serif at reading size and 80% ink, tight leading, one quiet action
+ * to reopen. Hovering the record lifts it to full ink, which is how it says
+ * it is still there and still editable without shouting. On the received
+ * page there is no action.
  */
 function SettledGroup({
   rows,
-  first,
   onChange,
 }: {
   rows: Array<{ term: string; value: string }>;
-  first: boolean;
   onChange?: () => void;
 }) {
   return (
-    <section
-      className={`relative ${first ? "" : "border-t pt-8 md:pt-9"} pb-8 md:pb-9`}
-      style={{ borderColor: "var(--hair)" }}
-    >
-      <div className="space-y-5">
+    <div className="group/settled relative pb-5 md:pb-6">
+      <div className="space-y-1.5">
         {rows.map((row) => (
           <div key={row.term} className={ROW_GRID}>
-            <span className="block font-sans text-[14px] leading-[1.4] md:pt-[0.2em]" style={{ color: "var(--muted)" }}>
+            <span
+              className="block font-sans text-[12px] leading-[1.5] md:pt-[0.3em]"
+              style={{ color: "var(--muted)" }}
+            >
               {row.term}
             </span>
             <div className="min-w-0 md:pr-24">
-              <Answer>{row.value}</Answer>
+              <p
+                className="font-editorial break-words opacity-80 transition-opacity duration-300 group-hover/settled:opacity-100 group-focus-within/settled:opacity-100"
+                style={{ fontSize: "1.05rem", lineHeight: 1.35, color: "var(--type)" }}
+              >
+                {row.value}
+              </p>
             </div>
           </div>
         ))}
       </div>
       {onChange && (
-        <div className={`absolute right-0 ${first ? "top-0" : "top-8 md:top-9"}`}>
+        <div className="absolute right-0 top-0">
           <QuietAction onClick={onChange}>{ACTIONS.changeLabel}</QuietAction>
         </div>
       )}
-    </section>
+    </div>
   );
 }

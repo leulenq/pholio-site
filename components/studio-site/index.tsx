@@ -9,7 +9,7 @@ import {
   type MotionValue,
 } from "framer-motion";
 
-import { CARD_FRACTION } from "@/components/hero/motion";
+import { APPLY_FRACTION } from "@/components/hero/motion";
 import { useMediaQuery } from "@/components/hero/useMediaQuery";
 
 import {
@@ -352,7 +352,7 @@ export function StudioSiteLayers({
       const rect = section.getBoundingClientRect();
       const travel = rect.height - window.innerHeight;
       const stageP = travel > 0 ? -rect.top / travel : 0;
-      const p = (stageP - CARD_FRACTION) / (1 - CARD_FRACTION);
+      const p = (stageP - APPLY_FRACTION) / (1 - APPLY_FRACTION);
       marker.style.top = p > TAKEOVER.start && p < TAKEOVER.end ? "0px" : "100vh";
     };
     place();

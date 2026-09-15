@@ -347,12 +347,13 @@ door is one to two screens. **This repo wins.** Flowty is a product site selling
 a subscription; it earns its length by having sixteen screens of product to
 show. Pholio's front door does not. Take the transition craft, not the runway.
 
-**Smooth scroll.** Lenis is a main-thread scroll hijack. 04 §2 sets CSS
-scroll-driven animation as the default and lists the ordered escalation; nothing
-in that list is a smooth-scroll library, and 04 §3 requires 60fps on a throttled
-mid-range device. **This repo wins.** The overlap and scale effects above are all
-reproducible with `animation-timeline: view()` on the compositor. Flowty's
-smooth scroll buys nothing the design needs.
+**Smooth scroll.** Flowty runs Lenis with touch synced and no reduced-motion
+branch, which is the hijack. This repo also runs Lenis, since `lessons.md` §45,
+but for one stated reason (the page's weight, not any effect above) and on
+narrower terms: wheel only, touch native, absent under reduced motion, tuned
+in one file (`04-scroll-craft.md` §2). The overlap and scale effects here still
+belong to `animation-timeline: view()` on the compositor; the layer does not
+license them.
 
 **ScrollTrigger for entrance reveals.** Eighteen triggers, of which roughly a
 dozen are `toggleActions` reveals that `animation-timeline: view()` does on the

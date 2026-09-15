@@ -34,6 +34,7 @@ import {
   SECONDARY_NAV,
 } from "@/lib/marketing-nav-links";
 
+import type { Field } from "@/components/header/kit";
 import {
   AddressLink,
   Arrive,
@@ -50,9 +51,9 @@ import {
 } from "./kit";
 import { CONTACT_EMAIL, LABEL, productLabel } from "./content";
 
-export default function SiteFooter() {
+export default function SiteFooter({ field }: { field?: Field } = {}) {
   return (
-    <FooterSurface>
+    <FooterSurface field={field}>
       <ArriveGroup
         className={`relative flex h-full flex-1 flex-col justify-between ${SHELL}`}
         style={{ paddingTop: 64, paddingBottom: 36 }}

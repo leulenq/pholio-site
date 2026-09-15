@@ -14,6 +14,14 @@ import Intelligence from "@/components/intelligence";
 import SceneCompCard, { CompCardLayers } from "@/components/comp-card";
 import { StaticStudioSite, StudioSiteLayers } from "@/components/studio-site";
 import {
+  ApplicationPrints,
+  ApplicationWords,
+  StillApplication,
+  useCardPose,
+  useFrame,
+} from "@/components/prepared-for";
+import { TIMELINE_SPRING as APPLY_SPRING } from "@/components/prepared-for/motion";
+import {
   GRAIN,
   LEAVE,
   TIMELINE_SPRING,
@@ -37,6 +45,8 @@ import {
   FIGURE_SCALE,
   FIGURE_STOPS,
   FIGURE_HANDOVER,
+  APPLY_END_FRACTION,
+  APPLY_FRACTION,
   CARD_FRACTION,
   HERO_FRACTION,
   HERO_OPENING_VH,
@@ -171,11 +181,26 @@ export default function Hero({
     [0, 1],
     { clamp: true },
   );
+  // The application beat runs between the card and Studio+: the card the
+  // card beat handed forward is one piece of her work, and the work is
+  // prepared for each destination. See components/prepared-for/motion.ts.
+  // Its timeline runs on past the Studio+ start: the send is the transition.
+  const applyProgress = useTransform(
+    stageProgress,
+    [CARD_FRACTION, APPLY_END_FRACTION],
+    [0, 1],
+    { clamp: true },
+  );
+  const applySmooth = useSpring(applyProgress, APPLY_SPRING);
+  const frame = useFrame();
+  const applyStage = narrow ? "compact" : "wide";
+  const cardPose = useCardPose(applySmooth, applyStage, frame.w, frame.h);
+
   // The Studio+ beat runs on the last stretch of the same stage: her site
   // rises over the card's close. See components/studio-site/motion.ts.
   const siteProgress = useTransform(
     stageProgress,
-    [CARD_FRACTION, 1],
+    [APPLY_FRACTION, 1],
     [0, 1],
     { clamp: true },
   );
@@ -289,11 +314,16 @@ export default function Hero({
   // The card belongs to the dark world and leaves with it: the whole card
   // layer travels on up and out of the frame as the light starts, and is
   // clear of it before the paper is bright enough to show the mark.
-  const cardLeaveY = useTransform(
+  const cardLeaveVh = useTransform(
     siteSmooth,
     [SITE_T.leave[0], SITE_T.leave[1]],
-    ["0vh", `${LEAVE[narrow ? "compact" : "wide"]}vh`],
+    [0, LEAVE[narrow ? "compact" : "wide"]],
     { ease: away },
+  );
+  // The card layer's travel: where the application beat holds it, plus the
+  // light's exit. The application returns it to rest before the light starts.
+  const cardLayerY = useTransform(
+    () => cardPose.y.get() + (cardLeaveVh.get() / 100) * frame.h,
   );
   const cardShown = useTransform(siteSmooth, (p) => (p >= SITE_T.leave[1] ? "hidden" : "visible"));
 
@@ -419,6 +449,7 @@ export default function Hero({
         </div>
 
         <SceneCompCard />
+        <StillApplication stage={narrow ? "compact" : "wide"} />
         <StaticStudioSite />
       </section>
     );
@@ -488,10 +519,34 @@ export default function Hero({
               moves everything parked outside it too (§35.5). ── */}
         <motion.div
           className="pointer-events-none absolute inset-0 z-30 overflow-hidden"
-          style={{ y: cardLeaveY, visibility: cardShown, willChange: "transform" }}
+          style={{
+            x: cardPose.x,
+            y: cardLayerY,
+            scale: cardPose.scale,
+            transformOrigin: cardPose.origin,
+            visibility: cardShown,
+            willChange: "transform",
+          }}
         >
           <CompCardLayers progress={cardTimeline} assetsArmed={cardAssetsArmed} />
         </motion.div>
+
+        {/* ── The application beat. Same pinned stage, fourth timeline. Its
+              words sit behind the card, its prints in front of it; the card
+              itself is the layer above, moved as a whole by the beat's pose.
+              See components/prepared-for. ── */}
+        <div className="pointer-events-none absolute inset-0 z-[28]">
+          <ApplicationWords progress={applySmooth} stage={applyStage} w={frame.w} h={frame.h} />
+        </div>
+        <div className="pointer-events-none absolute inset-0 z-[31]">
+          <ApplicationPrints
+            progress={applySmooth}
+            stage={applyStage}
+            w={frame.w}
+            h={frame.h}
+            armed={cardAssetsArmed}
+          />
+        </div>
 
         {/* ── The Studio+ beat. Same pinned stage, third timeline.
 

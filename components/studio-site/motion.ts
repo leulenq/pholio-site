@@ -61,10 +61,10 @@ export const glide = cubicBezier(0.65, 0, 0.35, 1);
 /** Opening: gathers, then commits. */
 export const open = cubicBezier(0.7, 0, 0.3, 1);
 
-/** The same shared inertia as the card beat, so the two read as one stage. */
+/** The same yield as the card beat, on the page's weight, so the two read as one stage (`lessons.md` §45.3). */
 export const TIMELINE_SPRING = {
-  stiffness: 180,
-  damping: 32,
+  stiffness: 320,
+  damping: 42,
   mass: 1,
   restDelta: 0.0002,
   restSpeed: 0.002,

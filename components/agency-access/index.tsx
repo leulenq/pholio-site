@@ -26,6 +26,7 @@
 import { useEffect, useRef, useState } from "react";
 import { animate, motion, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
 
+import { scrollPageTo } from "@/components/scroll-inertia";
 import ThemeColor from "@/components/ThemeColor";
 import type { AgencyAccessRequest } from "@/lib/agency-access-request";
 import { SUPPORT_EMAIL } from "@/lib/legal-constants";
@@ -80,7 +81,7 @@ export function AgencyAccessPage() {
      is taken back to it and it takes focus. */
   useEffect(() => {
     if (!sent) return;
-    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    scrollPageTo(0, { reduce });
     const timer = window.setTimeout(
       () => headingRef.current?.focus({ preventScroll: true }),
       reduce ? 0 : 500,

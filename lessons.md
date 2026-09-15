@@ -800,7 +800,8 @@ wired rather than authored; a scene should be a timeline with real curves.
 
 `lenis` was evaluated for scroll smoothing and left out of this change: it is a
 sitewide behaviour change, not a section one, and it belongs in its own
-decision.
+decision. That decision was made in §45: the page now carries one
+weighted scroll source, and this rule stands unchanged.
 
 ---
 
@@ -2330,3 +2331,428 @@ shot list. Talent imagery from the app keeps its one sanctioned source
 (`03-banned-ui.md` §7.4); Unsplash is for site art direction. The method is
 in the memory note `unsplash-research-technique` (search and user catalogues
 over `/napi`, contact sheets, one person across many frames).
+
+**What was then decided for this beat.** The Unsplash sweep found no other
+single sitting that reads as digitals (one person, one outfit, plain wall,
+front, profile, full length), and once the beat moved inside the home stage
+it inherits Ola's resting comp card, so the frames had to be Ola. The owner
+reviewed the beat with the seven-frame sitting Zofia's site hotlinks, plus
+her black-and-white close portrait, and kept it: "The current set of images
+are good." The rule above stands for the next section; this set is the
+owner's decision for this one, and it lives at `public/prepared-for/`.
+
+## 42. Required is an asterisk; the mark is part of the word; a finished group settles
+
+**Date:** 2026-09-14
+**Surface:** `/agency/request-access`, the term line and the settled groups
+(`components/agency-access/kit.tsx` `Term`, `RequestLedger.tsx`)
+
+**What was built.** §39.3's optional convention (a small empty square beside
+optional terms, no mark on required ones). The owner replaced it with an
+asterisk on required terms, set in gold at the label's size beside a 14px
+information icon. Settled groups kept the same row grid, 14px terms and
+1.5rem serif answers as the open group.
+
+**What was wrong.**
+
+> "We added the asterisks on purpose since the optional square icon is
+> meaningless and asterisks are a universal sign of a required field, but
+> the design is not good."
+
+> "The * beside required fields is much too visually prominent. It competes
+> with both the field label and the nearby information icon. The info
+> control should feel available when someone needs clarification, not like
+> another piece of mandatory metadata they have to parse. Don't just reduce
+> both icons by 2px. Solve the hierarchy."
+
+> "Once Agency and Website are complete, they remain almost as visually
+> present as City, Type and Boards. Everything feels simultaneously active."
+> "I particularly like the idea that once a section is complete, it settles.
+> It could become quieter and perhaps slightly more compact while preserving
+> enough information that I can glance back and verify what I entered.
+> Editing should immediately restore that section to full visual presence."
+> "Be careful not to make completed information look disabled."
+
+**The rules.**
+
+**41.1 Required is marked, with the asterisk, and optional is not.** This
+supersedes §39.3. The asterisk is the one convention every form reader
+already knows; an invented mark for the other case has to be learned.
+
+**41.2 The mark belongs to the word.** An 11px superscript asterisk in the
+label's own colour at 70%, one pixel after the last letter: `Agency*` is
+one word. Never gold, never at the label's size, never a badge with its own
+gap. Prominence is what made it compete.
+
+**41.3 The information affordance is available, not mandatory.** It stands
+apart from the word by a clear gap, is set smaller than the type (12px),
+rests at 75%, and comes to full presence only when the row is hovered or
+has focus, or when it is itself hovered, focused or open. Three weights on
+one line, in this order: label, mark, affordance.
+
+**41.4 A finished group settles.** It compresses to a compact record (12px
+terms, reading-size serif answers at 80% ink, tight rows, one quiet
+"Change"), the record arrives in place, and every group below slides up to
+its new position over 620ms rather than jumping. The open group keeps
+display scale and its air, so it is the page's centre of gravity without a
+stepper or a bar. Hovering a settled record lifts it to full ink: it is
+still there and still editable, not disabled. Nothing is hidden.
+
+**The test.** Freeze the page with two groups settled and one open. The
+open group should be the only thing at display scale, the settled records
+should be readable at a glance, and the term line of any field should read
+as one word with a small control beside it, not as three items.
+
+## 42. A chapter of the stage is not a section under it, and the viewport is the canvas
+
+**Date:** 2026-09-14
+**Surface:** the application beat (`components/prepared-for/`), second pass
+
+**What was built.** The first version was its own cream section after the
+home stage: a two-line headline in flow ("Prepared the way each agency asks
+for it. On Pholio or not."), then a pinned stage where "For Elite Models."
+sat top-left over a row of prints, and the address changed three times.
+
+**What was wrong.**
+
+> "First of all it before Studio+."
+
+> "There is something genuinely good here already: I like the photography
+> and the way the images move/change as we move between agency requirements.
+> Preserve that underlying idea. Everything around it needs another
+> art-direction pass."
+
+> "The current opening ... transition is bad, mainly because 'Prepared the
+> way each agency asks for it. On Pholio or not.' is too simple and generic.
+> Let it use the viewport, maybe start with it in a creative, typographic,
+> art directed way and then move on to the showcase."
+
+> "Stop allowing existing pholio-site section conventions to determine the
+> composition. ... Do not solve this with columns, cards, grids, conventional
+> feature layouts, centered headline sections or another sequence of neatly
+> stacked content blocks. Treat the viewport itself as the canvas."
+
+> "The composition can transform continuously rather than repeatedly
+> resetting into new sections."
+
+**The rules.**
+
+**42.1 The story is the brief.** The owner restated it in four sentences: a
+talent has one body of work; agencies ask to see it differently; as the
+destination changes Pholio prepares what that agency asks for; some
+applications happen through Pholio and some through the agency's own
+process, where Pholio still prepares and the talent continues there. Every
+frame of the beat is judged against those four sentences, and the beat now
+shows all four: the body of work (her card and her digitals), three
+agencies reshaping it, and Pholio as the last destination, where the whole
+application goes.
+
+**42.2 A beat that belongs to the story joins the stage.** Before Studio+
+means inside the pinned stage, as its fourth timeline, and that means
+inheriting what the chapter before leaves on the stage rather than starting
+beside it. The card the comp-card beat handed forward is one piece of her
+work, so the beat picks it up where it lies (its rest is read off the
+comp-card beat's own constants), recedes it into her spread, sets it aside
+where an agency does not ask for it, gathers it back for Pholio, and returns
+it to rest, exactly, for the light to take. The card is moved as a whole
+layer and never redrawn (§35.1); the Studio+ beat is untouched.
+
+**42.3 The opening is typographic and uses the frame.** No headline in
+flow. "The work / stays the same." arrives beside the resting card; the card
+recedes into her digitals as they come up from below; "The application /
+doesn't." lands in the space the card vacated. The two lines stand at the
+two sides of the frame with the work between them, and they leave through
+the top as the first agency's name arrives.
+
+**42.4 Nothing resets.** One set of objects, one continuous composition:
+every change is a re-sort of the same pieces, the words leave and arrive
+through the frame's edges, and the last state is the first chapter's object
+alone. A frozen frame anywhere in it is the same scene at a different point.
+
+**42.5 Where §41 stands.** The frames stay the ones the owner accepted.
+
+## 43. No plain sentences under a scene; what must be said is set as part of it
+
+**Date:** 2026-09-14
+**Surface:** the application beat (`components/prepared-for/`), third pass
+
+**What was built.** Under each agency's row: a mono "Checked 2026-08-09"
+line beneath the name, a sans sentence at the foot ("Elite takes
+applications on its own page. Pholio prepares the files. You upload them
+there."), the export's email draft typeset for Muse, mono file names under
+every print, and for the Pholio beat a right-aligned sentence beside the
+mark ("An agency on Pholio reads the whole application here: ...").
+
+**What was wrong.**
+
+> "The problem now is that we're repeatedly interrupting an art-directed
+> visual experience with plain explanatory text."
+
+> "Recency/provenance can exist in the product where someone inspecting
+> agency requirements actually needs it. The landing page does not need to
+> expose evidence metadata as part of this story."
+
+> "If there is some piece of information that absolutely cannot be
+> understood without language, don't put a normal sentence underneath the
+> composition. Integrate it into the art direction. Typography itself should
+> have hierarchy, position, timing and purpose."
+
+> "No documentation-like plain text underneath these scenes except for the
+> 'requirements are published...'"
+
+> "Remove the email draft as well, it reduces the quality of the
+> art-directed feel."
+
+> "The through pholio screen is the poorest beat, rework from scratch or try
+> a different idea."
+
+**The rules.**
+
+**43.1 A scene carries no sentence.** Dates, foot lines, drafts and file
+names are gone. The one exception the owner named stays: the small print
+that the requirements are the agency's own and that Pholio is not
+affiliated, at the foot, on the side the address is not.
+
+**43.2 The fact that needs language is set in the lockup.** Where the
+application continues cannot be shown, so it is the address's second line,
+in the display serif at a third of the name's size, arriving and leaving
+with the name: "For Elite Models. / On their own site." and "For Muse Model
+Management. / By email." Not a caption, not a sentence: part of the name.
+
+**43.3 The Pholio beat is a send, not a restatement.** The card returns to
+where the chapter found it; the digitals gather into one packet beside it;
+the packet leaves up and out; the card is what is left, for the light.
+Repeating the opening spread with a line beside it was the same scene
+again, with words doing the work the motion should do.
+
+**43.4 The boundary is kept by what the scene never does.** Nothing is sent
+for an agency that is not on Pholio: the set is prepared and stays. Only
+the Pholio beat sends. The words "you upload them there" were carrying a
+fact the choreography already keeps.
+
+## 44. The send is the transition: the last beat sends the digitals into the light
+
+**Date:** 2026-09-14
+**Surface:** the application beat's close and the hand-off to Studio+
+(`components/prepared-for/`, `components/hero/motion.ts`)
+
+**What was built.** The Pholio beat gathered the digitals into a packet
+beside the comp card, returned to its rest; the packet left upward; the
+card stayed for the Studio+ light to take, as §36.3 had it.
+
+**What was wrong.**
+
+> "remove the comp card on the last beat and design a different
+> transformation. The eight digitals leaving up could be a good direction
+> but should be enhanced for the transition to the studio+ section."
+
+**The rules.**
+
+**44.1 The card leaves with the last agency.** It goes straight up from
+where the last agency set it aside, as itself, during the move to the Pholio
+beat. The Pholio beat is the packet alone under the mark. This supersedes
+§36.3's "the finished object stays" for this transition: the Studio+ beat's
+own card exit still runs, on a card that is already out of the frame, and
+nothing in `components/studio-site` changed.
+
+**44.2 The send runs into the light.** The beat's timeline is longer than
+its scroll (`APPLY_OVERRUN_VH`): it runs on past the Studio+ start, so the
+send and the light are one transition. The packet fans out across the
+frame as it rises, each print a little larger as it comes toward the lens,
+on an accelerating curve with no settle, and the prints clear the top of
+the frame as the paper comes up around the mark. The Studio+ timeline is
+untouched; only the application's overlaps its start.
+
+## 43. Not generic is not the same as not recognisable. Pricing keeps its architecture.
+
+**Date:** 2026-09-14
+**Surface:** the home pricing section (`components/pricing/`)
+
+**What was built.** Asked for a pricing section that was not a generic SaaS
+component, the first pass abandoned the pricing form: three names
+(`Pholio`, `STUDIO+`, `Agencies`) at display scale down the left of the
+viewport, prices at display scale down the right, a sentence floating
+between each pair, and a scroll motion that closed the distance between
+each name and its price.
+
+**What was wrong.**
+
+> "We overcorrected. I said not to make a generic SaaS pricing section, but
+> the current result barely reads as a pricing section at all."
+
+> "I should be able to arrive here and immediately scan: the plans are free,
+> studio+, enterprise, and understand what each means and what I can do
+> next."
+
+> "Pholio, STUDIO+, and Agencies feel like giant unrelated typography placed
+> around a canvas. The descriptions and prices float separately, so I have
+> to reconstruct which information belongs together."
+
+> "Don't be afraid of useful conventions: clear plan names, prominent
+> prices, monthly/annual billing information, concise differences between
+> plans, clear CTA, visually identifiable plan groupings. Those aren't
+> 'generic SaaS.' They're information design."
+
+**The rules.**
+
+**43.1 Convention that carries information stays.** Plan name, audience,
+price, billing period, one action, then the differences, grouped so each
+plan reads as one object. A brief against "generic" is a brief against the
+furniture (badges, ribbons, rounded shadowed cards, checkmark walls, "Most
+popular"), never against the structure a visitor scans with.
+
+**43.2 Distinction comes from material and identity, not from scattering
+the information.** The three plans are one strip laid edge to edge: Free
+and Enterprise on paper, Studio+ cut from its own navy taffeta with the
+cross in gold, standing proud of the strip top and bottom. The paid plan is
+found by what it is made of, so it needs no label saying so.
+
+**43.3 Plans are named Free, Studio+, Enterprise.** Enterprise is the
+agency plan, at $0, with "Request access" as its action.
+
+**The test.** Arrive cold and, within a glance, say what each plan costs,
+who it is for, and what to press. Then take away the fonts and colours:
+the grouping must still hold, and the paid plan must still differ in
+material, not in a badge.
+
+**43.4 Studio+ is its solid colour, and the free plans are not boxed.**
+*(Supersedes the taffeta panel and the paper strip in §43.2.)*
+
+> "Don't use that design for the studio+ section, use the solid color design
+> of studio+. I also don't like how rigid the cards look and maybe make the
+> studio+ section gold or the solid pholio blue color. Improve the monthly,
+> annually toggle and placement."
+
+The photographic taffeta reads as texture behind a form, not as Studio+.
+Studio+ is one solid field, Pholio navy (`#0f172a`) with the gold cross,
+softened with a large radius and standing proud of the row. Free and
+Enterprise have no field at all: open type on the page's cream, so only one
+object on the row has edges. The billing period is a two-option track with
+a sliding cream thumb and the saving in gold beside "Annually", set in the
+band the Studio+ panel stands above the row, so it precedes the price it
+changes and never pushes that price off the line the other two share.
+
+**43.5 Pricing moves with the page, and nothing on it is a stock control.**
+
+> "The section is currently motionless ... Arriving at pricing and suddenly
+> getting a completely static pricing table makes this feel like an embedded
+> SaaS component."
+> "Replace the Monthly / Annually pill toggle. is generic SaaS UI and visually
+> foreign to this page ... it's too rounded."
+> "APPLY FREE, START 14-DAY FREE TRIAL, and REQUEST ACCESS currently feel like
+> static rectangles. design a hover state."
+> "ENTERPRISE is the wrong framing for agencies. Agencies aren't a premium
+> enterprise tier of Pholio. They're a different side of the platform and
+> they're free."
+
+- **Motion is scroll-driven, not on a timer.** The headline and the three
+  columns travel up at their own rates; the Studio+ field travels furthest
+  and fastest, overtakes the row and comes to rest standing proud of it.
+  Its cross turns a quarter as it lands; list rules draw as each list does.
+- **The billing period is the cross, not a switch.** Two tracked words; the
+  gold cross stands beside the chosen one and travels, turning, to the other.
+  The saving is set in the gold serif italic. The price and billing line
+  roll to the new figures. No track, thumb or pill.
+- **Every action has one hover and focus behaviour.** A fill rises from the
+  bottom edge, the label rolls up to its inverse, and the cross arrives at
+  the label's end. Pressed, it gives.
+- **Agencies is named Agencies,** not Enterprise, and is set apart from the
+  two talent plans as the other side of the platform. This supersedes §43.3.
+
+**43.6 The period is chosen under the price, and the saving belongs to its option.**
+
+> "Don't use + in monthly and yearly. save 20% is too disconnected from
+> yearly. find a better place for monthly and yearly. remove '14 days free,
+> then billed by Stripe. Cancel any time in Settings.'"
+
+The cross is Studio+'s mark, not a selection indicator; it stays on the name.
+The period sits directly under the price and billing line it changes, as two
+words with a gold rule under the chosen one that travels between them. The
+saving is part of the yearly label ("Yearly, save 20%"), never a separate
+element beside it. No trial fine print under the Studio+ action; the action's
+own label carries the trial. Supersedes the cross selector in §43.5.
+
+**43.7 The selector lives in the field's top band, and pricing has a real scroll choreography.**
+
+> "use the top part of the card for the selector toggle. Enhance the motion of
+> this section."
+
+The period selector returns to the band the Studio+ field stands above the
+row (supersedes the placement in §43.6; its form stands). The motion is a
+cascade, all on scroll: the headline arrives a word at a time; the columns
+travel at their own rates and Studio+ overtakes the row, its field opening
+down from its top edge; inside every plan the pieces follow each other up
+(name, price, action, each list item, its rule drawing as it lands), and in
+the field they lag the field itself; past rest the field keeps drifting ahead
+of the paper plans toward the closing panel. Time the windows against when the
+row is actually in the frame: the first version finished while the plans
+were still below the fold, so the motion existed and nobody could see it.
+
+## 45. The page has weight; the scenes have yield
+
+**Date:** 2026-09-14
+**Surface:** every page (`components/scroll-inertia/`), and the shared spring
+on the home stage's beats
+
+**What was built.** Each beat on the home stage smoothed its own copy of the
+scroll (`TIMELINE_SPRING`, §26.5), but the scroll itself was the trackpad's:
+the hero's frames, the sticky stage, the header's sampler, every plain
+section and the footer moved the instant the hand did and stopped the
+instant it stopped.
+
+**What was wrong.**
+
+> "Right now the individual animations can be strong, but moving through the
+> page itself still feels too mechanically tied to the trackpad. I want the
+> overall experience to feel heavier and more composed."
+
+> "When I scroll, the experience should feel as though the page/compositions
+> have physical mass: input creates pressure, the scene yields with slight
+> resistance, then catches up smoothly. There can be moments of release or
+> acceleration, but never bounce or elastic overshoot."
+
+**45.1 Weight is a property of the scroll position, not of a scene.** A
+scene can only smooth what it reads; it cannot make the page arrive later.
+So the weight now lives in one sitewide layer, `components/scroll-inertia/`,
+which runs Lenis on native scroll: the wheel moves a target and the real
+`scrollTop` closes on it by an exponential approach every frame
+(`PAGE_INERTIA.lerp`, 0.08: 95% settled in about 0.62s). Sticky, anchors,
+`scroll-margin`, Framer's `useScroll` and the header's sampler all keep
+reading the document, because the document really is where it says it is.
+§16.4 still holds: one scroll source per page. It is now a weighted one.
+This is the decision §16.4 deferred, and it overrules the collision recorded
+in `docs/design-language/07-reference-flowty.md` §7, which was written on
+the premise that the design only needed reveals.
+
+**45.2 An exponential approach is the only curve allowed on the page.** It
+cannot overshoot, so there is no bounce and no elastic settle, and a flick
+still reads as release: the target leaps ahead and the page accelerates to
+catch it. No easing with a value past 1, no `infinite`, no snap.
+
+**45.3 The scene springs are now the yield, not the inertia.** Cascading
+the page's lerp with the old 180/32 spring took a beat's settle from 0.47s
+to 0.88s, which is swimming. The three stage springs (`comp-card`,
+`prepared-for`, `studio-site`, the last also read by pricing) are 320/42:
+about 0.79s cascaded, with the S-shaped onset the brief describes, because
+a second-order response starts from rest where a lerp starts at full speed.
+If the page's lerp changes, resimulate the cascade before touching a spring;
+never tune one against the other by eye alone.
+
+**45.4 Touch stays native, and reduced motion gets no layer.** A phone's
+own physics already carry mass and momentum; synthesising them is what makes
+a hijacked page feel hijacked, so `syncTouch` is off and the wheel is the
+only input the layer takes. Under `prefers-reduced-motion: reduce` the
+instance is never created.
+
+**45.5 A locked page is a locked page.** The preloader locks the root and
+the index locks the body with `overflow: hidden`; the layer watches both and
+stops while either holds, so the wheel cannot move the page behind a veil.
+
+**45.6 The site moves the page through the same physics.** Every
+programmatic scroll (the hero's invitation, the request page's return to its
+title, the ledger's settle) goes through `scrollPageTo`, which travels on
+the house ease over a fixed duration and falls back to the browser's own
+behaviour when the layer is absent.
+
+**The rule.** The page carries the weight; a scene carries only its yield.
+Tune the weight in `components/scroll-inertia/motion.ts` and nowhere else.

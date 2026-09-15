@@ -65,6 +65,18 @@ GSAP, and that is the main legitimate reason to load it.
 Use it for: pinned sections, scrubbed multi-beat timelines, sequences where beat
 three depends on beat one's end state.
 
+### The page inertia layer — sitewide, and the one smoothing the page gets
+
+`components/scroll-inertia/` runs Lenis on native scroll, so the document's
+own scroll position closes on the wheel by an exponential approach
+(`PAGE_INERTIA.lerp`). It is a property of the page, not a tool for a section:
+no section mounts its own instance, sets `wheelMultiplier`, or adds a second
+smoothing library. Sticky, anchors, `scroll-margin`, CSS scroll-driven
+animation and Framer's `useScroll` all keep working because the scroll is
+real. Wheel only; touch stays native; never created under reduced motion.
+A section that springs its progress on top of this is adding *yield*, and the
+cascade must be simulated, not guessed (`lessons.md` §45.3).
+
 ### Banned outright
 
 **`window.addEventListener("scroll", …)` for animation.** It fires on every

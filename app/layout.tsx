@@ -61,6 +61,7 @@ export const metadata: Metadata = {
 };
 
 import CustomCursor from "@/components/CustomCursor";
+import ScrollInertia from "@/components/scroll-inertia";
 
 export default function RootLayout({
   children,
@@ -75,6 +76,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <CustomCursor />
+          <ScrollInertia />
           <HeaderWrapper />
           <main className="relative z-10 min-h-mobile-screen bg-[#050505]">
             {children}

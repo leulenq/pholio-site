@@ -36,6 +36,7 @@ import { useSyncExternalStore, type MouseEvent } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import { EditorialVerticalDivider } from "@/components/EditorialVerticalDivider";
+import { scrollPageTo } from "@/components/scroll-inertia";
 
 export function ScrollInvitation({
   label,
@@ -61,7 +62,7 @@ export function ScrollInvitation({
     const target = document.getElementById(targetId);
     if (!target) return;
     event.preventDefault();
-    target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    scrollPageTo(target, { reduce });
     window.history.replaceState(null, "", `#${targetId}`);
   };
 

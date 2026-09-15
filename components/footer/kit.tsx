@@ -144,15 +144,22 @@ function readPageEnd(): { field: Field; paper: string } | null {
 }
 
 /** Re-reads the page end on navigation and whenever the page changes height,
-    since most routes finish laying out after the footer has mounted. */
+    since most routes finish laying out after the footer has mounted.
+    Overridden to dark theme ("ink") on the landing page ("/") only. */
 function usePageEndField(): { field: Field; paper: string | null } {
   const pathname = usePathname();
+  const isLandingPage = pathname === "/";
   const [state, setState] = useState<{ field: Field; paper: string | null }>({
     field: "ink",
     paper: null,
   });
 
   useEffect(() => {
+    if (isLandingPage) {
+      setState({ field: "ink", paper: null });
+      return;
+    }
+
     const main = document.querySelector("main");
     if (!main) return;
     let frame = 0;
@@ -174,7 +181,11 @@ function usePageEndField(): { field: Field; paper: string | null } {
       cancelAnimationFrame(frame);
       observer.disconnect();
     };
-  }, [pathname]);
+  }, [pathname, isLandingPage]);
+
+  if (isLandingPage) {
+    return { field: "ink", paper: null };
+  }
 
   return state;
 }
@@ -191,13 +202,17 @@ const EASE_TUPLE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 export const SHELL = "mx-auto w-full max-w-[1440px] px-6 md:px-14";
 
 export function FooterSurface({
+  field: forcedField,
   children,
   className = "",
 }: {
+  field?: Field;
   children: ReactNode;
   className?: string;
 }) {
-  const { field, paper } = usePageEndField();
+  const detected = usePageEndField();
+  const field = forcedField ?? detected.field;
+  const paper = forcedField ? null : detected.paper;
   return (
     <footer
       data-site-footer
