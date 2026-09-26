@@ -47,11 +47,14 @@ export const STUDIO_PRICES: Record<Interval, { price: string; unit: string; bill
 
 export const INTERVAL_LABELS: Record<Interval, string> = {
   monthly: "Monthly",
-  annual: "Yearly",
+  annual: "Annual",
 };
 
-/** Part of the yearly option's own label. */
-export const ANNUAL_SAVING = "save 20%";
+/**
+ * The annual total, set beside the annual option so the choice is priced
+ * before it is made. The saving is left for the two figures to state.
+ */
+export const ANNUAL_TOTAL = money(STUDIO_PLUS_PRICE_ANNUAL);
 
 export const PLANS = {
   free: {

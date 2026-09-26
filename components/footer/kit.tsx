@@ -6,80 +6,75 @@
  * ── What this deliberately does NOT reuse ──────────────────────────────────
  *
  * Nothing of the header's composition. Not `Kicker`, not `NavLink`, not
- * `ActionLink`, not `GoldSweep`, not its container geometry, not its type
- * scale. An earlier pass built the footer out of those and produced a mirrored
- * header rather than a footer; see lessons.md §1.
+ * `ActionLink`, not its container geometry, not its type scale. An earlier pass
+ * built the footer out of those and produced a mirrored header (lessons.md §1).
  *
- * Two things are imported, and both are *values* rather than compositions:
- * `TOKENS` for the colour ladder, so the two surfaces cannot drift to different
- * creams, and `Wordmark`, which is a fixed brand asset that must be identical
- * wherever it appears.
+ * Three things are imported, and all three are *values* rather than
+ * compositions: `TOKENS` for the colour ladder, so the two surfaces cannot
+ * drift to different creams, `Wordmark`, which is a fixed brand asset that must
+ * be identical wherever it appears, and the gold. `GoldSweep` itself is not:
+ * the header's is symmetric because it is the bottom edge of a band, and this
+ * one is directional because it is a gesture. See `motion.ts` on the override.
  *
- * ── What the footer does differently, on purpose ───────────────────────────
+ * ── The surface ────────────────────────────────────────────────────────────
  *
- * No monospace. The header labels in tracked mono caps; a copyright line set
- * that way reads as a developer tool, and this site sells into modelling and
- * casting (lessons.md §3). The footer runs on two voices only: the display
- * serif for the product destinations and the signature, Inter for the group
- * labels and the clerical lists.
- *
- * No gold sweep. It is the header's edge and repeating it makes the original
- * weaker (lessons.md §2). The panel needs no drawn boundary at its top edge in
- * any case: it takes the whole viewport, so arriving in it *is* the transition.
- * Its rules are two horizontal hairlines with real material either side, and
- * three that stand vertically between the groups.
- *
- * One entrance, on one observer, once. The industry sample animates no footer
- * on entry (`05-industry-reference.md` §5.3) and that finding stands for a
- * footer. This is a closing panel that takes the screen and puts the header to
- * sleep, and a takeover that simply appears reads as a jump cut. The motion is
- * what makes it deliberate.
+ * The footer prints on whatever paper the page above it ended on. There is no
+ * boundary, no panel and no plate: the page runs out of content, leaves a lot
+ * of air, and is signed at the foot. That is why nothing here names a colour of
+ * its own and every value below comes from a field token.
  */
 
-import type { CSSProperties, ReactNode } from "react";
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import type { CSSProperties, ReactNode, RefObject } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Instagram, Linkedin } from "lucide-react";
 
 import { TOKENS, Wordmark, type Field } from "@/components/header/kit";
 import CookiePreferencesButton from "@/components/CookiePreferencesButton";
-import { Instagram, Linkedin } from "lucide-react";
 
-import { COOKIE_LABEL, SOCIAL, copyright } from "./content";
-
-export interface FooterVariantProps {
-  className?: string;
-}
+import { COOKIE_LABEL, SOCIAL } from "./content";
+import {
+  BASELINE_DROP_EM,
+  BEAT,
+  CONTENTS_RISE,
+  NAME_FALL,
+  STROKE_GRADIENT,
+  arrive,
+  at,
+  stroke as strokeEase,
+  strokeClip,
+} from "./motion";
 
 /* ══════════════════════════════════════════════════════════════════════
-   THE FOOTER'S OWN VALUES
-
-   Two type voices, two text strengths, one rule, one ease. Colours come from
-   the shared ink ladder; everything about how they are *set* is local.
+   FIELD
    ══════════════════════════════════════════════════════════════════════ */
 
-/* The page's own paper. The footer is one component under every route, so it
-   does not own a colour: it prints on whatever the page above it ended on, ink
-   under the home stage and cream under the legal corpus. An attempt at giving
-   it a lifted paper of its own was reverted, because a near-match reads as a
-   grey panel sitting on the page rather than as the same sheet. The footer's
-   personality comes from the mark and the standing rules instead.
-
-   Every colour below is a custom property set on the surface from the field's
-   token ladder (see `FooterSurface`), so nothing in here names a polarity. */
 export const PAPER = "var(--footer-paper)";
 export const INK = "var(--footer-ink)";
 export const MUTED = "var(--footer-muted)";
-export const LABEL_MUTED = "var(--footer-label)";
-export const HAIRLINE = "var(--footer-rule)";
+export const UTILITY = "var(--footer-utility)";
 export const GOLD = "var(--footer-gold)";
 
-/** The group label's strength on each field. Fainter than `textFaint`: the
-    label is the least important text in its own column. */
-const LABEL_ALPHA: Record<Field, string> = {
-  ink: "rgba(250,247,242,0.3)",
-  cream: "rgba(15,23,42,0.36)",
+/** The company pages, one step back from the destinations. Prominence on this
+    site is colour, never scale (foundations §5), so the two ranks of navigation
+    are the same size and differ only here. */
+const SECOND_RANK: Record<Field, string> = {
+  ink: "rgba(250,247,242,0.66)",
+  cream: "rgba(15,23,42,0.62)",
+};
+
+/** The utilities. Quiet, and still past 4.5:1 on either paper. */
+const UTILITY_INK: Record<Field, string> = {
+  ink: "rgba(250,247,242,0.56)",
+  cream: "rgba(15,23,42,0.56)",
 };
 
 function fieldVars(field: Field, paper: string | null): CSSProperties {
@@ -87,27 +82,35 @@ function fieldVars(field: Field, paper: string | null): CSSProperties {
   return {
     "--footer-paper": paper ?? t.surface,
     "--footer-ink": t.text,
-    "--footer-muted": t.textMuted,
-    "--footer-label": LABEL_ALPHA[field],
-    "--footer-rule": t.rule,
+    "--footer-muted": SECOND_RANK[field],
+    "--footer-utility": UTILITY_INK[field],
     "--footer-gold": t.gold,
   } as CSSProperties;
 }
 
+const SERIF = "var(--font-serif)";
+const SANS = "var(--font-sans)";
+const EASE = "cubic-bezier(0.22,1,0.36,1)";
+
+/** The site's outer measure, and the length of the stroke. */
+export const SHELL = "mx-auto w-full max-w-[1440px] px-6 md:px-14";
+
+/* ══════════════════════════════════════════════════════════════════════
+   THE PAPER THE PAGE ENDS ON
+   ══════════════════════════════════════════════════════════════════════ */
+
 const SKIP_BG = new Set(["rgba(0, 0, 0, 0)", "transparent"]);
 
 /**
- * The paper the page ends on.
- *
  * Walks down from `<main>` along whichever in-flow child reaches its parent's
  * bottom edge, keeping the deepest opaque background found on the way. That is
- * the surface a visitor was reading immediately before the footer arrives,
- * which is the one the footer has to continue. Geometry rather than DOM order,
- * because routes end in fixed banners and null-rendering helpers as often as in
- * their last section.
+ * the surface a visitor was reading immediately before the footer, and the one
+ * it has to continue. Geometry rather than DOM order, because routes end in
+ * fixed banners and null-rendering helpers as often as in their last section.
  *
- * Returns the exact colour as well as the polarity, for the same reason the
- * header does: `/agency` is #08080c, not #050505, and the difference is a seam.
+ * The exact colour as well as the polarity, for the same reason the header
+ * samples one: `/agency` ends on #08080c, not #050505, and the difference is a
+ * seam.
  */
 function readPageEnd(): { field: Field; paper: string } | null {
   let node: Element | null = document.querySelector("main");
@@ -143,23 +146,23 @@ function readPageEnd(): { field: Field; paper: string } | null {
   return found;
 }
 
-/** Re-reads the page end on navigation and whenever the page changes height,
-    since most routes finish laying out after the footer has mounted.
-    Overridden to dark theme ("ink") on the landing page ("/") only. */
-function usePageEndField(): { field: Field; paper: string | null } {
+/**
+ * Re-reads the page end on navigation and whenever the page changes height,
+ * since most routes finish laying out after the footer has mounted.
+ *
+ * There is no per-route override any more. An earlier version forced the ink
+ * field on `/`, which put a black plate under a page that ends on cream, and a
+ * rectangle attached to the bottom of the page is the one thing this surface
+ * must not look like.
+ */
+function usePageEnd(): { field: Field; paper: string | null } {
   const pathname = usePathname();
-  const isLandingPage = pathname === "/";
   const [state, setState] = useState<{ field: Field; paper: string | null }>({
     field: "ink",
     paper: null,
   });
 
   useEffect(() => {
-    if (isLandingPage) {
-      setState({ field: "ink", paper: null });
-      return;
-    }
-
     const main = document.querySelector("main");
     if (!main) return;
     let frame = 0;
@@ -181,358 +184,262 @@ function usePageEndField(): { field: Field; paper: string | null } {
       cancelAnimationFrame(frame);
       observer.disconnect();
     };
-  }, [pathname, isLandingPage]);
-
-  if (isLandingPage) {
-    return { field: "ink", paper: null };
-  }
+  }, [pathname]);
 
   return state;
 }
 
-const SERIF = "var(--font-serif)";
-const SANS = "var(--font-sans)";
-const MONO = "var(--font-mono)";
-const EASE = "cubic-bezier(0.22,1,0.36,1)";
-/** The same curve as a tuple, for framer. */
-const EASE_TUPLE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+/* ══════════════════════════════════════════════════════════════════════
+   THE SCENE
+   ══════════════════════════════════════════════════════════════════════ */
 
-/** The site's outer measure. Wider gutters than the header: the header is a
-    band that has to clear a hero, the footer is a page that has to breathe. */
-export const SHELL = "mx-auto w-full max-w-[1440px] px-6 md:px-14";
+export interface Scene {
+  progress: MotionValue<number>;
+  reduce: boolean;
+}
+
+/**
+ * One scroll source for the whole signing: the footer's own arrival, read off
+ * the real document position, 0 when its top edge reaches the bottom of the
+ * viewport and 1 at the document's maximum scroll.
+ *
+ * The page's inertia layer already gives that position its weight
+ * (lessons.md §45), so nothing here smooths it again: a second spring on top of
+ * the page's lerp is how a scene starts swimming behind the hand (§45.3).
+ */
+function useScene(ref: RefObject<HTMLElement | null>): Scene {
+  const reduce = useReducedMotion() ?? false;
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end end"],
+  });
+  return { progress: scrollYProgress, reduce };
+}
 
 export function FooterSurface({
   field: forcedField,
   children,
-  className = "",
 }: {
   field?: Field;
-  children: ReactNode;
-  className?: string;
+  children: (scene: Scene) => ReactNode;
 }) {
-  const detected = usePageEndField();
+  const ref = useRef<HTMLElement>(null);
+  const scene = useScene(ref);
+  const detected = usePageEnd();
   const field = forcedField ?? detected.field;
   const paper = forcedField ? null : detected.paper;
+
   return (
     <footer
+      ref={ref}
       data-site-footer
-      data-footer-trigger
       data-field={field}
-      className={`relative z-20 flex min-h-[100dvh] w-full flex-col justify-between overflow-hidden texture-grain ${className}`}
+      className="relative z-20 w-full overflow-hidden texture-grain"
       style={{
         ...fieldVars(field, paper),
         background: PAPER,
         color: INK,
       }}
     >
-      {children}
+      {/* The header does NOT stand down for this footer, and this marker is
+          where that decision lives. The takeover exists for a panel that owns
+          the screen; this footer is about 600px, with the page's last section
+          still in frame beside it, so hiding the bar would be hiding chrome
+          over a page the visitor is still reading. Parked at the foot, where it
+          can never cross the observer's line. */}
+      <span
+        aria-hidden
+        data-footer-trigger
+        className="pointer-events-none absolute bottom-0 left-0 h-px w-px"
+      />
+      {children(scene)}
     </footer>
   );
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+   THE THREE MOVES
+   ══════════════════════════════════════════════════════════════════════ */
+
 /**
- * The mark, at the top of the panel, spanning the measure.
+ * The page's last words, coming to rest.
  *
- * This is the footer's subject and the reason it reads as a closing chapter
- * rather than a strip of links. It is the real `Wordmark` component, so the
- * letterforms, tracking and gold are the header's exactly; only the scale is
- * this surface's.
- *
- * On the size, which is the whole craft of this component.
- *
- * It is a container query unit, not a viewport unit. The mark has to fill the
- * *measure*, and the measure is not a fixed fraction of the viewport: the
- * gutters step from 24px to 56px at the `md` breakpoint and the container stops
- * growing at 1440px. Any single `vw` coefficient is therefore correct at one
- * width and wrong everywhere else, and the wrong direction clips the O. `cqi`
- * is 1% of the container's own inline size, so one number holds at every width
- * with no breakpoints and no cap.
- *
- * The coefficient is tuned against the *painted glyphs*, not the element box.
- * Letter-spacing and the font's right side bearing leave roughly 200px of empty
- * trailing space inside the box at this scale, so sizing the box to the measure
- * stops the visible mark about 15% short, and it reads as a mark that failed to
- * reach the edge rather than one set to it. The box is allowed to run past the
- * container; the surface clips, and what runs past is air.
- *
- * 23.4 lands the glyphs at 99% of the measure. Verified at 390, 768, 1024,
- * 1440, 1920 and 2560.
- *
- * It is deliberately not a link. The header's wordmark is the way home; a
- * viewport-wide click target at the bottom of the page is a trap, not a
- * navigation aid.
+ * One move for the whole block rather than a stagger per column. A staggered
+ * footer is a footer performing, and this one appears under every page on the
+ * site: by the ninetieth reading the choreography is the only thing left to
+ * notice.
  */
-export function FooterMark() {
+export function Contents({
+  scene,
+  children,
+  className,
+}: {
+  scene: Scene;
+  children: ReactNode;
+  className?: string;
+}) {
+  const y = useTransform(scene.progress, (p) =>
+    scene.reduce ? 0 : (1 - at(p, BEAT.contents, arrive)) * CONTENTS_RISE,
+  );
   return (
-    <div
+    <motion.div className={className} style={{ y }}>
+      {children}
+    </motion.div>
+  );
+}
+
+/**
+ * The stroke.
+ *
+ * A 1px gradient the length of the measure, drawn left to right by a retreating
+ * clip. It is the footer's one gesture and the thing the name is signed on, and
+ * it is why the mark can be 64px: the subject of the composition is the act of
+ * signing, not the logotype.
+ */
+export function Stroke({ scene }: { scene: Scene }) {
+  const clipPath = useTransform(scene.progress, (p) =>
+    strokeClip(scene.reduce ? 1 : at(p, BEAT.stroke, strokeEase)),
+  );
+  return (
+    <motion.span
       aria-hidden
-      style={{ containerType: "inline-size", lineHeight: 0.86 }}
+      style={{
+        display: "block",
+        height: 1,
+        width: "100%",
+        background: STROKE_GRADIENT,
+        clipPath,
+      }}
+    />
+  );
+}
+
+/**
+ * The name, set down on the line.
+ *
+ * The real `Wordmark`, so the letterforms, tracking and gold are the header's
+ * exactly; only the scale and the placement belong to this surface. It sits
+ * with its baseline on the stroke, which puts the O's overshoot a hair below
+ * the rule, the way a round letter is drawn against a line and what keeps the
+ * signature from looking aligned rather than written.
+ *
+ * It travels down and decelerates into place, and it is on the stage from the
+ * first frame, so no frame of the arrival is missing its signature.
+ *
+ * Deliberately not a link: the header's wordmark is the way home, and a wide
+ * click target at the foot of every page is a trap rather than a navigation
+ * aid. Hidden from assistive technology, which has the site's name already.
+ */
+export function Signature({ scene }: { scene: Scene }) {
+  const y = useTransform(scene.progress, (p) =>
+    scene.reduce ? 0 : -(1 - at(p, BEAT.name, arrive)) * NAME_FALL,
+  );
+  return (
+    <motion.span
+      aria-hidden
+      className="block text-[42px] md:text-[64px]"
+      style={{ y, marginBottom: `-${BASELINE_DROP_EM}em` }}
     >
       <Wordmark
-        size="23.4cqi"
+        size="1em"
         tracking={0.06}
         color={GOLD}
-        style={{ display: "block", whiteSpace: "nowrap", transition: "none" }}
+        style={{ display: "block", transition: "none" }}
       />
-    </div>
+    </motion.span>
   );
 }
 
-/**
- * Arrival.
- *
- * One observer for the whole panel, with the stagger coming from variants
- * rather than a delay on each part. The per-part version does not survive a
- * phone: the panel is a full viewport tall, so a visitor who lands at the
- * bottom of the document has its upper half above the viewport where it never
- * intersects and never fires, and they get blank paper above the columns.
- * Observing the surface means that if any of it is on screen, all of it
- * arrives.
- *
- * Reduced motion starts at the finished composition and never hides anything,
- * not even for a frame. The obvious-looking `initial={false}` version leaves
- * content stuck invisible forever, because `useReducedMotion()` is false during
- * SSR and the first render, so the hidden state is applied and there is no
- * target left to move it to once the preference resolves. Content gated behind
- * an animation that cannot fire is the one motion rule this repo will not bend.
- */
-export function ArriveGroup({
-  children,
-  className,
-  style,
-}: {
-  children: ReactNode;
-  className?: string;
-  style?: CSSProperties;
-}) {
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      className={className}
-      style={style}
-      initial={reduce ? "shown" : "hidden"}
-      whileInView="shown"
-      viewport={{ once: true, amount: 0.12 }}
-      variants={{
-        hidden: {},
-        shown: { transition: { staggerChildren: reduce ? 0 : 0.09 } },
-      }}
-    >
-      {children}
-    </motion.div>
-  );
-}
+/* ══════════════════════════════════════════════════════════════════════
+   TYPE
+   ══════════════════════════════════════════════════════════════════════ */
 
-/** One beat of the arrival. Inherits its state from the enclosing
-    `ArriveGroup`, so it carries no observer and no delay of its own. */
-export function Arrive({
-  className,
-  children,
-}: {
-  className?: string;
-  children: ReactNode;
-}) {
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      className={className}
-      variants={{
-        hidden: { opacity: 0, y: 22 },
-        shown: {
-          opacity: 1,
-          y: 0,
-          transition: reduce
-            ? { duration: 0 }
-            : { duration: 0.85, ease: EASE_TUPLE },
-        },
-      }}
-    >
-      {children}
-    </motion.div>
-  );
-}
+type Rank = "destination" | "company";
 
-/** The footer's single horizontal hairline. It sits above the signature line and has real
-    material on both sides of it, which is the only condition under which this
-    site draws one. */
-export function Hairline({ style }: { style?: CSSProperties }) {
-  return (
-    <span
-      aria-hidden
-      style={{ display: "block", height: 1, background: HAIRLINE, ...style }}
-    />
-  );
-}
-
-/**
- * The divider, and it runs the other way.
- *
- * The header closes itself with a full-bleed horizontal gradient. Drawing
- * anything horizontal across the top of the footer competes with it, which is
- * the ruling in lessons.md §2. So the footer's structural mark is vertical: a
- * hairline standing between two real groups, the way a printed index or a
- * newspaper column is divided. Content on both sides, which is the only
- * condition under which this site draws a line at all, and no other surface
- * here uses one.
- *
- * It sits inside the row rather than reaching the gutters, and it stops where
- * the tallest column stops.
- */
-/**
- * A standing rule between two groups.
- *
- * `display` is a class rather than an inline style on purpose. Inline it beat
- * the `hidden md:block` its caller passes, so all three rules rendered on a
- * phone as well, where the groups are stacked and each rule therefore had a
- * column on its left and nothing at all on its right. That is a hairline drawn
- * because the composition felt empty, which `03-banned-ui.md` §3.9 rules out.
- */
-export function ColumnRule({ className = "block" }: { className?: string }) {
-  return (
-    <span
-      aria-hidden
-      className={className}
-      style={{ width: 1, alignSelf: "stretch", background: HAIRLINE }}
-    />
-  );
-}
-
-/**
- * A group label.
- *
- * Smaller than the items it heads, which is the opposite of what this file did
- * a revision ago and the opposite of what looks intuitively right. Every site in
- * the industry sample sets it this way: Art + Commerce runs a 10px uppercase
- * label over 16px names, and the label is never the largest thing in its own
- * column. A label that outweighs its list is scaffolding pretending to be
- * content.
- *
- * Uppercase and tracked, but tracked at 0.09em. The header's mono `Kicker` sits
- * at 0.26em, which is more than double the widest tracking measured anywhere in
- * the space (0.03em to 0.12em), and that width is half the reason the mono read
- * as an instrument panel rather than a masthead. Sans here, not serif and not
- * mono: the display serif is spent on the destinations and the
- * signature, and a fourth job would dilute it.
- */
-export function GroupLabel({
-  children,
-}: {
-  children: ReactNode;
-}) {
-  return (
-    <h2
-      style={{
-        fontFamily: MONO,
-        fontWeight: 400,
-        fontSize: 9,
-        letterSpacing: "0.26em",
-        textTransform: "uppercase",
-        lineHeight: 1,
-        color: LABEL_MUTED,
-        margin: 0,
-      }}
-    >
-      {children}
-    </h2>
-  );
-}
-
-type LinkTone = "product" | "clerical" | "signature";
-
-/**
- * Three voices, and the sizes come from measurement rather than taste. See
- * `docs/design-language/05-industry-reference.md` §2.4 and §3.9.
- */
-const TONE: Record<LinkTone, CSSProperties> = {
-  /* Match the header's NavLink / ActionLink voice: sans, 11px, tracked
-     uppercase caps. The footer used to speak in its own larger, mixed-voice
-     register; it now shares the header's clerical treatment. */
-  product: {
-    fontFamily: SANS,
-    fontSize: 11,
-    fontWeight: 500,
-    letterSpacing: "0.12em",
-    textTransform: "uppercase",
-    lineHeight: 1,
-    color: MUTED,
-  },
-  clerical: {
-    fontFamily: SANS,
-    fontSize: 11,
-    fontWeight: 500,
-    letterSpacing: "0.12em",
-    textTransform: "uppercase",
-    lineHeight: 1,
-    color: MUTED,
-  },
-  signature: {
-    fontFamily: SERIF,
-    fontSize: 13,
-    fontWeight: 400,
-    fontStyle: "italic",
-    letterSpacing: "0.02em",
-    textTransform: "none",
-    lineHeight: 1,
-    color: MUTED,
-  },
+const NAV: Record<Rank, string> = {
+  destination: INK,
+  company: MUTED,
 };
 
-/** Non-interactive text in one of the three voices. */
-export function FooterText({
-  tone = "clerical",
-  children,
-  style,
-}: {
-  tone?: LinkTone;
-  children: ReactNode;
-  style?: CSSProperties;
-}) {
-  return <span style={{ ...TONE[tone], ...style }}>{children}</span>;
-}
-
-/**
- * Every interactive thing in the footer. Hover is a colour shift and a 1px
- * rule, drawn with `scaleX` so it never touches layout.
- */
-export function FooterLink({
+/** A destination. Display serif, because these are the only words in the footer
+    a visitor came looking for. */
+export function NavLink({
   href,
   label,
-  tone = "clerical",
-  external = false,
-  strong = false,
-  onClick,
+  rank,
 }: {
   href: string;
   label: string;
-  tone?: LinkTone;
-  external?: boolean;
-  /** Full-strength ink. Prominence on this site is colour, never scale. */
-  strong?: boolean;
-  onClick?: () => void;
+  rank: Rank;
 }) {
   const [hover, setHover] = useState(false);
-  const props = {
-    onClick,
-    onMouseEnter: () => setHover(true),
-    onMouseLeave: () => setHover(false),
-    className: "focus:outline-none focus-visible:underline",
-    style: { textDecoration: "none", display: "inline-block" } as CSSProperties,
-  };
-  const body = <Mark label={label} tone={tone} hover={hover} strong={strong} />;
-
-  return external ? (
-    <a href={href} {...props}>
-      {body}
-    </a>
-  ) : (
-    <Link href={href} {...props}>
-      {body}
+  return (
+    <Link
+      href={href}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      className="inline-block text-[22px] leading-[1.45] focus:outline-none focus-visible:underline md:text-[24px]"
+      style={{
+        fontFamily: SERIF,
+        textDecoration: "none",
+        color: hover ? GOLD : NAV[rank],
+        transition: `color 0.42s ${EASE}`,
+      }}
+    >
+      {label}
     </Link>
   );
 }
 
-/** The withdrawal control, wearing the footer's own type rather than a button's. */
-export function CookieControl({ tone = "signature" }: { tone?: LinkTone }) {
+/**
+ * The utility voice.
+ *
+ * The legal links, the cookie control and the copyright all speak in it, which
+ * is the point: they are one class of thing, and giving the copyright a
+ * treatment of its own is what made it read as inherited. Inter, the site's
+ * clerical typeface, at 11.5px with a little tracking and tabular lining
+ * figures, in sentence case.
+ *
+ * Not mono: `lessons.md` §3 rules that out for a copyright line, and this site
+ * sells into casting and fashion rather than into engineering. Not the serif
+ * italic it replaces: italic on this site means a verdict and nothing else
+ * (`03-banned-ui.md` §6.5), and a copyright notice is not a verdict. Not
+ * tracked caps: at this size that is the eyebrow signature the ban list
+ * rations, and it would put the smallest thing in the frame in the loudest
+ * costume.
+ */
+const UTILITY_TYPE: CSSProperties = {
+  fontFamily: SANS,
+  fontSize: 11.5,
+  fontWeight: 450,
+  letterSpacing: "0.045em",
+  lineHeight: 1.7,
+  fontVariantNumeric: "lining-nums tabular-nums",
+  color: UTILITY,
+};
+
+export function UtilityLink({ href, label }: { href: string; label: string }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <Link
+      href={href}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      className="inline-block focus:outline-none focus-visible:underline"
+      style={{
+        ...UTILITY_TYPE,
+        textDecoration: "none",
+        color: hover ? GOLD : UTILITY,
+        transition: `color 0.42s ${EASE}`,
+      }}
+    >
+      {label}
+    </Link>
+  );
+}
+
+/** The withdrawal control, in the utility voice rather than a button's. */
+export function CookieControl() {
   const [hover, setHover] = useState(false);
   return (
     <CookiePreferencesButton
@@ -541,81 +448,64 @@ export function CookieControl({ tone = "signature" }: { tone?: LinkTone }) {
       onMouseLeave={() => setHover(false)}
       className="focus:outline-none focus-visible:underline"
       style={{
+        ...UTILITY_TYPE,
+        color: hover ? GOLD : UTILITY,
         background: "none",
         border: "none",
         padding: 0,
         cursor: "pointer",
         textAlign: "left",
+        transition: `color 0.42s ${EASE}`,
       }}
     >
-      <Mark label={COOKIE_LABEL} tone={tone} hover={hover} />
+      {COOKIE_LABEL}
     </CookiePreferencesButton>
   );
 }
 
-function Mark({
-  label,
-  tone,
-  hover,
-  strong = false,
-}: {
-  label: string;
-  tone: LinkTone;
-  hover: boolean;
-  strong?: boolean;
-}) {
-  const base = TONE[tone];
-  return (
-    <span style={{ position: "relative", display: "inline-block" }}>
-      <span
-        style={{
-          ...base,
-          fontWeight: strong ? 500 : base.fontWeight,
-          color: hover ? GOLD : strong ? INK : base.color,
-          transition: `color 0.3s ${EASE}`,
-        }}
-      >
-        {label}
-      </span>
-    </span>
-  );
+/** The imprint. The one line in the footer that is not a destination, so it is
+    the one line that does not answer a pointer. */
+export function Imprint({ children }: { children: ReactNode }) {
+  return <span style={UTILITY_TYPE}>{children}</span>;
 }
 
 /**
- * The imprint line: who owns this, and the withdrawal control.
+ * The address.
  *
- * The wordmark used to sit here at scale beside the copyright. It came out for
- * two reasons: a 37px gold mark next to a 14px serif notice is an awkward pair
- * at any spacing, and the header already prints the mark at the top of the same
- * screen. The mark is in the paper now (`Watermark`), which is the one place it
- * can be large without being a repeat.
+ * Set in the display serif at the navigation's size, because it is a
+ * destination like the others rather than a headline. What marks it out is that
+ * it is the only full-strength thing on the right of the frame.
  */
-export function Signature({ trailing }: { trailing?: ReactNode }) {
+export function AddressLink({ email }: { email: string }) {
+  const [hover, setHover] = useState(false);
   return (
-    <div className="flex flex-col gap-5 sm:flex-row sm:items-baseline sm:justify-between">
-      <FooterText tone="signature">{copyright()}</FooterText>
-      <div className="flex flex-wrap items-baseline gap-x-7 gap-y-3">
-        {trailing}
-        <CookieControl />
-      </div>
-    </div>
+    <a
+      href={`mailto:${email}`}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      className="inline-block text-[22px] leading-[1.45] focus:outline-none focus-visible:underline md:text-[24px]"
+      style={{
+        fontFamily: SERIF,
+        color: hover ? GOLD : INK,
+        textDecoration: "none",
+        transition: `color 0.42s ${EASE}`,
+      }}
+    >
+      {email}
+    </a>
   );
 }
 
 /**
- * The social channels.
- *
- * Marks, not buttons: no circle, no border, no fill, no pill. Hover is the same
- * colour shift every other link in here uses, and nothing scales.
+ * The channels. Marks, not buttons: no circle, no border, no fill, no pill.
  *
  * An entry with no `href` renders as an inert mark with its name still exposed
  * to assistive technology. Pholio has no accounts yet, and a link that goes
- * nowhere is worse than a mark that waits (see content.ts). Filling in a URL
- * turns it into a link with no other change.
+ * nowhere is worse than a mark that waits (see content.ts).
  */
-export function SocialRow() {
+export function SocialRow({ className = "" }: { className?: string }) {
   return (
-    <div className="flex items-center gap-6">
+    <div className={`flex items-center gap-6 ${className}`}>
       {SOCIAL.map((channel) => (
         <SocialMark key={channel.label} {...channel} />
       ))}
@@ -630,7 +520,7 @@ function SocialMark({ label, href }: { label: string; href: string | null }) {
       style={{
         display: "block",
         color: hover ? GOLD : MUTED,
-        transition: `color 0.3s ${EASE}`,
+        transition: `color 0.42s ${EASE}`,
       }}
     >
       {label === "Instagram" ? (
@@ -680,43 +570,5 @@ function XMark() {
     >
       <path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.84L1.25 2.25h6.83l4.71 6.23zm-1.16 17.52h1.83L7.08 4.13H5.11z" />
     </svg>
-  );
-}
-
-/**
- * The address at display scale, in gold.
- *
- * Not invented for this surface: every legal document in the repo already
- * closes on its contact address set in the display serif in gold, and this is
- * that move promoted from the corpus to the site.
- */
-export function AddressLink({
-  email,
-  size = "clamp(0.9rem, 2vw, 1.1rem)",
-}: {
-  email: string;
-  size?: string;
-}) {
-  const [hover, setHover] = useState(false);
-  return (
-    <a
-      href={`mailto:${email}`}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      className="focus:outline-none focus-visible:underline"
-      style={{
-        fontFamily: SERIF,
-        fontSize: size,
-        letterSpacing: "-0.015em",
-        lineHeight: 1.1,
-        color: GOLD,
-        textDecoration: hover ? "underline" : "none",
-        textUnderlineOffset: "0.3em",
-        textDecorationThickness: 1,
-        transition: `color 0.3s ${EASE}`,
-      }}
-    >
-      {email}
-    </a>
   );
 }

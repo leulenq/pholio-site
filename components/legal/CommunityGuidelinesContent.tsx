@@ -17,77 +17,90 @@ import {
 
 const sections: LegalSection[] = [
   {
-    title: "Scope and Standard",
+    title: "Scope and Professional Use",
     content: [
-      `These Community Guidelines apply to every Pholio account, public portfolio, image, application, message, organization, agency, event, casting, brand, client, and other opportunity Recipient. They supplement the Terms of Service.`,
-      `Use Pholio only for legitimate professional portfolio, representation, casting, event, collaboration, or related administration purposes. Be accurate about identity, role, authority, opportunity, compensation, and intended data use.`,
-      `A violation may result in content restriction, removal, investigation, warning, suspension, termination, preservation, or a legally required report. Action depends on evidence, severity, recurrence, safety, law, and the rights of affected people.`,
+      `These Community and Safety Guidelines form part of the [Terms of Service](/terms). They apply to use of the Services, including accounts, Public Sites, User Content, Submissions, Market activity, messages, shared selections and Organization workspaces. Capitalized terms have the meanings given in the Terms.`,
+      `Use the Services for legitimate professional purposes. Talent, Organizations, Recipients and their authorized users must describe their identity, role, authority and intended use accurately, respect other people's rights, and comply with applicable law.`,
+      `These rules also apply to conduct connected to a Pholio introduction or Submission when that conduct threatens a person's safety, exploits the Services, or violates the obligations accepted for the relevant opportunity. Pholio may restrict use of its Services in response without becoming a party to the participants' separate relationship.`,
     ],
   },
   {
-    title: "Professional and Authorized Use",
+    title: "Identity, Authority and Opportunity Integrity",
     content: [
-      `Talent may create and control professional portfolios, generate comp cards, review analytics, communicate, and submit to identified Recipients.`,
-      `Authorized organizations may review submissions, administer genuine opportunities, communicate professionally, and manage information for the purpose shown to Talent.`,
-      `You must have authority to upload every image and personal-data item, operate an organization account, invite team members, and submit or evaluate material for another person.`,
-      `Off-platform meetings, contracts, travel, payments, shoots, fittings, and work are undertaken at the participants' own responsibility and remain subject to applicable licensing, labor, child-performer, insurance, safety, privacy, and contract law.`,
+      `Do not impersonate Talent, an Organization, a scout, a client, a guardian, a rights holder or Pholio. Do not falsify age, contact details, measurements, experience, representation, licenses, verification status, work eligibility or authority to act for another person.`,
+      `A Recipient must have a genuine stated purpose for requesting materials and must accurately identify the responsible Organization, the nature of the opportunity and material participation conditions. Do not misstate compensation, expenses, deadlines, location, selection status or required rights. Representation review, event casting and a client's project must be described as the distinct activities they are.`,
+      `Do not post fictitious opportunities, collect applications to build an unrelated mailing list, sell applicant data, or present a reference entry in Market as an endorsement, partnership or invitation that the Organization has not authorized.`,
+      `Do not promise guaranteed representation, selection, work, immigration status or earnings in exchange for payment. Deceptive scouting, compulsory photo-service schemes, undisclosed conflicts, fraudulent fees and pressure to disclose payment credentials are prohibited. A Studio+ subscription does not purchase selection or preferential consideration by a Recipient.`,
     ],
   },
   {
-    title: "Prohibited Content and Conduct",
+    title: "Prohibited Sexual and Exploitative Conduct",
     content: [
-      `3a. Sexual and exploitative content\nPornographic, sexually explicit, exploitative, coercive, or trafficked content is prohibited. Nude or intimate imagery is not appropriate for the Talent Platform or an initial submission. Any sexualized depiction of a minor is prohibited.`,
-      `3b. Child sexual abuse material\nChild sexual abuse material and any content that sexually exploits or endangers a minor are prohibited. Do not download, copy, forward, or attach suspected material to a report. Provide only the location and circumstances. When Pholio obtains actual knowledge of an apparent reportable violation, it will preserve and report information to NCMEC as required by federal law.`,
-      `3c. Nonconsensual intimate imagery and digital forgeries\nSharing or threatening to share an intimate image without consent, including a digitally created or altered image that appears to depict a real person, is prohibited. Sextortion, coercive image demands, and retaliation are prohibited.`,
-      `3d. Harassment, threats, and doxxing\nThreats, stalking, repeated unwanted contact, intimidation, bullying, publishing private contact or location information, or evading a block or restriction are prohibited.`,
-      `3e. Impersonation and deceptive profiles\nDo not impersonate a person, agency, brand, client, event, employee, scout, guardian, or rights holder; falsify credentials, licenses, representation, measurements, experience, identity, age, or work eligibility; or use edited or AI-generated material deceptively.`,
-      `3f. Fraud, pay-to-secure schemes, and exploitation\nDo not demand payment to guarantee representation, selection, access, work, immigration status, or earnings; redirect users into deceptive payment or photo-service schemes; solicit financial credentials; facilitate trafficking; or exploit professional or age-related vulnerability.`,
-      `3g. Hate, discrimination, and unlawful screening\nHateful content and unlawful discrimination are prohibited. Do not use a Platform filter, score, or AI output to evade civil-rights, employment, accessibility, candidate-notice, or automated-decision obligations.`,
-      `3h. Rights violations and malicious activity\nCopyright, privacy, publicity, confidentiality, and trademark violations; malware; scraping; credential theft; unauthorized access; spam; and interference with the Platform are prohibited.`,
+      `Pornographic, sexually explicit, exploitative or trafficked content is prohibited. Nude or intimate imagery must not be uploaded to a Public Site, requested through a Submission, or used to condition access to an opportunity on Pholio.`,
+      `Child sexual abuse material, sexualized depictions of minors, grooming and any conduct that sexually exploits or endangers a child are prohibited. Do not request, acquire or redistribute such material. Pholio reports apparent violations and preserves information when required by applicable child-safety law.`,
+      `Sharing or threatening to share an intimate depiction without consent is prohibited, including an AI-generated or altered depiction made to appear authentic. Consent to create an image or share it privately is not permission to publish it or distribute it to another audience.`,
+      `Sextortion, coercive image demands, trafficking, forced labor, sexual harassment, retaliation and abuse of a person's financial, immigration, professional or age-related vulnerability are prohibited.`,
     ],
   },
   {
-    title: "Minors",
+    title: "Safe Contact and Respectful Treatment",
     content: [
-      `Users under 13 may not create accounts or provide personal information through Pholio. A user aged 13 to 17 requires guardian knowledge, supervision, and authorization and remains subject to any higher opportunity-specific minimum age.`,
-      `A guardian email, consent link, or work-permit indicator is not proof of identity, relationship, custody, legal authority, permit validity, or authorization to work. Pholio may request additional evidence and restrict a minor profile or submission.`,
-      `Do not contact a minor outside the authorized workflow, request private or sexual material, arrange unsupervised meetings or travel, or ask the minor to conceal contact from a guardian.`,
-      `A submission does not satisfy child-performer permits, employer certificates, school, work-hour, trust-account, responsible-adult, safety, insurance, or other legal requirements. The party controlling the engagement is responsible for those requirements.`,
+      `Threats, stalking, hate speech, discriminatory harassment, doxxing, intimidation, repeated unwanted contact and evasion of a block or restriction are prohibited. Do not disclose another person's private address, contact information, financial details or sensitive records without authority.`,
+      `Communications must relate to the purpose for which contact or materials were provided. Do not use a Submission, exported package, public contact link or shared selection for unrelated solicitation, spam, sexual contact or pressure to move into an unsafe private channel.`,
+      `An introduction, message, interview request or invitation is not a signed contract. Before a meeting, shoot, event, travel or engagement, the responsible parties must agree on the material terms and satisfy applicable safety, labor, licensing and other obligations. A Pholio listing or verification result does not replace those duties.`,
+      `Do not require a person to conceal communications, attend an undisclosed location, surrender identification documents, accept unwanted physical contact, or waive mandatory rights as a condition of consideration. Report threats or coercion using the channels below.`,
     ],
   },
   {
-    title: "Opportunity and Recipient Integrity",
+    title: "Content Rights, Data and Automated Tools",
     content: [
-      `A Recipient must identify the true organization and role, state a genuine purpose, collect only relevant information, limit access, and avoid misleading Talent about review, selection, compensation, expenses, publicity, or work.`,
-      `An event, casting, brand, or client opportunity is not an agency-representation application unless it is expressly identified as one. A Recipient must not repurpose an agency submission for an event, publicity, training, advertising, or another purpose without a separate lawful basis.`,
-      `A paid Pholio subscription is not payment to a Recipient and does not guarantee review, priority, selection, representation, work, or income. Opportunity rules may prohibit any paid advantage.`,
-      `A Recipient may not create or commercially use a digital replica of Talent or use Talent's name, image, voice, or likeness in publicity or advertising without a separate agreement or consent that satisfies applicable law.`,
+      `Upload, import, publish and share User Content only with sufficient copyright permission and any required privacy, publicity or other authority. Being depicted in a photograph does not necessarily give you its copyright. An Organization must have authority to provide another person's materials; access to an image or a public profile does not establish that authority.`,
+      `Use a Submission only for its disclosed purpose and authorized related administration. Limit access to authorized people. Do not resell data, scrape or aggregate profiles without permission, circulate access tokens or private links to unauthorized people, or repurpose a representation application for advertising, an unrelated event or another undisclosed use.`,
+      `Do not use another person's materials for model training, public advertising, merchandising, or creation or exploitation of a digital replica without the separate authorization and other lawful basis required for that use. General account acceptance, a public profile and a Submission are not those authorizations.`,
+      `Hateful content and unlawful discrimination are prohibited. Do not use filters, rankings, AI outputs or proxies for protected characteristics to discriminate unlawfully or to evade employment, accessibility, candidate-notice or automated-decision obligations. Recipients must exercise the human review and other safeguards required by the [Organization Terms](/legal/agency-terms) and [AI Notice](/ai-notice).`,
+      `Do not use edited or synthetic media to misrepresent identity, current appearance, experience, consent or an opportunity. Do not remove rights information or falsely attribute work to another person.`,
     ],
   },
   {
-    title: "Reporting",
+    title: "Account Security and Service Integrity",
     content: [
-      `Use the in-product report tool where available. It is intended for ordinary account, message, or content concerns, but it may not collect every fact required for a statutory notice.`,
-      `Immediate danger: contact local emergency services first, then send the account, URL, time, and non-graphic circumstances to ${LEGAL_EMAIL}.`,
-      `Child-safety concerns: send only identifying URLs, account information, and circumstances to ${LEGAL_EMAIL}. Do not download or redistribute suspected material.`,
-      `Nonconsensual intimate image or digital forgery: use www.pholio.studio/take-it-down or send ${LEGAL_EMAIL} the content location, depicted person's name, requester's relationship or authority, contact information, a good-faith and accuracy statement, and a physical or electronic signature. Valid requests covered by the TAKE IT DOWN Act are processed within 48 hours as required by law, including known identical copies where required.`,
-      `Privacy, unwanted likeness, or personal-data complaints: ${PRIVACY_EMAIL}. Copyright complaints: ${DMCA_EMAIL}. General help: ${SUPPORT_EMAIL}.`,
-      `Do not make a knowingly false report, impersonate a victim or rights holder, or use reporting to harass another person.`,
+      `Do not share or steal credentials, impersonate another team member, obtain unauthorized access, deploy malware, circumvent access controls, manipulate usage limits, or interfere with the Services. Organization members must use their own authorized accounts and respect the access granted to their role.`,
+      `Automated collection, bulk account creation, message spam and unauthorized scraping are prohibited. Do not evade a suspension through another account, Organization, domain or person.`,
+      `Do not misuse analytics, tracking links, search tools or verification processes to identify, monitor or target a person outside their disclosed professional purpose. Report suspected account compromise promptly to ${LEGAL_EMAIL}.`,
     ],
   },
   {
-    title: "Review, Enforcement, and Preservation",
+    title: "Children and Any Future Minor Program",
     content: [
-      `Pholio may restrict access while reviewing a credible safety, rights, or fraud concern. We may preserve relevant content or account information even after removal where required for a report, investigation, legal hold, dispute, or statutory preservation period.`,
-      `We may warn, remove content, restrict features, revoke sessions, suspend, terminate, or notify a provider, Recipient, guardian, rights holder, insurer, regulator, NCMEC, or law enforcement where appropriate or required.`,
-      `A public URL, Recipient copy, download, screenshot, cache, or off-platform message may remain outside Pholio after in-product removal. Tell us about known copies or locations so they can be evaluated.`,
-      `Where an appeal is appropriate, send ${SUPPORT_EMAIL} the account, decision, and reason for appeal. Safety, legal-hold, child-protection, or court-ordered restrictions may not be appealable or may require additional verification.`,
+      `Talent accounts are currently limited to adults as stated in the [Terms of Service](/terms). Do not falsify a date of birth or use an adult's or guardian's details to bypass that restriction. The [Guardian and Minor Notice](/legal/guardians) describes the conditions for any separately introduced minor program; it does not open one.`,
+      `If a minor's information is present in the Services or a specifically authorized future program, do not contact or engage the minor outside the approved guardian-involved process. Do not request private or sexual material, arrange unsupervised meetings or travel, or ask a minor to hide contact from a guardian.`,
+      `Guardian authorization, identity checks and a self-reported permit are not interchangeable. None alone establishes that a minor can lawfully work, travel or license publicity rights. The party responsible for an engagement must meet applicable child-performer, supervision, education, work-hour, trust-account and safety requirements.`,
+      `A child or guardian can report a safety concern or request removal without creating a Pholio account.`,
+    ],
+  },
+  {
+    title: "Reports and Urgent Requests",
+    content: [
+      `For immediate danger, contact local emergency services. Pholio is not an emergency-response service. For other safety concerns, use an available in-product report control or email ${LEGAL_EMAIL} with the relevant account, URL or message identifier, approximate time and a concise description.`,
+      `For an intimate image or digital forgery shared without consent, use the [Intimate Image Removal process](/take-it-down). An account or copyright ownership is not required. The process explains the written notice requirements and the 48-hour removal obligation for valid requests covered by the TAKE IT DOWN Act.`,
+      `For suspected child sexual abuse material, provide the location and non-graphic circumstances to ${LEGAL_EMAIL}. Do not download, copy, forward or attach the material to make a report.`,
+      `For privacy, unwanted likeness or personal-data concerns, contact ${PRIVACY_EMAIL}. Copyright owners and authorized representatives can use the [Copyright Policy](/dmca) or contact ${DMCA_EMAIL}. General support is available at ${SUPPORT_EMAIL}.`,
+      `Reports must be made honestly. Do not impersonate a victim or rights holder, submit knowingly false allegations, retaliate against a good-faith reporter or abuse reporting to harass another person.`,
+    ],
+  },
+  {
+    title: "Review, Enforcement and Appeals",
+    content: [
+      `Pholio may review reported or detected violations and restrict access while a matter is investigated. Depending on the evidence, severity, recurrence, safety risk and applicable law, action may include a warning, content removal, limitation of sharing or messaging, revocation of access, suspension or termination under the Terms.`,
+      `We may preserve relevant records, restrict internal access, and disclose information to service providers, affected people or competent authorities where required or permitted for safety, legal process or enforcement. Removal from view does not necessarily end a legal preservation duty. The [Privacy Policy](/privacy) explains the handling of report and safety information.`,
+      `To challenge an enforcement decision, contact ${SUPPORT_EMAIL} with the account, decision and reasons for review. We will consider relevant information and correct a decision where appropriate. A report or appeal does not stay an urgent protective measure, a legally required removal or a court order.`,
+      `Pholio cannot remove copies held independently by another website, Recipient or device. Restrictions within the Services do not determine the parties' rights under a separate contract or prevent a person from seeking a legal remedy.`,
     ],
   },
   {
     title: "Changes and Contact",
     content: [
-      `We may update these Guidelines as the Platform, threats, or law change. We will update the dates above and provide any additional notice required by applicable law.`,
+      `Changes to these Guidelines follow the amendment and notice provisions in the [Terms of Service](/terms). A revised version does not retroactively authorize prohibited conduct or expand a permission you separately granted.`,
       `Trust, safety, exploitation, or urgent legal reports: ${LEGAL_EMAIL}`,
       `Privacy and likeness reports: ${PRIVACY_EMAIL}`,
       `Copyright reports: ${DMCA_EMAIL}`,
@@ -99,7 +112,7 @@ export function CommunityGuidelinesContent() {
   return (
     <LegalDocumentLayout
       title="Community and Safety Guidelines"
-      subtitle="These Guidelines govern professional conduct, minors, opportunity integrity, prohibited content, reporting, preservation, and enforcement across Pholio."
+      subtitle="The standards for professional conduct, safe contact, authorized content and genuine opportunities throughout the Pholio Services."
       lastUpdated={LAST_UPDATED}
       effectiveDate={EFFECTIVE_DATE}
       sections={sections}

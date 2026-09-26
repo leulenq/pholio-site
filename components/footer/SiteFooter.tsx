@@ -1,31 +1,33 @@
 "use client";
 
 /**
- * THE CLOSING PANEL
+ * THE SIGNATURE LINE
  *
- * Not a footer in the strip-at-the-bottom sense. It owns a viewport, the header
- * stands down while it does, and it reads as the last chapter of the site
- * rather than as content tacked on under the last section.
+ * The page ends. Pholio signs its name.
  *
- * The composition is a single decision: **the mark is the subject, everything
- * else is apparatus.** It spans the measure at the top of the panel, the four
- * groups sit beneath it at clerical scale, and the space between them is what
- * does the work. A footer that gives its largest element to a column heading has
- * not decided what it is for.
+ * The composition is one decision: **the line is the subject and the mark is
+ * the signature on it.** That is what lets the wordmark be 64px here. A mark is
+ * only obliged to be enormous when it is carrying the frame alone; give it
+ * something to be signed on and it can be the size a signature actually is.
  *
- * Four groups, in the order a visitor needs them: what you can use, who is
- * behind it, what you are agreeing to, and how to reach a person.
+ * Three registers, in the order a page ends:
  *
- * Two deliberate departures from `docs/design-language/05-industry-reference.md`,
- * both owner decisions rather than oversights:
+ *   above the line   the destinations, the company, and the address. The only
+ *                    words a visitor came looking for, all at one size, ranked
+ *                    by colour rather than by scale.
+ *   the line         the stroke, drawn across the measure, with the mark set
+ *                    down on it.
+ *   below the line   the utilities. The smallest type on the site, in one
+ *                    voice, because they are one class of thing.
  *
- *  - §3.9 refuses an oversized wordmark at the bottom of a page as a
- *    portfolio-template move. Taken as read, and overruled: the brief is a
- *    closing panel, not a footer, and at panel scale the mark is the
- *    composition rather than an ornament on one.
- *  - §5.3 found that no footer in the sample animates on entry. This one does,
- *    once, on one observer, because the panel has to be *arrived at* for the
- *    takeover to feel deliberate instead of abrupt.
+ * No group labels. Three columns of plain destinations need no headings, and a
+ * heading over three links is scaffolding rather than content.
+ *
+ * No hairlines besides the stroke. The stroke has real material on both sides
+ * of it, which is the only condition under which this site draws a line at all.
+ *
+ * The signing itself, and why the sweep is allowed here at all, is in
+ * `motion.ts`.
  */
 
 import {
@@ -33,111 +35,104 @@ import {
   PRIMARY_NAV,
   SECONDARY_NAV,
 } from "@/lib/marketing-nav-links";
-
 import type { Field } from "@/components/header/kit";
+
 import {
   AddressLink,
-  Arrive,
-  ArriveGroup,
-  ColumnRule,
-  FooterLink,
-  FooterMark,
+  Contents,
+  CookieControl,
   FooterSurface,
-  GroupLabel,
-  Hairline,
+  Imprint,
+  NavLink,
   SHELL,
   Signature,
   SocialRow,
+  Stroke,
+  UtilityLink,
 } from "./kit";
-import { CONTACT_EMAIL, LABEL, productLabel } from "./content";
+import { CONTACT_EMAIL, copyright, productLabel } from "./content";
 
 export default function SiteFooter({ field }: { field?: Field } = {}) {
   return (
     <FooterSurface field={field}>
-      <ArriveGroup
-        className={`relative flex h-full flex-1 flex-col justify-between ${SHELL}`}
-        style={{ paddingTop: 64, paddingBottom: 36 }}
-      >
-        {/* The mark. `flex-1` under it pushes the apparatus to the foot of the
-            panel, so on a tall viewport the two are held apart by real space
-            rather than by a margin someone guessed. */}
-        <Arrive>
-          <FooterMark />
-        </Arrive>
-
-        <div className="flex-1" style={{ minHeight: 24, maxHeight: 64 }} />
-
-        {/* Four groups, three standing rules. The rules are grid items of their
-            own so they stretch to the tallest column and stop there, and they
-            belong to the wide stage only: a rule needs material on both sides
-            of it.
-
-            Two columns on a phone, four on a wide stage. Stacked one per row,
-            the four groups run about 2.2 viewports on a 390 frame, and a panel
-            that has to be scrolled through in three screens is a list of links
-            again rather than the closing panel this component exists to be.
-            Paired, the apparatus fits under the mark inside one viewport,
-            which is the whole composition: Product / Company, then
-            Legal / Contact. */}
-        <Arrive>
-          <Hairline />
-          <div
-            className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)_1px_minmax(0,1fr)_1px_minmax(0,1.1fr)] md:gap-x-10 md:gap-y-8"
-            style={{ paddingTop: 32, paddingBottom: 16 }}
-          >
-            <Group label={LABEL.product} entries={PRIMARY_NAV} />
-            <ColumnRule className="hidden md:block" />
-            <Group label={LABEL.company} entries={SECONDARY_NAV} />
-            <ColumnRule className="hidden md:block" />
-            {/* Four standing links, not the whole corpus. The other four
-                documents are published and routed; they are reached from the
-                context that raises them. See lib/marketing-nav-links.ts. */}
-            <Group label={LABEL.legal} entries={FOOTER_LEGAL_NAV} />
-            <ColumnRule className="hidden md:block" />
-
-            <div>
-              <GroupLabel>{LABEL.contact}</GroupLabel>
-              <div className="mt-5 flex flex-col items-start gap-4">
-                <AddressLink email={CONTACT_EMAIL} />
-                <SocialRow />
+      {(scene) => (
+        <div
+          className={SHELL}
+          style={{ paddingTop: "clamp(72px, 11vw, 132px)", paddingBottom: 48 }}
+        >
+          <Contents scene={scene}>
+            {/* Above the line. Two ranks of navigation on the left, the address
+                on the right: the frame's two ends are the two things anyone
+                comes to a footer for, a way onward and a way to reach someone.
+                The address is right-aligned so the block's outer edges are the
+                stroke's, and the three groups sit on one top line. */}
+            <nav
+              aria-label="Footer"
+              className="flex flex-col gap-10 md:flex-row md:justify-between md:gap-12"
+            >
+              <div className="flex flex-col gap-10 sm:flex-row sm:gap-20 md:gap-24">
+                <ul className="flex flex-col items-start">
+                  {PRIMARY_NAV.map((entry) => (
+                    <li key={entry.href}>
+                      <NavLink
+                        href={entry.href}
+                        label={productLabel(entry.label)}
+                        rank="destination"
+                      />
+                    </li>
+                  ))}
+                </ul>
+                <ul className="flex flex-col items-start">
+                  {SECONDARY_NAV.map((entry) => (
+                    <li key={entry.href}>
+                      <NavLink
+                        href={entry.href}
+                        label={entry.label}
+                        rank="company"
+                      />
+                    </li>
+                  ))}
+                </ul>
               </div>
+
+              <div className="flex flex-col items-start md:items-end">
+                <AddressLink email={CONTACT_EMAIL} />
+                <SocialRow className="mt-5 md:mt-6" />
+              </div>
+            </nav>
+          </Contents>
+
+          {/* The signing. The mark sits in the flow directly above the stroke
+              with its baseline on it, so the two are one object and no spacing
+              value has to be kept in sync with the type. */}
+          <div style={{ marginTop: "clamp(72px, 10vw, 128px)" }}>
+            <Signature scene={scene} />
+            <Stroke scene={scene} />
+          </div>
+
+          {/* Below the line. Deliberately the quietest thing in the frame: the
+              four standing documents, the withdrawal control and the imprint,
+              all in the utility voice. The other four legal documents are
+              published and routed; they are reached from the context that
+              raises them (lib/marketing-nav-links.ts). */}
+          <Contents
+            scene={scene}
+            className="mt-5 flex flex-col gap-x-10 gap-y-3 md:flex-row md:items-baseline md:justify-between"
+          >
+            <ul className="flex flex-wrap items-baseline gap-x-7 gap-y-1">
+              {FOOTER_LEGAL_NAV.map((entry) => (
+                <li key={entry.href}>
+                  <UtilityLink href={entry.href} label={entry.label} />
+                </li>
+              ))}
+            </ul>
+            <div className="flex flex-wrap items-baseline gap-x-7 gap-y-1">
+              <CookieControl />
+              <Imprint>{copyright()}</Imprint>
             </div>
-          </div>
-        </Arrive>
-
-        <div className="flex-1" style={{ minHeight: 16, maxHeight: 48 }} />
-
-        <Arrive>
-          <Hairline />
-          <div style={{ paddingTop: 20 }}>
-            <Signature />
-          </div>
-        </Arrive>
-      </ArriveGroup>
+          </Contents>
+        </div>
+      )}
     </FooterSurface>
-  );
-}
-
-function Group({
-  label,
-  entries,
-}: {
-  label: string;
-  entries: readonly { label: string; href: string }[];
-}) {
-  return (
-    <div>
-      <GroupLabel>{label}</GroupLabel>
-      <div className="mt-5 flex flex-col items-start gap-3.5">
-        {entries.map((entry) => (
-          <FooterLink
-            key={entry.href}
-            href={entry.href}
-            label={productLabel(entry.label)}
-            tone="clerical"
-          />
-        ))}
-      </div>
-    </div>
   );
 }

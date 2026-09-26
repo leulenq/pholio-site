@@ -6,15 +6,7 @@
  * separators, no invented numbers, no atmospheric place-dressing, no emoji.
  */
 
-import { COMPANY_NAME, SUPPORT_EMAIL } from "@/lib/legal-constants";
-
-/** The four groups under the mark. */
-export const LABEL = {
-  product: "Product",
-  company: "Company",
-  legal: "Legal",
-  contact: "Contact",
-} as const;
+import { SUPPORT_EMAIL } from "@/lib/legal-constants";
 
 export const CONTACT_EMAIL = SUPPORT_EMAIL;
 

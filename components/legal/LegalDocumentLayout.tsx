@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 
 export interface LegalSection {
   title: string;
+  id?: string;
   content: string[];
 }
 
@@ -20,6 +21,26 @@ export interface LegalDocumentLayoutProps {
   companyAddress?: string;
 }
 
+// Only authored Markdown links, HTTP(S) URLs and email addresses are accepted.
+// Text stays React-escaped; no HTML injection or arbitrary URI schemes.
+function renderInline(text: string) {
+  const pattern = /\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*|mailto:[^\s)]+|#[^\s)]+)\)|(https?:\/\/[^\s<>]+|www\.[^\s<>]+|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})/g;
+  const parts = [];
+  let cursor = 0;
+  for (const match of text.matchAll(pattern)) {
+    const start = match.index ?? 0;
+    parts.push(text.slice(cursor, start));
+    const raw = match[3]?.replace(/[.,;:!?)]*$/, "");
+    const label = match[1] ?? raw ?? "";
+    const href = match[2] ?? (raw?.includes("@") && !raw.startsWith("http") ? `mailto:${raw}` : raw?.startsWith("www.") ? `https://${raw}` : raw ?? "");
+    parts.push(<a key={start} href={href} className="underline underline-offset-4 hover:text-[#C9A55A] break-words">{label}</a>);
+    if (raw) parts.push(match[3].slice(raw.length));
+    cursor = start + match[0].length;
+  }
+  parts.push(text.slice(cursor));
+  return parts;
+}
+
 function renderParagraph(paragraph: string, key: number) {
   if (paragraph.includes("\n")) {
     const [heading, ...rest] = paragraph.split("\n");
@@ -29,7 +50,7 @@ function renderParagraph(paragraph: string, key: number) {
           {heading}
         </p>
         <p className="font-sans text-base text-[#050505]/65 leading-relaxed font-light">
-          {rest.join(" ")}
+          {renderInline(rest.join(" "))}
         </p>
       </div>
     );
@@ -40,7 +61,7 @@ function renderParagraph(paragraph: string, key: number) {
       <div key={key} className="flex gap-3 pl-4">
         <span className="text-[#C9A55A] shrink-0 mt-0.5">—</span>
         <p className="font-sans text-base text-[#050505]/65 leading-relaxed font-light">
-          {paragraph.slice(2)}
+          {renderInline(paragraph.slice(2))}
         </p>
       </div>
     );
@@ -58,7 +79,7 @@ function renderParagraph(paragraph: string, key: number) {
     return (
       <div key={key} className="flex gap-3 pl-4">
         <p className="font-sans text-base text-[#050505]/65 leading-relaxed font-light">
-          {paragraph}
+          {renderInline(paragraph)}
         </p>
       </div>
     );
@@ -74,7 +95,7 @@ function renderParagraph(paragraph: string, key: number) {
         key={key}
         className="font-sans text-sm text-[#050505]/50 leading-relaxed pl-4 border-l-2 border-[#C9A55A]/30"
       >
-        {paragraph}
+        {renderInline(paragraph)}
       </p>
     );
   }
@@ -85,7 +106,7 @@ function renderParagraph(paragraph: string, key: number) {
         key={key}
         className="font-sans text-sm text-[#050505]/55 leading-relaxed font-medium tracking-wide p-4 bg-[#050505]/[0.03] rounded-lg border border-[#050505]/[0.06]"
       >
-        {paragraph}
+        {renderInline(paragraph)}
       </p>
     );
   }
@@ -95,7 +116,7 @@ function renderParagraph(paragraph: string, key: number) {
       key={key}
       className="font-sans text-base text-[#050505]/65 leading-relaxed font-light"
     >
-      {paragraph}
+      {renderInline(paragraph)}
     </p>
   );
 }
@@ -151,7 +172,7 @@ export function LegalDocumentLayout({
             {sections.map((section, i) => (
               <li key={section.title}>
                 <a
-                  href={`#section-${i + 1}`}
+                  href={`#${section.id ?? `section-${i + 1}`}`}
                   className="font-sans text-sm text-[#050505]/60 hover:text-[#C9A55A] transition-colors duration-200 flex items-baseline gap-3"
                 >
                   <span className="text-[#C9A55A] font-semibold tabular-nums w-5 shrink-0">
@@ -168,7 +189,7 @@ export function LegalDocumentLayout({
           {sections.map((section, i) => (
             <motion.section
               key={section.title}
-              id={`section-${i + 1}`}
+              id={section.id ?? `section-${i + 1}`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
@@ -212,8 +233,7 @@ export function LegalDocumentLayout({
           </a>
           <p className="mt-12 text-xs text-[#050505]/30 font-sans">
             © {new Date().getFullYear()} {companyName}. All rights reserved.
-            This document does not constitute legal advice. Consult qualified
-            legal counsel for advice specific to your circumstances.
+
           </p>
         </motion.footer>
       </div>

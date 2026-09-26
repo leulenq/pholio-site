@@ -15,7 +15,7 @@ import { useMediaQuery } from "@/components/hero/useMediaQuery";
 import { GOLD_ON_PAPER, INK, CREAM, TIMELINE_SPRING, arrive, clamp01 } from "@/components/studio-site/motion";
 
 import {
-  ANNUAL_SAVING,
+  ANNUAL_TOTAL,
   HEADING,
   INTERVAL_LABELS,
   PLANS,
@@ -54,11 +54,14 @@ import {
  *     drifting ahead of the paper plans, so the row never locks flat.
  *
  * The billing period is chosen in the band at the top of the field: two
- * words, a gold rule under the chosen one that travels between them, the
- * saving part of the yearly label. The price and billing line roll.
+ * words, a gold rule under the chosen one that travels between them, and the
+ * annual total set beside the annual word in the clerical voice. The price
+ * and billing line roll, so the saving is stated by the figures changing
+ * rather than advertised.
  *
- * Every action has one hover and focus behaviour: a fill rises from the
- * bottom edge like a light coming up, and the label rolls to its inverse.
+ * Every action has one hover and focus behaviour, and it is the site's own
+ * (ban list §8.3): its 1px ring goes gold and its field settles one step
+ * deeper. The same button becoming active, with nothing added to it.
  */
 
 const SERIF = "var(--font-serif)";
@@ -67,6 +70,10 @@ const INK_SOFT = "rgba(15, 23, 42, 0.68)";
 const CREAM_SOFT = "rgba(250, 247, 242, 0.62)";
 const GOLD_ON_CLOTH = "#C9A55A";
 const ROLL = "cubic-bezier(0.22,1,0.36,1)";
+/** The field each action settles onto while it is live. */
+const INK_LIVE = "#050505";
+const CREAM_LIVE = "#FFFFFF";
+const GOLD_WASH = "rgba(168, 137, 78, 0.09)";
 
 type Tone = "paper" | "cloth";
 
@@ -175,61 +182,51 @@ function Billing({ children, tone }: { children: ReactNode; tone: Tone }) {
 type ActionVariant = "ink" | "outline" | "cream";
 
 /**
- * One behaviour for every action. At rest: a solid or ruled rectangle. On
- * hover and on keyboard focus: a fill rises from the bottom edge (a light
- * coming up, not a colour swap) and the label rolls up to its inverse, the
- * rolled-in copy hidden from assistive tech. Pressed, it gives a little.
+ * One behaviour for every action, and it is the site's own: a colour shift
+ * and a 1px rule (ban list §8.3), which is what the header's words, the
+ * hero's action and the request page's one solid control already do.
+ *
+ * At rest each action is a square field ringed 1px in its own colour, so the
+ * ring is not there to be seen. Live — hovered, or focused from a keyboard —
+ * the ring alone goes gold and the field settles one step: ink onto the
+ * site's true ink, cream onto white, and the ruled action, which has no
+ * field of its own to deepen, onto the faintest warmth of the same gold
+ * that takes its edge. Nothing arrives, nothing rolls, nothing lifts. It is
+ * the same button, active. Pressed, it gives.
+ *
+ * Gold takes the ring rather than the label because gold on cream reads at
+ * 3:1, which is enough for a 1px edge and not enough for 12.5px type.
  */
 function Action({ href, label, variant }: { href: string; label: string; variant: ActionVariant }) {
   const v = {
-    ink: { bg: INK, border: INK, text: CREAM, fill: GOLD_ON_CLOTH, textOn: INK, ring: GOLD_ON_PAPER },
-    outline: { bg: "transparent", border: INK, text: INK, fill: INK, textOn: CREAM, ring: GOLD_ON_PAPER },
-    cream: { bg: CREAM, border: CREAM, text: INK, fill: GOLD_ON_CLOTH, textOn: INK, ring: GOLD_ON_CLOTH },
+    ink: { field: INK, live: INK_LIVE, edge: INK, text: CREAM, gold: GOLD_ON_CLOTH },
+    outline: { field: "transparent", live: GOLD_WASH, edge: INK, text: INK, gold: GOLD_ON_PAPER },
+    cream: { field: CREAM, live: CREAM_LIVE, edge: CREAM, text: INK, gold: GOLD_ON_CLOTH },
   }[variant];
+  const ring = (c: string) => `inset 0 0 0 1px ${c}`;
   return (
     <a
       href={href}
-      className="group relative flex w-full items-center justify-center overflow-hidden outline-none transition-transform duration-200 active:scale-[0.985] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4"
-      style={{
-        backgroundColor: v.bg,
-        boxShadow: `inset 0 0 0 1px ${v.border}`,
-        outlineColor: v.ring,
-        padding: "1rem 1.25rem",
-        fontFamily: SANS,
-        fontSize: 12.5,
-        fontWeight: 600,
-        letterSpacing: "0.12em",
-        textTransform: "uppercase",
-      }}
+      className="relative flex w-full items-center justify-center bg-(--field) shadow-(--edge) hover:bg-(--field-live) hover:shadow-(--edge-live) focus-visible:bg-(--field-live) focus-visible:shadow-(--edge-live) focus-visible:outline-1 focus-visible:outline-offset-4 active:scale-[0.985] motion-reduce:active:scale-100"
+      style={
+        {
+          "--field": v.field,
+          "--field-live": v.live,
+          "--edge": ring(v.edge),
+          "--edge-live": ring(v.gold),
+          outlineColor: v.gold,
+          color: v.text,
+          padding: "1rem 1.25rem",
+          fontFamily: SANS,
+          fontSize: 12.5,
+          fontWeight: 600,
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          transition: `background-color 420ms ${ROLL}, box-shadow 420ms ${ROLL}, transform 200ms ${ROLL}`,
+        } as React.CSSProperties
+      }
     >
-      <span
-        aria-hidden
-        className="absolute inset-0 origin-bottom scale-y-0 transition-transform duration-[560ms] group-hover:scale-y-100 group-focus-visible:scale-y-100 motion-reduce:transition-none"
-        style={{ backgroundColor: v.fill, transitionTimingFunction: ROLL }}
-      />
-      <span className="relative flex items-center">
-        <span className="relative block overflow-hidden" style={{ height: "1.25em", lineHeight: "1.25em" }}>
-          <span
-            className="block transition-transform duration-[560ms] group-hover:-translate-y-1/2 group-focus-visible:-translate-y-1/2 motion-reduce:transition-none"
-            style={{ transitionTimingFunction: ROLL }}
-          >
-            <span className="block whitespace-nowrap" style={{ color: v.text }}>
-              {label}
-            </span>
-            <span aria-hidden className="block whitespace-nowrap" style={{ color: v.textOn }}>
-              {label}
-            </span>
-          </span>
-        </span>
-        {/* The cross arrives at the label's end and turns as it does. */}
-        <span
-          aria-hidden
-          className="ml-0 block w-0 -rotate-90 overflow-hidden opacity-0 transition-all duration-[560ms] group-hover:ml-3 group-focus-visible:ml-3 group-hover:w-[10px] group-hover:rotate-0 group-hover:opacity-100 group-focus-visible:w-[10px] group-focus-visible:rotate-0 group-focus-visible:opacity-100 motion-reduce:transition-none"
-          style={{ transitionTimingFunction: ROLL }}
-        >
-          <Cross size={10} color={v.textOn} />
-        </span>
-      </span>
+      <span className="block whitespace-nowrap">{label}</span>
     </a>
   );
 }
@@ -240,8 +237,9 @@ function Action({ href, label, variant }: { href: string; label: string; variant
  * At the top of the Studio+ field, in the band it stands above the row, so
  * the choice is made before the price it changes is read and the three
  * prices stay on one line. Two words; the chosen one is in cream with a gold
- * rule under it that travels to the other when it changes. The saving is
- * part of the yearly option's own label, so it is never read apart from it.
+ * rule under it that travels to the other when it changes. The annual total
+ * is part of the annual option's own label, in the muted clerical voice
+ * rather than in gold: it prices the choice, it does not sell it.
  * A radio group underneath: arrows move, Tab leaves.
  */
 function PeriodSelector({ value, onChange }: { value: Interval; onChange: (v: Interval) => void }) {
@@ -271,7 +269,7 @@ function PeriodSelector({ value, onChange }: { value: Interval; onChange: (v: In
                 refs.current[next]?.focus();
               }
             }}
-            className="group relative cursor-pointer border-0 bg-transparent p-0 pb-2 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4"
+            className="group relative cursor-pointer border-0 bg-transparent p-0 pb-2 focus-visible:outline-1 focus-visible:outline-offset-4"
             style={{ outlineColor: GOLD_ON_CLOTH }}
           >
             <span
@@ -280,7 +278,7 @@ function PeriodSelector({ value, onChange }: { value: Interval; onChange: (v: In
             >
               {INTERVAL_LABELS[k]}
               {k === "annual" ? (
-                <span style={{ color: GOLD_ON_CLOTH, fontWeight: 500 }}>{`, ${ANNUAL_SAVING}`}</span>
+                <span style={{ color: CREAM_SOFT, fontWeight: 400 }}>{` · ${ANNUAL_TOTAL}`}</span>
               ) : null}
             </span>
             {on ? (
@@ -294,7 +292,7 @@ function PeriodSelector({ value, onChange }: { value: Interval; onChange: (v: In
             ) : (
               <span
                 aria-hidden
-                className="absolute bottom-0 left-0 block h-px w-full origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100"
+                className="absolute bottom-0 left-0 block h-px w-full origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100 group-focus-visible:scale-x-100"
                 style={{ backgroundColor: "rgba(250, 247, 242, 0.3)", transitionTimingFunction: ROLL }}
               />
             )}

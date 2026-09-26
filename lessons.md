@@ -2756,3 +2756,80 @@ behaviour when the layer is absent.
 
 **The rule.** The page carries the weight; a scene carries only its yield.
 Tune the weight in `components/scroll-inertia/motion.ts` and nowhere else.
+
+## 46. The folded-print cursor was rejected
+
+**Date:** 2026-09-25
+**Surface:** sitewide custom cursor
+
+**What was built.** The gold ring and dot were replaced with a small angular
+folded-print browser cursor, with paper and gold faces for photography, links
+and actions. The concept borrowed from the comp card's paper.
+
+**What was wrong.**
+
+> "not good, the original one was better."
+
+**The rule.** The original ring and dot are restored as the baseline. The
+folded-print direction is rejected; do not treat its metaphor or native SVG
+implementation as an approved brand decision. A future exploration must improve
+on the original in the rendered experience, not merely justify a different
+shape through a brand story.
+
+## 46. The billing choice states a price, and an action goes gold at its edge
+
+**Date:** 2026-09-25
+**Surface:** the home pricing section (`components/pricing/`)
+
+**What was wrong.**
+
+> "Replace Yearly, save 20%. It feels promotional/SaaS-like, especially in
+> gold. Make the billing choice more matter-of-fact and premium, e.g.
+> Monthly / Annual · $95.88. Let the actual price communicate the savings
+> rather than advertising save 20%."
+
+> "Redesign the CTA hover effects. The current hover feels disconnected from
+> Pholio's brand. Keep it restrained and derive it from the site's existing
+> visual language: ink, cream, gold, typography, borders, and weighted
+> motion. It should feel like the same button becoming active, not a new
+> effect being introduced."
+
+**46.1 The annual option is priced, not promoted.** *(Supersedes the label in
+§43.6.)* The two words are **Monthly** and **Annual**, and the annual one
+carries its own total, `Annual · $95.88`, set in the muted clerical cream
+rather than in gold. A percentage in the accent colour is an advertisement;
+a figure in the same voice as the rest of the band is information. The
+saving is stated by the price rolling from $9.99 to $7.99 when the choice is
+made, which is the section's existing motion doing the work the badge was
+doing.
+
+**46.2 An action's hover is the site's own two channels, and nothing else.**
+*(Supersedes the hover in §43.5.)* The rising fill, the label rolling to its
+inverse and the cross arriving at the label's end were three effects stacked
+on one control, and none of them existed anywhere else on the site. The ban
+list already says what a hover is here (§8.3: a colour shift and a 1px rule),
+and the header's words, the hero's action and the request page's one solid
+control already do exactly that. So: every action rests as a square field
+ringed 1px in its own colour, where the ring cannot be seen. Live, hovered or
+focused from a keyboard, **the ring alone goes gold and the field settles one
+step** — ink onto the site's true ink `#050505`, cream onto white, and the
+ruled action, which has no field of its own to deepen, onto a 9% wash of the
+same gold that takes its edge. 420ms on the house ease. Pressed, it still
+gives.
+
+Gold takes the ring rather than the label because gold on cream measures
+3:1: enough for a 1px edge, not enough for 12.5px type. That asymmetry is
+why the label never changes colour on any of the three.
+
+**46.3 `outline-none` and `focus-visible:outline` cancel each other.** In
+Tailwind v4 `outline-none` sets `--tw-outline-style: none`, and the bare
+`outline` utility reads that variable back, so a control carrying both has
+no focus ring at all — it computes to `outline-style: none` while reporting
+a width. Both pricing controls had the pair. Let the width utility carry the
+style (`focus-visible:outline-1` alone) and drop `outline-none`. The period
+options additionally drew their rule on hover only, so a keyboard user
+focusing the unchosen option saw nothing; the rule now draws on
+`group-focus-visible` too.
+
+**The test.** Hover an action and be unable to name a second thing that
+happened. Read the billing band cold and get a price, not an offer.
