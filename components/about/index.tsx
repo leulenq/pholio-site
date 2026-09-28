@@ -1,44 +1,30 @@
 /**
- * /about — why Pholio exists, what it refuses to do, and who makes it.
+ * /about — Pholio, the company: why it exists, what it refuses to do, who
+ * makes it, and the industry it is working toward.
  *
- * Eight chapters, each given the composition and the motion its own idea
- * needs, inside one continuous narrative:
- *
- *   I    The numbers     ink     photography. A crop of one woman and her
- *                                casting tag pulls back into a queue of four.
- *   II   The sitting     ink     motion. Her own set, framed, until paper
- *                                closes around it and it is an object.
- *   III  The bill        ink     typography. No photograph but that one
- *                                print, holding the corner of an empty half.
- *   IV   The corridor    ink     absence. Everyone has gone; the longest
- *                                hold on the page, with the queue still in it.
- *   V    The turn        →cream  the field change, once, as a seam crossing
- *                                the frame. The statement inverts as it passes.
- *   VI   The colophon    cream   long form, as a spread: the reading on the
- *                                left page, one plate bleeding off the right.
- *   VII  The Collective  cream   recovered, not reinterpreted.
- *   VIII The coda        cream   one line, two doors, a lot of air.
- *
- * I to V share one pinned frame and one set of objects, so each chapter
- * inherits what the last one left on the stage rather than starting beside
- * it. The field changes exactly once.
- *
- * This is a company page. Features belong to `/talent` and `/agencies`
- * (`lessons.md` §31.8).
+ * The page is written as plain HTML (about.html) with its own stylesheet
+ * (about.css) and a small vanilla motion engine (motion.ts). This component
+ * only places it between the site's global header and footer: the HTML is
+ * read at build time and rendered as-is.
  */
 
-import Coda from "./Coda";
-import Collective from "./Collective";
-import Colophon from "./Colophon";
-import Stage from "./Stage";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
+import AboutMotion from "./AboutMotion";
+import "./about.css";
 
 export function AboutPage() {
+  // Read per render, not at module load: the page is static in production
+  // either way, and in development an edit to the HTML shows on reload.
+  const html = readFileSync(
+    path.join(process.cwd(), "components/about/about.html"),
+    "utf8",
+  );
   return (
     <>
-      <Stage />
-      <Colophon />
-      <Collective />
-      <Coda />
+      <div dangerouslySetInnerHTML={{ __html: html }} />
+      <AboutMotion />
     </>
   );
 }

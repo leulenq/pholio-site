@@ -8,6 +8,7 @@ import {
   isHeaderVariantId,
   type HeaderVariantId,
 } from "@/lib/header-variants";
+import { fieldForPath } from "@/lib/viewport-canvas";
 // Use the directory entrypoint explicitly so it cannot collide with the
 // top-level `Header.tsx` on case-insensitive filesystems.
 import { HEADER_COMPONENTS } from "@/components/header/index";
@@ -24,28 +25,12 @@ const STORAGE_KEY = "pholio:header-variant";
  * wrong polarity — not to describe the page.
  *
  * Ink is the default because the document canvas is velvet. Legal documents are
- * the site's cream surfaces: long-form reading is set on paper. The agency
- * request page opens on velvet and lights to cream while it is used, so it is
- * deliberately not listed: the live sampler follows it.
+ * the site's cream surfaces: long-form reading is set on paper. The list lives
+ * in `lib/viewport-canvas.ts` so the browser chrome and the header open on the
+ * same paper. The agency request page opens on velvet and lights to cream
+ * while it is used, so it is deliberately not listed: the live sampler follows
+ * it.
  */
-const CREAM_ROUTES = [
-  "/terms",
-  "/privacy",
-  "/cookies",
-  "/dmca",
-  "/ai-notice",
-  "/community-guidelines",
-  "/take-it-down",
-  "/legal",
-];
-
-function fieldForRoute(pathname: string | null): "ink" | "cream" {
-  if (!pathname) return "ink";
-  return CREAM_ROUTES.some((route) => pathname.startsWith(route))
-    ? "cream"
-    : "ink";
-}
-
 /**
  * Reads a header direction from `?header=<id>` and remembers it for the tab, so
  * a direction can be walked through the whole site while it is being reviewed.
@@ -87,5 +72,5 @@ export default function HeaderWrapper() {
   const pathname = usePathname();
   const Header = HEADER_COMPONENTS[useHeaderVariant()];
 
-  return <Header theme={fieldForRoute(pathname)} />;
+  return <Header theme={fieldForPath(pathname)} />;
 }

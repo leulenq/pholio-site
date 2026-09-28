@@ -45,13 +45,17 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  background-color: var(--color-velvet);
 
-  /* Fill the mobile visual viewport. `100vh` alone leaves a gap above the iOS
-     Safari toolbar; `-webkit-fill-available` covers older WebKit and `100dvh`
-     tracks chrome show/hide. `viewport-fit=cover` in app/layout.tsx lets this
-     reach the physical edges including the home-indicator band. */
-  height: 100%;
+  /* Mobile viewport canvas.
+     `viewport-fit=cover` (app/layout.tsx) extends the layout under the status
+     bar and the home indicator. iOS Safari then tints those bands, and the
+     toolbar, from this background — not from `theme-color`, which Safari 26
+     ignores. A hardcoded velvet canvas is a black bar on a cream page.
+     `--viewport-canvas` is set before first paint and kept current by
+     components/ViewportCanvas.tsx. `color-scheme` stops the browser painting
+     its own black or white into any strip the document does not cover. */
+  color-scheme: dark;
+  background-color: var(--viewport-canvas, var(--color-velvet));
   min-height: 100%;
   min-height: -webkit-fill-available;
   min-height: 100dvh;
@@ -59,12 +63,44 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-velvet);
+  background-color: var(--viewport-canvas, var(--color-velvet));
   color: var(--color-cream);
+  /* `clip` keeps wide stages from scrolling sideways without turning the body
+     into a scroll container. `hidden` does that, and on iOS the root scroll
+     container is what cuts the canvas off above the toolbar. */
   overflow-x: hidden;
+  overflow-x: clip;
   min-height: 100%;
   min-height: -webkit-fill-available;
   min-height: 100dvh;
+}
+
+/* Edge samples for Safari's chrome tint. 4px is the shortest strip WebKit
+   will read, and on a phone it sits inside the safe area the system chrome
+   already covers. A wide fine-pointer window has no such bands; a hairline
+   there would be visible, so it is not painted. */
+[data-viewport-sentinel] {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  height: 4px;
+  pointer-events: none;
+  background-color: var(--viewport-canvas, var(--color-velvet));
+}
+
+[data-viewport-sentinel="top"] {
+  top: 0;
+}
+
+[data-viewport-sentinel="bottom"] {
+  bottom: 0;
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 1025px) {
+  [data-viewport-sentinel] {
+    display: none;
+  }
 }
 
 ::selection {
@@ -81,7 +117,12 @@ body {
    UTILITIES — only these four. Justify any addition.
    ══════════════════════════════════════════════════════════════════════════ */
 
-/** Full mobile viewport height, chrome-aware. */
+/**
+ * One screen of the *visible* viewport, for a stage or a short page.
+ * `100dvh` tracks the toolbar showing and hiding. `100vh` / `100lvh` are the
+ * large viewport and leave a scrollable empty band under the fold on iOS —
+ * the root canvas above is what fills the chrome bands, not this utility.
+ */
 .min-h-mobile-screen {
   min-height: 100vh;
   min-height: -webkit-fill-available;

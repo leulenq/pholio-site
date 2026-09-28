@@ -1295,6 +1295,24 @@ export function IndexPanel({
   const { isAuthenticated, dashboardHref } = usePholioAuth();
   useScrollLock(open && !contained);
 
+  /* A closed panel used to stay mounted at `opacity: 0`. iOS Safari still
+     reads the background of a fixed element in that state, and this one is
+     velvet and flush with the bottom edge, so the toolbar band stayed black
+     on every page. `display: none` takes it out of that sample. Presence has
+     to flip on in the same render that opens it, or the fade pops; it waits
+     out the close before leaving the tree. */
+  const [present, setPresent] = useState(open);
+  if (open && !present) setPresent(true);
+
+  useEffect(() => {
+    if (open || !present) return;
+    const id = window.setTimeout(
+      () => setPresent(false),
+      reduceMotion ? 0 : 360,
+    );
+    return () => window.clearTimeout(id);
+  }, [open, present, reduceMotion]);
+
   const entry = (i: number) => ({
     initial: false as const,
     animate: {
@@ -1315,7 +1333,11 @@ export function IndexPanel({
       initial={false}
       animate={{ opacity: open ? 1 : 0, pointerEvents: open ? "auto" : "none" }}
       transition={{ duration: 0.36, ease: EASE }}
-      style={{ top, background: "#050505" }}
+      style={{
+        top,
+        background: "#050505",
+        display: present ? "flex" : "none",
+      }}
       aria-hidden={!open}
     >
       <div

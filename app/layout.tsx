@@ -1,11 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Serif_Display, Inter, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 
 import "./globals.css";
 import { PHOLIO_TITLE, PHOLIO_DESCRIPTION } from "@/lib/brand";
+import { VIEWPORT_INK, viewportBootScript } from "@/lib/viewport-canvas";
 import SiteFooter from "@/components/footer/SiteFooter";
 import HeaderWrapper from "@/components/HeaderWrapper";
 import Providers from "@/components/Providers";
+import ViewportCanvas from "@/components/ViewportCanvas";
 
 /**
  * Three typefaces, three jobs. Do not add a fourth without a reason that
@@ -36,13 +39,17 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "600"],
 });
 
-/** Edge-to-edge on notched iPhones. `themeColor` is overridden per route by
-    <ThemeColor />, so the browser chrome matches the page's paper. */
+/**
+ * `viewport-fit: cover` lets the page reach the physical screen, including
+ * the notch and the home indicator. Without it iOS draws its own bar in the
+ * gap. `themeColor` is the fallback older browsers still read; Safari 26
+ * tints from the document canvas (`--viewport-canvas`) instead.
+ */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#050505",
+  themeColor: VIEWPORT_INK,
 };
 
 export const metadata: Metadata = {
@@ -74,11 +81,15 @@ export default function RootLayout({
       className={`${notoSerif.variable} ${inter.variable} ${jetbrainsMono.variable}`}
     >
       <body>
+        <Script id="viewport-canvas-boot" strategy="beforeInteractive">
+          {viewportBootScript()}
+        </Script>
+        <ViewportCanvas />
         <Providers>
           <CustomCursor />
           <ScrollInertia />
           <HeaderWrapper />
-          <main className="relative z-10 min-h-mobile-screen bg-[#050505]">
+          <main className="relative z-10 min-h-mobile-screen">
             {children}
           </main>
           <SiteFooter />

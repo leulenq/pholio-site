@@ -1,0 +1,355 @@
+<!--
+  /about — Pholio, the company.
+
+  Plain HTML, mounted between the global header and footer by
+  components/about/index.tsx. Styles: about.css. Motion: motion.ts, which
+  writes each [data-scene]'s scroll progress to --p (0 → 1), the step and
+  the progress within it (--sp) where a scene declares data-steps, and runs
+  the measured scenes named by data-hook.
+
+  Chapters
+    I    The wall          faces keep arriving; the dark closes in, and the phrase is cut from them
+    II   Hope              the word is made of faces, and falls apart one letter per problem
+    III  Two sides         two lists travel toward each other until every line has its pair
+    IV   We only           how the company decides: the easy ending, struck, then the one we chose
+    V    The Collective    the people, as an editorial spread
+    VI   The sentence      the future, read left to right, photographs standing in as words
+    VII  The close
+-->
+
+<div class="ab" data-about>
+
+  <!-- ══════════════════════════════════════════ I · SEEN BEFORE MET ══ -->
+  <section class="ab-wall fv" data-scene="pin" data-hook="stream" data-still="1" aria-labelledby="ab-wall-title">
+    <div class="ab-stage">
+      <div class="ab-wall__cols" aria-hidden="true">
+          <div class="ab-col" data-col data-speed="0.7" style="--c:0">
+            <figure class="ab-tile" style="--r:0.324" aria-hidden="true"><img src="https://images.unsplash.com/photo-1613915617430-8ab0fd7c6baf?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.151" aria-hidden="true"><img src="https://images.unsplash.com/photo-1670108527128-e8d4dd2edf7a?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.651" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542974382-fb1a86417afb?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.072" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542849767-55b44931b333?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.536" aria-hidden="true"><img src="https://images.unsplash.com/photo-1634933612633-a074fd4536c9?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.366" aria-hidden="true"><img src="https://images.unsplash.com/photo-1633329712165-4e578376eb87?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.058" aria-hidden="true"><img src="https://images.unsplash.com/photo-1620122830785-a18b43585b44?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.324" aria-hidden="true"><img src="https://images.unsplash.com/photo-1613915617430-8ab0fd7c6baf?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.151" aria-hidden="true"><img src="https://images.unsplash.com/photo-1670108527128-e8d4dd2edf7a?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.651" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542974382-fb1a86417afb?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.072" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542849767-55b44931b333?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.536" aria-hidden="true"><img src="https://images.unsplash.com/photo-1634933612633-a074fd4536c9?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.366" aria-hidden="true"><img src="https://images.unsplash.com/photo-1633329712165-4e578376eb87?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.058" aria-hidden="true"><img src="https://images.unsplash.com/photo-1620122830785-a18b43585b44?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 20%" /></figure>
+          </div>
+          <div class="ab-col" data-col data-speed="-0.45" style="--c:1">
+            <figure class="ab-tile" style="--r:0.124" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850083-aff0f80c1646?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.223" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850016-81415d0c7b05?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.627" aria-hidden="true"><img src="https://images.unsplash.com/photo-1701287004661-a1cc099cef87?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.948" aria-hidden="true"><img src="https://images.unsplash.com/photo-1702571184766-84d8a548a2cd?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.577" aria-hidden="true"><img src="https://images.unsplash.com/photo-1617746652908-91e66c07499a?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.397" aria-hidden="true"><img src="https://images.unsplash.com/photo-1685702673311-e7c4ce28e561?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.976" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850347-507cf5fd85c3?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.124" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850083-aff0f80c1646?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.223" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850016-81415d0c7b05?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.627" aria-hidden="true"><img src="https://images.unsplash.com/photo-1701287004661-a1cc099cef87?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.948" aria-hidden="true"><img src="https://images.unsplash.com/photo-1702571184766-84d8a548a2cd?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.577" aria-hidden="true"><img src="https://images.unsplash.com/photo-1617746652908-91e66c07499a?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.397" aria-hidden="true"><img src="https://images.unsplash.com/photo-1685702673311-e7c4ce28e561?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.976" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850347-507cf5fd85c3?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:40% 35%" /></figure>
+          </div>
+          <div class="ab-col" data-col data-speed="1" style="--c:2">
+            <figure class="ab-tile" style="--r:0.181" aria-hidden="true"><img src="https://images.unsplash.com/photo-1691654640333-22335256a8e6?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.582" aria-hidden="true"><img src="https://images.unsplash.com/photo-1614779601827-b02345f6508d?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.639" aria-hidden="true"><img src="https://images.unsplash.com/photo-1613915617430-8ab0fd7c6baf?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.372" aria-hidden="true"><img src="https://images.unsplash.com/photo-1670108527128-e8d4dd2edf7a?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.548" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542974382-fb1a86417afb?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.063" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542849767-55b44931b333?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.06" aria-hidden="true"><img src="https://images.unsplash.com/photo-1634933612633-a074fd4536c9?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.181" aria-hidden="true"><img src="https://images.unsplash.com/photo-1691654640333-22335256a8e6?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.582" aria-hidden="true"><img src="https://images.unsplash.com/photo-1614779601827-b02345f6508d?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.639" aria-hidden="true"><img src="https://images.unsplash.com/photo-1613915617430-8ab0fd7c6baf?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.372" aria-hidden="true"><img src="https://images.unsplash.com/photo-1670108527128-e8d4dd2edf7a?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.548" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542974382-fb1a86417afb?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.063" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542849767-55b44931b333?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.06" aria-hidden="true"><img src="https://images.unsplash.com/photo-1634933612633-a074fd4536c9?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+          </div>
+          <div class="ab-col" data-col data-speed="-0.8" style="--c:3">
+            <figure class="ab-tile" style="--r:0.794" aria-hidden="true"><img src="https://images.unsplash.com/photo-1633329712165-4e578376eb87?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.699" aria-hidden="true"><img src="https://images.unsplash.com/photo-1620122830785-a18b43585b44?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.244" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850083-aff0f80c1646?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.574" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850016-81415d0c7b05?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.525" aria-hidden="true"><img src="https://images.unsplash.com/photo-1701287004661-a1cc099cef87?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.875" aria-hidden="true"><img src="https://images.unsplash.com/photo-1702571184766-84d8a548a2cd?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.729" aria-hidden="true"><img src="https://images.unsplash.com/photo-1617746652908-91e66c07499a?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.794" aria-hidden="true"><img src="https://images.unsplash.com/photo-1633329712165-4e578376eb87?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.699" aria-hidden="true"><img src="https://images.unsplash.com/photo-1620122830785-a18b43585b44?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.244" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850083-aff0f80c1646?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.574" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850016-81415d0c7b05?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.525" aria-hidden="true"><img src="https://images.unsplash.com/photo-1701287004661-a1cc099cef87?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.875" aria-hidden="true"><img src="https://images.unsplash.com/photo-1702571184766-84d8a548a2cd?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.729" aria-hidden="true"><img src="https://images.unsplash.com/photo-1617746652908-91e66c07499a?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+          </div>
+          <div class="ab-col" data-col data-speed="0.35" style="--c:4">
+            <figure class="ab-tile" style="--r:0.039" aria-hidden="true"><img src="https://images.unsplash.com/photo-1685702673311-e7c4ce28e561?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.668" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850347-507cf5fd85c3?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.765" aria-hidden="true"><img src="https://images.unsplash.com/photo-1691654640333-22335256a8e6?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.573" aria-hidden="true"><img src="https://images.unsplash.com/photo-1614779601827-b02345f6508d?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.875" aria-hidden="true"><img src="https://images.unsplash.com/photo-1613915617430-8ab0fd7c6baf?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.314" aria-hidden="true"><img src="https://images.unsplash.com/photo-1670108527128-e8d4dd2edf7a?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.695" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542974382-fb1a86417afb?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.039" aria-hidden="true"><img src="https://images.unsplash.com/photo-1685702673311-e7c4ce28e561?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.668" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850347-507cf5fd85c3?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.765" aria-hidden="true"><img src="https://images.unsplash.com/photo-1691654640333-22335256a8e6?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.573" aria-hidden="true"><img src="https://images.unsplash.com/photo-1614779601827-b02345f6508d?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.875" aria-hidden="true"><img src="https://images.unsplash.com/photo-1613915617430-8ab0fd7c6baf?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.314" aria-hidden="true"><img src="https://images.unsplash.com/photo-1670108527128-e8d4dd2edf7a?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.695" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542974382-fb1a86417afb?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+          </div>
+          <div class="ab-col" data-col data-speed="-1" style="--c:5">
+            <figure class="ab-tile" style="--r:0.061" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542849767-55b44931b333?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.701" aria-hidden="true"><img src="https://images.unsplash.com/photo-1634933612633-a074fd4536c9?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.647" aria-hidden="true"><img src="https://images.unsplash.com/photo-1633329712165-4e578376eb87?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.993" aria-hidden="true"><img src="https://images.unsplash.com/photo-1620122830785-a18b43585b44?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.822" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850083-aff0f80c1646?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.285" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850016-81415d0c7b05?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.386" aria-hidden="true"><img src="https://images.unsplash.com/photo-1701287004661-a1cc099cef87?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.061" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542849767-55b44931b333?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.701" aria-hidden="true"><img src="https://images.unsplash.com/photo-1634933612633-a074fd4536c9?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.647" aria-hidden="true"><img src="https://images.unsplash.com/photo-1633329712165-4e578376eb87?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.993" aria-hidden="true"><img src="https://images.unsplash.com/photo-1620122830785-a18b43585b44?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.822" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850083-aff0f80c1646?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.285" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850016-81415d0c7b05?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.386" aria-hidden="true"><img src="https://images.unsplash.com/photo-1701287004661-a1cc099cef87?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+          </div>
+          <div class="ab-col" data-col data-speed="0.6" style="--c:6">
+            <figure class="ab-tile" style="--r:0.129" aria-hidden="true"><img src="https://images.unsplash.com/photo-1702571184766-84d8a548a2cd?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.248" aria-hidden="true"><img src="https://images.unsplash.com/photo-1617746652908-91e66c07499a?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.391" aria-hidden="true"><img src="https://images.unsplash.com/photo-1685702673311-e7c4ce28e561?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.871" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850347-507cf5fd85c3?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.081" aria-hidden="true"><img src="https://images.unsplash.com/photo-1691654640333-22335256a8e6?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.449" aria-hidden="true"><img src="https://images.unsplash.com/photo-1614779601827-b02345f6508d?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.549" aria-hidden="true"><img src="https://images.unsplash.com/photo-1613915617430-8ab0fd7c6baf?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.129" aria-hidden="true"><img src="https://images.unsplash.com/photo-1702571184766-84d8a548a2cd?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.248" aria-hidden="true"><img src="https://images.unsplash.com/photo-1617746652908-91e66c07499a?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.391" aria-hidden="true"><img src="https://images.unsplash.com/photo-1685702673311-e7c4ce28e561?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.871" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850347-507cf5fd85c3?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.081" aria-hidden="true"><img src="https://images.unsplash.com/photo-1691654640333-22335256a8e6?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.449" aria-hidden="true"><img src="https://images.unsplash.com/photo-1614779601827-b02345f6508d?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.549" aria-hidden="true"><img src="https://images.unsplash.com/photo-1613915617430-8ab0fd7c6baf?w=360&q=65&auto=format&fit=crop" alt="" loading="eager" style="object-position:40% 35%" /></figure>
+          </div>
+          <div class="ab-col" data-col data-speed="-0.55" style="--c:7">
+            <figure class="ab-tile" style="--r:0.958" aria-hidden="true"><img src="https://images.unsplash.com/photo-1670108527128-e8d4dd2edf7a?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.151" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542974382-fb1a86417afb?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.176" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542849767-55b44931b333?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.232" aria-hidden="true"><img src="https://images.unsplash.com/photo-1634933612633-a074fd4536c9?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.233" aria-hidden="true"><img src="https://images.unsplash.com/photo-1633329712165-4e578376eb87?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.485" aria-hidden="true"><img src="https://images.unsplash.com/photo-1620122830785-a18b43585b44?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.589" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850083-aff0f80c1646?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.958" aria-hidden="true"><img src="https://images.unsplash.com/photo-1670108527128-e8d4dd2edf7a?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.151" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542974382-fb1a86417afb?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.176" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542849767-55b44931b333?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.232" aria-hidden="true"><img src="https://images.unsplash.com/photo-1634933612633-a074fd4536c9?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.233" aria-hidden="true"><img src="https://images.unsplash.com/photo-1633329712165-4e578376eb87?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.485" aria-hidden="true"><img src="https://images.unsplash.com/photo-1620122830785-a18b43585b44?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.589" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850083-aff0f80c1646?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:60% 25%" /></figure>
+          </div>
+          <div class="ab-col" data-col data-speed="0.9" style="--c:8">
+            <figure class="ab-tile" style="--r:0.515" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850016-81415d0c7b05?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.618" aria-hidden="true"><img src="https://images.unsplash.com/photo-1701287004661-a1cc099cef87?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.676" aria-hidden="true"><img src="https://images.unsplash.com/photo-1702571184766-84d8a548a2cd?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.054" aria-hidden="true"><img src="https://images.unsplash.com/photo-1617746652908-91e66c07499a?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.9" aria-hidden="true"><img src="https://images.unsplash.com/photo-1685702673311-e7c4ce28e561?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.78" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850347-507cf5fd85c3?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.875" aria-hidden="true"><img src="https://images.unsplash.com/photo-1691654640333-22335256a8e6?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.515" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850016-81415d0c7b05?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.618" aria-hidden="true"><img src="https://images.unsplash.com/photo-1701287004661-a1cc099cef87?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 45%" /></figure>
+            <figure class="ab-tile" style="--r:0.676" aria-hidden="true"><img src="https://images.unsplash.com/photo-1702571184766-84d8a548a2cd?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 30%" /></figure>
+            <figure class="ab-tile" style="--r:0.054" aria-hidden="true"><img src="https://images.unsplash.com/photo-1617746652908-91e66c07499a?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 20%" /></figure>
+            <figure class="ab-tile" style="--r:0.9" aria-hidden="true"><img src="https://images.unsplash.com/photo-1685702673311-e7c4ce28e561?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:40% 35%" /></figure>
+            <figure class="ab-tile" style="--r:0.78" aria-hidden="true"><img src="https://images.unsplash.com/photo-1542850347-507cf5fd85c3?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:60% 25%" /></figure>
+            <figure class="ab-tile" style="--r:0.875" aria-hidden="true"><img src="https://images.unsplash.com/photo-1691654640333-22335256a8e6?w=360&q=65&auto=format&fit=crop" alt="" loading="lazy" style="object-position:50% 45%" /></figure>
+          </div>
+      </div>
+
+      <!-- The dark that closes over the wall, with the phrase cut out of it. -->
+      <div class="ab-wall__cut" aria-hidden="true">
+        <span class="ab-wall__look">first look</span>
+      </div>
+
+      <h1 class="ab-wall__line">
+        <span class="ab-wall__pre">Pholio exists to make the</span>
+        <span class="ab-sr">first look</span>
+        <span class="ab-wall__post">an <span class="it g">honest</span> one.</span>
+      </h1>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ II · HOPE ══ -->
+  <section class="ab-hope fc" data-scene="pin" data-still="1" aria-labelledby="ab-hope-title">
+    <div class="ab-stage">
+      <h2 class="ab-hope__lead d" id="ab-hope-title">The way into modeling runs on <span class="ab-sr">hope.</span></h2>
+
+      <p class="ab-hope__word" aria-hidden="true">
+        <span class="ab-hope__l" style="--i:0; --rot:-14deg; --img:url('https://images.unsplash.com/photo-1718251479696-36a6fab2a44b?w=1100&q=75&auto=format&fit=crop')">h</span><span
+              class="ab-hope__l" style="--i:1; --rot:9deg; --img:url('https://images.unsplash.com/photo-1633329712165-4e578376eb87?w=1100&q=75&auto=format&fit=crop')">o</span><span
+              class="ab-hope__l" style="--i:2; --rot:-6deg; --img:url('https://images.unsplash.com/photo-1683849121275-16929857ceb3?w=1100&q=75&auto=format&fit=crop')">p</span><span
+              class="ab-hope__l" style="--i:3; --rot:12deg; --img:url('https://images.unsplash.com/photo-1780566759983-483dd201237c?w=1100&q=75&auto=format&fit=crop')">e</span>
+      </p>
+
+      <ol class="ab-hope__why">
+        <li class="d" style="--i:0">Rules nobody writes down, so the same photographs get taken again and again.</li>
+        <li class="d" style="--i:1">Silence, which many agencies publish as policy.</li>
+        <li class="d" style="--i:2">Money spent on being noticed: fees to stay visible, paid opinions.</li>
+        <li class="d" style="--i:3">Agencies that turn out not to exist.</li>
+      </ol>
+
+      <p class="ab-hope__after d">Pholio exists to make the way in <span class="it g">honest.</span></p>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════ III · TWO SIDES ══ -->
+  <section class="ab-zip fv" data-scene="pin" data-still="1" aria-labelledby="ab-zip-title">
+    <div class="ab-stage">
+      <h2 class="ab-zip__title d" id="ab-zip-title">Every introduction has <span class="it g">two sides.</span></h2>
+
+      <div class="ab-zip__col ab-zip__col--ask">
+        <p class="ab-zip__head">If you are asking to be seen, you should be able to expect</p>
+        <ul>
+          <li class="d">to know the rules before you send anything</li>
+          <li class="d">not to be left waiting</li>
+          <li class="d">never to pay for a chance</li>
+          <li class="d">that your face is not used without asking</li>
+          <li class="d">that nobody promises you work</li>
+        </ul>
+      </div>
+      <div class="ab-zip__col ab-zip__col--dec">
+        <p class="ab-zip__head">If you are deciding, you should be able to expect</p>
+        <ul>
+          <li class="d">to receive what you asked for</li>
+          <li class="d">not to owe everyone a letter</li>
+          <li class="d">never to pay to receive one</li>
+          <li class="d">that nobody can apply in your name</li>
+          <li class="d">that the decision stays yours</li>
+        </ul>
+      </div>
+      <div class="ab-zip__ties" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ IV · WE ONLY ══ -->
+  <section class="ab-only fc" data-scene="pin" data-steps="5" data-still="1" aria-labelledby="ab-only-title">
+    <div class="ab-stage">
+      <p class="ab-only__kicker">How the company decides</p>
+
+      <h2 class="ab-only__sentence d" id="ab-only-title">
+        <span class="ab-only__we">We <span class="it g">only</span></span>
+        <span class="ab-only__slot">
+          <span class="ab-only__tempt" aria-hidden="true">
+            <span><em class="ab-x">guess.</em></span>
+            <span><em class="ab-x">sell visibility.</em></span>
+            <span><em class="ab-x">use whatever we are given.</em></span>
+            <span><em class="ab-x">rank people.</em></span>
+            <span><em class="ab-x">do everything.</em></span>
+          </span>
+          <span class="ab-only__reel">
+            <span>say what we know.</span>
+            <span>charge for what you keep.</span>
+            <span>share what you agreed to share.</span>
+            <span>let people judge people.</span>
+            <span>build the part before the decision.</span>
+          </span>
+        </span>
+      </h2>
+
+      <ol class="ab-only__proof">
+        <li>A photograph with no date is never called current. A height nobody measured is marked self-reported. An outcome we never saw is never recorded.</li>
+        <li>No agency pays us. Nobody pays to apply, to be reviewed, or to be seen. The only thing for sale is craft you keep.</li>
+        <li>Location data is stripped from every photograph. An adult’s age is never printed on their card. Permission is asked one purpose at a time, and starts at no.</li>
+        <li>No scores, no rankings, no guesses at anyone’s potential. Software can tell a close-up from a full length. Who gets signed is a person’s call.</li>
+        <li>Bookings, contracts and commissions belong to the people in the room and the systems they already use. We stop at the door, on purpose.</li>
+      </ol>
+
+      <ol class="ab-only__count" aria-hidden="true"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li></ol>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════ V · THE COLLECTIVE ══ -->
+  <section class="ab-team fv" aria-labelledby="ab-team-title">
+    <header class="ab-team__head" data-scene="pass">
+      <p class="ab-team__label">The Collective</p>
+      <h2 class="ab-team__title d" id="ab-team-title">Engineering, business, and <span class="it g">the runway.</span></h2>
+    </header>
+
+    <article class="ab-person ab-person--1" data-scene="pass">
+      <figure class="ab-person__plate">
+        <img src="/assets/Leul_Portrait.PNG" alt="Leul Enquanhone" loading="lazy" style="object-position:50% 24%" />
+      </figure>
+      <div class="ab-person__credit">
+        <p class="ab-person__role">Co-founder, engineering</p>
+        <p class="ab-person__name d">Leul <span class="it">Enquanhone</span></p>
+        <a class="ab-person__link" href="https://www.linkedin.com/in/leulenquanhone/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </article>
+
+    <article class="ab-person ab-person--2" data-scene="pass">
+      <figure class="ab-person__plate">
+        <img src="/assets/Natan_Portrait.png" alt="Natan Getahun" loading="lazy" style="object-position:50% 30%" />
+      </figure>
+      <div class="ab-person__credit">
+        <p class="ab-person__role">Co-founder, business</p>
+        <p class="ab-person__name d">Natan <span class="it">Getahun</span></p>
+        <a class="ab-person__link" href="https://www.linkedin.com/in/naty-getahun/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </article>
+
+    <article class="ab-person ab-person--3" data-scene="pass">
+      <figure class="ab-person__plate">
+        <img src="/assets/Alex_Portrait.jpg" alt="Alexander Rieder" loading="lazy" style="object-position:50% 36%" />
+      </figure>
+      <div class="ab-person__credit">
+        <p class="ab-person__role">Industry advisor, co-producer of Fashion Week Brooklyn</p>
+        <p class="ab-person__name d">Alexander <span class="it">Rieder</span></p>
+        <a class="ab-person__link" href="https://www.linkedin.com/in/alexander-rieder-2798351b8/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </article>
+
+    <p class="ab-team__foot d">Pholio began in <span class="it g">2025.</span></p>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ VI · THE SENTENCE ══ -->
+  <section class="ab-line fc" data-scene="pin" data-hook="track" data-still="0.5" aria-labelledby="ab-line-title">
+    <div class="ab-stage">
+      <h2 class="ab-line__kicker" id="ab-line-title">What we are working toward</h2>
+
+      <p class="ab-line__track d" data-track>
+        An industry where the first step costs <span class="it g">nothing</span>
+        <span class="ab-rebus" data-lens data-frames="photo-1623082186035-fd4ad50e4744,photo-1623082185968-93f2ab57818b,photo-1623082186204-25e774bd7640,photo-1623082185808-579b6093d0dd"><img src="https://images.unsplash.com/photo-1623082186035-fd4ad50e4744?w=700&q=80&auto=format&fit=crop" alt="Instant photographs of one young woman, taken on different days." loading="lazy" /></span>,
+        the rules are <span class="it g">written down</span>
+        <span class="ab-rebus" data-lens data-frames="photo-1780566759827-b3314b9fc55e,photo-1780566759977-ff8b5d53731c,photo-1780566759973-a130d48d2ead,photo-1780566759972-08eecc32ef3c,photo-1780566759999-4dbaa4218959"><img src="https://images.unsplash.com/photo-1780566759827-b3314b9fc55e?w=700&q=80&auto=format&fit=crop" alt="A woman photographed full length against a white wall, the kind of plain picture agencies ask for." loading="lazy" /></span>,
+        silence has <span class="it g">an end</span>
+        <span class="ab-rebus" data-lens><img src="https://images.unsplash.com/photo-1673596541989-67b031a6e085?w=700&q=80&auto=format&fit=crop" alt="A row of empty chairs along a wooden wall." loading="lazy" /></span>,
+        nobody’s face is used <span class="it g">without asking</span>
+        <span class="ab-rebus" data-lens><img src="https://images.unsplash.com/photo-1634933612633-a074fd4536c9?w=700&q=80&auto=format&fit=crop" alt="A woman hiding half her face behind her raised hand." loading="lazy" /></span>,
+        and nobody makes a living selling hope to the people <span class="it g">at the door</span>
+        <span class="ab-rebus ab-rebus--wide" data-lens data-last data-frames="photo-1745962978498-13fac949e357,photo-1745962978987-010bc11e700c"><img src="https://images.unsplash.com/photo-1745962978498-13fac949e357?w=1200&q=80&auto=format&fit=crop" alt="Women of different ages, dressed in white and cream, standing together and facing the camera." loading="lazy" /></span>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════ VII · CLOSE ══ -->
+  <section class="ab-close fv">
+    <p class="ab-close__line d">A <span class="it g">better</span> introduction.</p>
+
+    <nav class="ab-close__doors" aria-label="Where to next">
+      <a class="ab-link" href="/talent">For talent</a>
+      <a class="ab-link" href="/agency/request-access">For agencies</a>
+      <a class="ab-link" href="mailto:hello@pholio.studio">hello@pholio.studio</a>
+    </nav>
+
+    <p class="ab-close__credit">
+      Photographs from Unsplash by Yash Mevawala, Chyntia Juls, Matheus Farias,
+      mahdi chaghari, A M, Emiliano Vittoriosi, Behrooz, Amir Abbaspoor, Mecit
+      Tarık Arıöz, Maxim Tolchinskiy, Joeyy Lee, Hardeep Singh, Brian Lawson,
+      Anton K Wibowo, Matthew Moloney, Davide Buttani and Kamil Kalkan.
+      Portraits of the team are their own.
+    </p>
+  </section>
+</div>

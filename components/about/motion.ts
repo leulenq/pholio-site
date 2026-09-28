@@ -1,157 +1,259 @@
 /**
- * The About page's tunable numbers, in one place, so a chapter can be
- * art-directed without reading JSX (`04-scroll-craft.md` §5).
+ * The /about page's motion engine.
  *
- * The page is eight chapters. Chapter 0 through V share one pinned frame
- * and one set of objects, so they hand over to each other rather than
- * stacking; the last three are the page at rest on paper, after the turn.
+ * about.html declares scenes; this writes a few numbers into each and the
+ * stylesheet does the rest. Per scene, whenever the document has moved:
  *
- * Every value here drives `transform` or `opacity` and nothing else.
+ *   --p          progress, 0 → 1
+ *                  pin   0 when the sticky stage locks, 1 when it releases
+ *                  pass  0 when the element's top enters, 1 when its bottom leaves
+ *   data-step    floor(p × data-steps), for scenes that change in turns
+ *   --sp         progress within the current step, 0 → 1
+ *   data-phase   "tempt" for the first half of a step, "real" for the second
+ *                (We only: the easy ending, then the one we chose)
+ *
+ * Two scenes need more than progress, and declare it with data-hook:
+ *
+ *   stream  the wall of faces. Each [data-col] drifts on its own clock at its
+ *           own data-speed, looping seamlessly (its tiles are doubled), and a
+ *           flick of the scroll makes the faces rush. Reading on slows it,
+ *           but never to a stop, so the faces keep moving inside the letters
+ *           cut out of the dark.
+ *   track   the sentence. The section's height is set from the line's width
+ *           so one pixel of scroll moves the line one pixel; it comes to rest
+ *           with its last photograph centred. Photographs near the centre
+ *           swell (--near), and any with data-frames play a few frames of
+ *           their own sitting as they pass.
+ *
+ * Reads the real document scroll position, so it moves with the site's
+ * inertia layer rather than competing with it. Under reduced motion nothing
+ * is scroll-linked: every scene is set once to its composed state
+ * (data-still, default 1 for pins and 0.5 for passes).
  */
 
-/** The site's single ease, as a mutable tuple framer-motion accepts. */
-export const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
-
-export const STAGE_VH = 1020;
-
-/* ── THE CAMERA ───────────────────────────────────────────────────────
-   A shot is a plate height as a percentage of the viewport, plus which
-   point of the plate belongs at the centre of the frame. The renderer
-   turns that into a scale and a translation and never touches layout.
-
-   `fx` can never fall below the visible half-width of the plate at that
-   height, or the field shows at the frame's edge. At h = 300 on a 3:2
-   photograph that floor is 0.178.
-*/
-export type Shot = { at: number; h: number; fx: number; fy: number };
-
-/**
- * 0 + I. THE DOOR, AND THE NUMBERS.
- *
- * The camera is parked on one casting tag for the whole of the opening,
- * because the opening is a door rather than a move: a hand's width of the
- * photograph stands at the right edge of the frame and then opens across
- * it. Only once the door is open does the camera pull back, and what it
- * finds is that the tag was on a person and the person was in a queue.
- */
-export const LINEUP_AR = 3 / 2;
-export const LINEUP: Shot[] = [
-  { at: 0.0, h: 300, fx: 0.19, fy: 0.74 },
-  { at: 0.115, h: 300, fx: 0.19, fy: 0.74 },
-  { at: 0.195, h: 176, fx: 0.33, fy: 0.52 },
-  { at: 0.275, h: 96, fx: 0.5, fy: 0.5 },
-];
-export const LINEUP_COMPACT: Shot[] = [
-  { at: 0.0, h: 150, fx: 0.19, fy: 0.55 },
-  { at: 0.115, h: 150, fx: 0.19, fy: 0.55 },
-  { at: 0.195, h: 104, fx: 0.34, fy: 0.5 },
-  { at: 0.275, h: 48, fx: 0.5, fy: 0.5 },
-];
-export const LINEUP_EXIT = [0.295, 0.355] as const;
-
-/** The door itself: the clip that opens the photograph across the frame,
-    as a percentage inset from the left. */
-export const DOOR = { at: [0.006, 0.098] as const, from: 90, to: 0 };
-
-/**
- * II. THE SITTING. One figure, framed, pulling back until paper closes
- * around it and it is an object. It lands at the centre and stays: the
- * bill is going to land on top of it.
- */
-export const SITTING_AR = 2 / 3;
-export const SITTING: Shot[] = [
-  { at: 0.315, h: 152, fx: 0.5, fy: 0.42 },
-  { at: 0.378, h: 98, fx: 0.5, fy: 0.5 },
-  { at: 0.438, h: 34, fx: 0.5, fy: 0.5 },
-];
-export const SITTING_COMPACT: Shot[] = [
-  { at: 0.315, h: 124, fx: 0.5, fy: 0.44 },
-  { at: 0.378, h: 92, fx: 0.5, fy: 0.5 },
-  { at: 0.438, h: 26, fx: 0.5, fy: 0.5 },
-];
-export const SITTING_ENTER_VH = 124;
-/** Where she rests while the paper piles onto her, in vh from the centre. */
-export const SITTING_REST = { wide: [-15, -8] as const, compact: [0, -20] as const };
-export const SITTING_EXIT = [0.818, 0.868] as const;
-
-/* ── III. THE STACK ───────────────────────────────────────────────────
-   Six slips of paper, the size of receipts rather than of pictures. Each
-   one arrives from below the frame and lands a little lower and a little
-   further right than the last, so what accumulates is readable the whole
-   way down: the top band of every slip stays out from under the next one.
-   By the last slip her photograph is under all of it with only its top
-   edge still showing, which is the argument.
-
-   Then the paper leaves, fast and all at once, and she is still there.
-*/
-export type SlipGeometry = {
-  /** slip width and height, in vh */
-  w: number;
-  h: number;
-  /** the pile's own offset from the frame's centre, in vh. It sits to the
-      right of the photograph so the paper leans onto her rather than
-      hiding her: about half her width stays out from under it. */
-  x: number;
-  /** where the first slip rests, in vh from the frame's centre */
-  top: number;
-  /** how far each slip lands below and to the right of the last */
-  step: number;
-  drift: number;
-  /** how far below the frame a slip waits */
-  enter: number;
+type Scene = {
+  el: HTMLElement;
+  pin: boolean;
+  steps: number;
+  last: number;
+};
+type Hook = {
+  measure(): void;
+  frame(p: number): void;
+  tick?(dt: number, velocity: number): void;
+  still?(): void;
 };
 
-export const SLIP: Record<"wide" | "compact", SlipGeometry> = {
-  wide: { w: 46, h: 9.4, x: 7, top: -6, step: 4.9, drift: 1.05, enter: 76 },
-  compact: { w: 42, h: 12, x: 0, top: -10, step: 6.0, drift: 0.7, enter: 82 },
-};
-/** A degree either way, alternating. Paper does not land square. */
-export const SLIP_TILT = [-0.65, 0.5, -0.4, 0.7, -0.55, 0.45] as const;
+const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
+const smooth = (t: number) => t * t * (3 - 2 * t);
+const src = (id: string, w: number) =>
+  `https://images.unsplash.com/${id}?w=${w}&q=80&auto=format&fit=crop`;
 
-/* ── IV. THE CORRIDOR ─────────────────────────────────────────────────
-   The waiting plate holds the whole frame and pushes in very slowly for
-   the length of the chapter. It never leaves; the paper takes it.
-*/
-export const CORRIDOR = { rise: [0.845, 0.898] as const, scale: [1.15, 1.0] as const };
+/* ── stream ───────────────────────────────────────────────────────────── */
 
-/* ── THE WINDOWS ──────────────────────────────────────────────────────
-   Uneven on purpose. The stack is the longest sequence because
-   accumulation takes time to be felt, and the corridor holds longest
-   because the hold is the point (`04-scroll-craft.md` §6).
-*/
-export const WHEN = {
-  /** 0 */
-  opening: [0, 0.012, 0.055, 0.1] as const,
-  /** I */
-  whisper: [0.105, 0.132, 0.168, 0.2] as const,
-  statement: [0.2, 0.236, 0.272, 0.302] as const,
-  /** II */
-  sittingNote: [0.398, 0.425, 0.462, 0.492] as const,
-  /** III */
-  stackLabel: [0.452, 0.482, 0.716, 0.746] as const,
-  stackSlips: [0.47, 0.672] as const,
-  stackHold: 0.706,
-  stackSweep: [0.706, 0.752] as const,
-  total: [0.752, 0.78, 0.812, 0.838] as const,
-  /** IV */
-  corridorLine: [0.858, 0.888, 0.918, 0.942] as const,
-  corridorNote: [0.874, 0.902, 0.918, 0.938] as const,
-  /** V */
-  seam: [0.934, 0.988] as const,
-  under: [0.978, 0.999] as const,
-} as const;
+const DRIFT = 0.03; // viewport widths per second at a column speed of 1
+const REST = 0.22; // the stream never stops: this much keeps moving inside the letters
 
-/** How far small copy travels into and out of its hold. It arrives from
-    outside the frame and leaves through it; the frame is the only clipping
-    edge on the stage (`lessons.md` §18). */
-export const TRAVEL = ["118vh", "0vh", "0vh", "-118vh"] as const;
+function streamHook(scene: HTMLElement): Hook {
+  const cols = Array.from(scene.querySelectorAll<HTMLElement>("[data-col]"));
+  const speeds = cols.map((c) => Number(c.dataset.speed ?? 0));
+  let cycles = cols.map(() => 1);
+  let offsets = cols.map((_, i) => i * 997);
+  let rate = 1;
+  let push = 0;
 
-/* ── THE PAPER CHAPTERS ───────────────────────────────────────────────
-   Arrival once, then rest. A page that scrubs everything has no pacing.
-*/
-export const ARRIVE_DURATION = 0.95;
-export const ARRIVE_STAGGER = 0.08;
-export const ARRIVE_RISE = 28;
+  const place = () => {
+    cols.forEach((col, i) => {
+      const c = cycles[i];
+      col.style.setProperty("--off", (-(((offsets[i] % c) + c) % c)).toFixed(1));
+    });
+  };
 
-/** The colophon's plate travels against its column. One transform. */
-export const PLATE_DRIFT = 96;
+  return {
+    measure() {
+      // Each column holds its tiles twice; one loop is half its height.
+      cycles = cols.map((c) => Math.max(1, c.scrollHeight / 2));
+      place();
+    },
+    frame(p) {
+      rate = 1 - (1 - REST) * smooth(clamp01((p - 0.06) / 0.4));
+    },
+    tick(dt, velocity) {
+      const r = scene.getBoundingClientRect();
+      if (r.bottom <= 0 || r.top >= window.innerHeight) return;
+      // Scrolling pushes the stream; the push decays over about half a second.
+      push = push * Math.exp(-dt * 4) + Math.min(6, Math.abs(velocity) / 400) * (1 - Math.exp(-dt * 4));
+      const px = DRIFT * window.innerWidth * dt * rate * (1 + push * 3);
+      offsets = offsets.map((o, i) => o + speeds[i] * px);
+      place();
+    },
+    still() {
+      cycles = cols.map((c) => Math.max(1, c.scrollHeight / 2));
+      place();
+    },
+  };
+}
+
+/* ── track ────────────────────────────────────────────────────────────── */
+
+const TRAVEL = 0.9;
+
+function trackHook(scene: HTMLElement): Hook {
+  const track = scene.querySelector<HTMLElement>("[data-track]");
+  const lenses = Array.from(scene.querySelectorAll<HTMLElement>("[data-lens]"));
+  const last = scene.querySelector<HTMLElement>("[data-last]");
+  const reels = lenses.map((l) => ({
+    img: l.querySelector("img"),
+    frames: (l.dataset.frames ?? "").split(",").filter(Boolean),
+    shown: -1,
+  }));
+  let travel = 0;
+  let centres: number[] = [];
+  let preloaded = false;
+
+  return {
+    measure() {
+      if (!track || !last) return;
+      const vw = window.innerWidth;
+      travel = Math.max(0, last.offsetLeft + last.offsetWidth / 2 - vw / 2);
+      centres = lenses.map((l) => l.offsetLeft + l.offsetWidth / 2);
+      scene.style.height = `${Math.round(travel / TRAVEL + window.innerHeight)}px`;
+    },
+    frame(p) {
+      if (!track) return;
+      if (!preloaded && p > 0) {
+        preloaded = true;
+        reels.forEach((r) => r.frames.forEach((id) => (new Image().src = src(id, 700))));
+      }
+      const vw = window.innerWidth;
+      const tx = Math.min(1, p / TRAVEL) * travel;
+      track.style.setProperty("--tx", tx.toFixed(1));
+      lenses.forEach((lens, i) => {
+        const signed = (centres[i] - tx - vw / 2) / vw;
+        const d = Math.abs(signed);
+        lens.style.setProperty("--near", (1 + 0.45 * Math.max(0, 1 - d / 0.3)).toFixed(3));
+        // A few frames of the sitting, advanced as the photograph crosses the frame.
+        const reel = reels[i];
+        if (reel.img && reel.frames.length > 1) {
+          const k = Math.min(
+            reel.frames.length - 1,
+            Math.floor(clamp01(0.5 - signed / 0.8) * reel.frames.length),
+          );
+          if (k !== reel.shown) {
+            reel.shown = k;
+            reel.img.src = src(reel.frames[k], lens.classList.contains("ab-rebus--wide") ? 1200 : 700);
+          }
+        }
+      });
+    },
+  };
+}
+
+/* ── engine ───────────────────────────────────────────────────────────── */
+
+export function mountAboutMotion(root: HTMLElement): () => void {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const scenes: Scene[] = Array.from(
+    root.querySelectorAll<HTMLElement>("[data-scene]"),
+  ).map((el) => ({
+    el,
+    pin: el.dataset.scene === "pin",
+    steps: Number(el.dataset.steps ?? 0),
+    last: -1,
+  }));
+
+  const hooks = new Map<HTMLElement, Hook>();
+  for (const s of scenes) {
+    if (s.el.dataset.hook === "stream") hooks.set(s.el, streamHook(s.el));
+    if (s.el.dataset.hook === "track") hooks.set(s.el, trackHook(s.el));
+  }
+
+  const apply = (scene: Scene, p: number) => {
+    if (Math.abs(p - scene.last) < 0.0002) return;
+    scene.last = p;
+    const el = scene.el;
+    el.style.setProperty("--p", p.toFixed(4));
+    if (scene.steps > 0) {
+      const raw = p * scene.steps;
+      const step = Math.min(scene.steps - 1, Math.floor(raw));
+      const sp = clamp01(raw - step);
+      if (el.dataset.step !== String(step)) el.dataset.step = String(step);
+      el.style.setProperty("--sp", sp.toFixed(4));
+      const phase = sp < 0.5 ? "tempt" : "real";
+      if (el.dataset.phase !== phase) el.dataset.phase = phase;
+    }
+    hooks.get(el)?.frame(p);
+  };
+
+  if (reduce) {
+    root.classList.add("is-still");
+    for (const s of scenes) {
+      s.el.style.removeProperty("height");
+      const still = Number(s.el.dataset.still ?? (s.pin ? 1 : 0.5));
+      s.el.style.setProperty("--p", String(still));
+      delete s.el.dataset.step;
+      s.el.dataset.phase = "real";
+      hooks.get(s.el)?.still?.();
+    }
+    return () => root.classList.remove("is-still");
+  }
+
+  root.classList.add("is-moving");
+
+  let vh = window.innerHeight;
+  let lastY = window.scrollY;
+  let lastT = performance.now();
+  let frame = 0;
+  let dirty = true;
+
+  const progress = (s: Scene) => {
+    const r = s.el.getBoundingClientRect();
+    return s.pin
+      ? clamp01(-r.top / Math.max(1, r.height - vh))
+      : clamp01((vh - r.top) / (vh + r.height));
+  };
+
+  const measureAll = () => {
+    vh = window.innerHeight;
+    hooks.forEach((h) => h.measure());
+    for (const s of scenes) {
+      s.last = -1;
+      apply(s, progress(s));
+    }
+  };
+
+  const tick = (now: number) => {
+    const dt = Math.min(0.1, (now - lastT) / 1000);
+    lastT = now;
+    const y = window.scrollY;
+    const velocity = dt > 0 ? (y - lastY) / dt : 0;
+    if (y !== lastY || dirty) {
+      lastY = y;
+      dirty = false;
+      for (const s of scenes) {
+        const r = s.el.getBoundingClientRect();
+        if (r.bottom < -vh * 0.5 || r.top > vh * 1.5) continue;
+        apply(s, progress(s));
+      }
+    }
+    hooks.forEach((h) => h.tick?.(dt, velocity));
+    frame = requestAnimationFrame(tick);
+  };
+
+  const onResize = () => {
+    measureAll();
+    dirty = true;
+  };
+
+  window.addEventListener("resize", onResize);
+  document.fonts?.ready.then(onResize).catch(() => {});
+  measureAll();
+  frame = requestAnimationFrame(tick);
+
+  return () => {
+    cancelAnimationFrame(frame);
+    window.removeEventListener("resize", onResize);
+    root.classList.remove("is-moving");
+  };
+}

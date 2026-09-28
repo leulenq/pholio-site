@@ -25,8 +25,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
  *
  * `stride` loads every Nth frame instead of all of them. Nothing else moves:
  * the timing model in `motion.ts` is authored against the full `FRAMES` array
- * and stays exactly as it is, and `draw` already snaps to the nearest frame
- * that has arrived, which is the same code path that carries a slow network.
+ * and stays exactly as it is. `draw` holds the latest loaded frame at or
+ * behind the playhead, so a load that finishes early cannot skip her forward.
  * Halving the count halves both the bytes and the number of live decodes, so
  * frames survive in the image cache long enough to be redrawn without one.
  */
@@ -135,19 +135,19 @@ export function useFrameSequence(
       const images = imagesRef.current;
       const wanted = Math.min(Math.max(Math.round(target), 0), frames.length - 1);
 
-      // While the sequence is still streaming, hold the nearest frame that has
-      // arrived instead of blanking the stage.
+      // Hold the latest frame at or behind the playhead. A phone streams this
+      // sequence while the finger is already moving, and six loads finish out
+      // of order. Snapping forward to whichever of those landed closest jumps
+      // the camera: the held seated crop is replaced in one paint by a later
+      // standing frame, and she drops down the stage instead of travelling
+      // with the scroll. Desktop usually has the wanted frame decoded, so the
+      // same path stays continuous there.
       let index = wanted;
       if (!loaded[index]) {
         let back = wanted;
         while (back >= 0 && !loaded[back]) back -= 1;
-        let forward = wanted;
-        while (forward < frames.length && !loaded[forward]) forward += 1;
-
-        if (back < 0 && forward >= frames.length) return;
-        if (back < 0) index = forward;
-        else if (forward >= frames.length) index = back;
-        else index = wanted - back <= forward - wanted ? back : forward;
+        if (back < 0) return;
+        index = back;
       }
 
       if (index === lastDrawnRef.current) return;
