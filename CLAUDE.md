@@ -34,6 +34,8 @@ not established — ask rather than infer it from the archive.
 Concretely, when you catch yourself about to:
 
 - copy a pattern from `pholio-landing` → **stop**, it is the archive
+  (unless the owner names a surface there as the thing to build, as they did
+  for `/careers` on 2026-09-27; see `lessons.md` §48)
 - reconstruct a brand value from memory → **stop**, look it up in
   `02-preserved-surfaces.md`
 - add a "supporting paragraph" under a headline → **stop**, read foundations §2

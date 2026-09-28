@@ -1,35 +1,44 @@
 /**
- * /about — what Pholio believes, why it exists, who makes it, and why it can
- * be trusted, built as a sequence of scenes rather than a stack of sections.
+ * /about — why Pholio exists, what it refuses to do, and who makes it.
  *
- *   Hero        ink    the statement, the photograph as a camera, the invitation
- *   Origin      ink    why it exists, three beats travelling past a plate
- *   The Line    cream  the defining scene: three statements at viewport scale
- *   The Record  ink    the proof, deliberately quiet, in document register
- *   Collective  cream  the recovered triptych: centered header, 4:5 plates
- *   Close       ink    the one sentence, and the two doors
+ * Eight chapters, each given the composition and the motion its own idea
+ * needs, inside one continuous narrative:
  *
- * The pacing is the design: loud, moving, loud, quiet, loud, still. Every
- * section carries an opaque field so the header's polarity sampler can read
- * the paper beneath it.
+ *   I    The numbers     ink     photography. A crop of one woman and her
+ *                                casting tag pulls back into a queue of four.
+ *   II   The sitting     ink     motion. Her own set, framed, until paper
+ *                                closes around it and it is an object.
+ *   III  The bill        ink     typography. No photograph but that one
+ *                                print, holding the corner of an empty half.
+ *   IV   The corridor    ink     absence. Everyone has gone; the longest
+ *                                hold on the page, with the queue still in it.
+ *   V    The turn        →cream  the field change, once, as a seam crossing
+ *                                the frame. The statement inverts as it passes.
+ *   VI   The colophon    cream   long form, as a spread: the reading on the
+ *                                left page, one plate bleeding off the right.
+ *   VII  The Collective  cream   recovered, not reinterpreted.
+ *   VIII The coda        cream   one line, two doors, a lot of air.
+ *
+ * I to V share one pinned frame and one set of objects, so each chapter
+ * inherits what the last one left on the stage rather than starting beside
+ * it. The field changes exactly once.
+ *
+ * This is a company page. Features belong to `/talent` and `/agencies`
+ * (`lessons.md` §31.8).
  */
 
-import Close from "./Close";
+import Coda from "./Coda";
 import Collective from "./Collective";
-import Hero from "./Hero";
-import Origin from "./Origin";
-import Record from "./Record";
-import TheLine from "./TheLine";
+import Colophon from "./Colophon";
+import Stage from "./Stage";
 
 export function AboutPage() {
   return (
     <>
-      <Hero />
-      <Origin />
-      <TheLine />
-      <Record />
+      <Stage />
+      <Colophon />
       <Collective />
-      <Close />
+      <Coda />
     </>
   );
 }

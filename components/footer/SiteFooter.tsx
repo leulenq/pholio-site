@@ -51,6 +51,7 @@ import {
   UtilityLink,
 } from "./kit";
 import { CONTACT_EMAIL, copyright, productLabel } from "./content";
+import { RULE_GAP, SIGN_GAP } from "./motion";
 
 export default function SiteFooter({ field }: { field?: Field } = {}) {
   return (
@@ -97,17 +98,20 @@ export default function SiteFooter({ field }: { field?: Field } = {}) {
 
               <div className="flex flex-col items-start md:items-end">
                 <AddressLink email={CONTACT_EMAIL} />
-                <SocialRow className="mt-5 md:mt-6" />
+                <SocialRow className="mt-4 md:mt-5" />
               </div>
             </nav>
           </Contents>
 
-          {/* The signing. The mark sits in the flow directly above the stroke
-              with its baseline on it, so the two are one object and no spacing
-              value has to be kept in sync with the type. */}
-          <div style={{ marginTop: "clamp(72px, 10vw, 128px)" }}>
+          {/* The signing, then the closing. `Signature` ends on its own
+              baseline, so `SIGN_GAP` is the true distance from the name's feet
+              to the stroke rather than a margin measured off a line box. See
+              `motion.ts` on why the two must not touch. */}
+          <div style={{ marginTop: "clamp(64px, 8.6vw, 112px)" }}>
             <Signature scene={scene} />
-            <Stroke scene={scene} />
+            <div style={{ paddingTop: SIGN_GAP }}>
+              <Stroke scene={scene} />
+            </div>
           </div>
 
           {/* Below the line. Deliberately the quietest thing in the frame: the
@@ -117,7 +121,8 @@ export default function SiteFooter({ field }: { field?: Field } = {}) {
               raises them (lib/marketing-nav-links.ts). */}
           <Contents
             scene={scene}
-            className="mt-5 flex flex-col gap-x-10 gap-y-3 md:flex-row md:items-baseline md:justify-between"
+            className="flex flex-col gap-x-10 gap-y-3 md:flex-row md:items-baseline md:justify-between"
+            style={{ marginTop: RULE_GAP }}
           >
             <ul className="flex flex-wrap items-baseline gap-x-7 gap-y-1">
               {FOOTER_LEGAL_NAV.map((entry) => (

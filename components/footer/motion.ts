@@ -35,52 +35,67 @@ import { cubicBezier } from "framer-motion";
 /* ══════════════════════════════════════════════════════════════════════
    THE BEATS
 
-   Positions in the footer's own arrival, 0 when its top edge reaches the
-   bottom of the viewport and 1 at the document's maximum scroll.
+   A timeline in seconds, played once when the footer comes into view, and
+   **not** tied to scroll position.
 
-   They overlap on purpose. Three beats that start and stop cleanly would be
+   Scroll-tying was tried first and is wrong for this surface, for a reason
+   worth recording: the footer is about 550px tall and sits at the end of the
+   document, so by the time its signature row is on screen there are only about
+   160px of scroll left before the page stops. A gesture authored against that
+   range either plays out below the fold or has to be crammed into the last
+   flick of the wheel. `04-scroll-craft.md` §1 puts it as a question: does the
+   scroll reveal something, or just move it? Here it would only move it.
+
+   So the trigger is the footer entering the frame, and the choreography is in
+   time. This is also what `lessons.md` §8 already blessed for this surface, and
+   what the industry sample's one departure was granted for: a closing gesture
+   has to be arrived at.
+
+   The beats overlap on purpose. Three that start and stop cleanly would be
    three states, and a visitor would see the states rather than the change
-   (lessons.md §36). The stroke begins while the contents are still settling
-   and the name lands as the stroke lifts, so the whole thing is one continuous
-   gesture with a beginning, a middle and an end.
+   (lessons.md §36). The name begins to settle while the contents still are, and
+   the stroke starts before the name has landed, so the whole thing is one
+   gesture over about 1.7 seconds. Then nothing on this surface ever moves again.
 
-   Everything is finished by 0.96, so the last of the scroll is spent on a
-   frame that is already completely still.
+   **The stroke is last, and that is the point.** It was second in the first
+   build, which made the name land on a line already drawn and read as a
+   wordmark acquiring an underline. Signing and then closing is the true order
+   of the gesture: the name is put down, and the line is drawn under the whole
+   frame to finish it.
    ══════════════════════════════════════════════════════════════════════ */
 
 export const BEAT = {
   /** The page's last words come to rest. */
-  contents: [0.0, 0.46],
-  /** The pen crosses the measure. */
-  stroke: [0.3, 0.9],
-  /** The name is set down on the line. */
-  name: [0.42, 0.96],
+  contents: { delay: 0, duration: 0.92 },
+  /** The name is set down. */
+  name: { delay: 0.3, duration: 0.78 },
+  /** The pen crosses the measure, and the frame is closed. */
+  stroke: { delay: 0.58, duration: 1.15 },
 } as const;
 
 /**
- * In fast, settling long. The house arrival curve: a thing thrown up by the
- * scroll and coming to rest, with no overshoot anywhere, because the page's
- * physics cannot overshoot either (lessons.md §45.2).
+ * How much of the footer has to be in the frame before the signing starts.
+ *
+ * Low enough that the gesture begins as the surface arrives rather than after
+ * it has sat there, high enough that it is not triggered by the first pixel of
+ * a footer still a screen away.
+ */
+export const TRIGGER_AMOUNT = 0.3;
+
+/**
+ * In fast, settling long. The house arrival curve: a thing coming to rest with
+ * no overshoot anywhere, because the page's own physics cannot overshoot either
+ * (lessons.md §45.2).
  */
 export const arrive = cubicBezier(0.22, 1, 0.36, 1);
 
 /**
- * The stroke's own curve, and the one place this surface does not use
- * `arrive`. A pen is at rest before it moves: it accelerates off the left
- * margin, runs, and lifts. `arrive` starts at full speed, which is right for
- * something the scroll threw and wrong for something a hand began.
+ * The stroke's own curve, and the one place this surface does not use `arrive`.
+ * A pen is at rest before it moves: it accelerates off the left margin, runs,
+ * and lifts. `arrive` starts at full speed, which is right for something the
+ * scroll threw and wrong for something a hand began.
  */
 export const stroke = cubicBezier(0.65, 0, 0.3, 1);
-
-export function at(
-  p: number,
-  [from, to]: readonly [number, number],
-  ease: (t: number) => number,
-): number {
-  if (p <= from) return 0;
-  if (p >= to) return 1;
-  return ease((p - from) / (to - from));
-}
 
 /* ══════════════════════════════════════════════════════════════════════
    THE TRAVEL
@@ -111,15 +126,21 @@ export const NAME_FALL = 18;
  *
  * The header's is `transparent → gold → transparent`, symmetric, because it is
  * the bottom edge of a band and an edge has no direction. A stroke does: it is
- * full where the nib is set down, carries through the signature, and lifts off
- * to nothing. The short transparent lead-in keeps it from butting hard against
- * the left margin, which would read as a border rather than as a mark made.
+ * full where the nib is set down, carries at full pressure through the
+ * signature and most of the measure, and lifts off over the last third. The
+ * short transparent lead-in keeps it from butting hard against the left margin,
+ * which would read as a border rather than as a mark made.
+ *
+ * The lift starts at 68%, not at the midpoint. At the midpoint the stroke has
+ * faded to nothing by about two thirds of the measure and reads as a stub that
+ * ran out rather than as a line that was lifted, and the signature ends up
+ * sitting on the only solid part of it.
  *
  * `--footer-gold` tracks the paper, so the stroke is #C9A55A on the velvet and
  * the dark gold on cream, where #C9A55A manages about 2:1 and disappears.
  */
 export const STROKE_GRADIENT =
-  "linear-gradient(to right, transparent 0%, var(--footer-gold) 2.5%, var(--footer-gold) 42%, transparent 100%)";
+  "linear-gradient(to right, transparent 0%, var(--footer-gold) 1.5%, var(--footer-gold) 68%, transparent 100%)";
 
 /**
  * The drawing edge, as a clip.
@@ -130,16 +151,14 @@ export const STROKE_GRADIENT =
  * a complete miniature sweep growing to full width is a line being stretched,
  * not a line being drawn.
  */
-export const strokeClip = (p: number) =>
-  `inset(0 ${((1 - p) * 100).toFixed(3)}% 0 0)`;
+export const STROKE_CLIP = {
+  undrawn: "inset(0 100% 0 0)",
+  drawn: "inset(0 0% 0 0)",
+} as const;
 
 /* ══════════════════════════════════════════════════════════════════════
    THE FRAME
    ══════════════════════════════════════════════════════════════════════ */
-
-/** The mark's size. Restrained on purpose: the line is the subject, and the
-    signature's authority comes from sitting on it. */
-export const MARK = { wide: 64, narrow: 42 } as const;
 
 /**
  * With `line-height: 1` the baseline sits this far above the line box's foot in
@@ -149,3 +168,25 @@ export const MARK = { wide: 64, narrow: 42 } as const;
  * signature from looking aligned rather than written.
  */
 export const BASELINE_DROP_EM = 0.112;
+
+/* ══════════════════════════════════════════════════════════════════════
+   THE SEPARATION
+
+   How far the stroke sits from the name, measured from the name's baseline
+   rather than from its box, and how far the utilities sit below the stroke.
+
+   The first build put the baseline **on** the stroke. It was the literal
+   reading of "signed on a line" and it was wrong: at 64px against a 1px rule
+   the eye does not see a signature resting on a line, it sees a wordmark with
+   an underline, and the sweep stops being a gesture and becomes part of the
+   logotype.
+
+   `SIGN_GAP` is about one cap height of the mark at every width, which is the
+   distance at which the two stop being read as one object. `RULE_GAP` is a
+   little less, so the stroke is not equidistant between the name and the small
+   print: it hangs slightly nearer the print it closes off, and belongs to the
+   frame rather than to either group.
+   ══════════════════════════════════════════════════════════════════════ */
+
+export const SIGN_GAP = "clamp(30px, 3.3vw, 48px)";
+export const RULE_GAP = "clamp(22px, 2.3vw, 34px)";

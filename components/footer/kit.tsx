@@ -26,13 +26,7 @@
 
 import type { CSSProperties, ReactNode, RefObject } from "react";
 import { useEffect, useRef, useState } from "react";
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-  type MotionValue,
-} from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Instagram, Linkedin } from "lucide-react";
@@ -46,11 +40,11 @@ import {
   BEAT,
   CONTENTS_RISE,
   NAME_FALL,
+  STROKE_CLIP,
   STROKE_GRADIENT,
+  TRIGGER_AMOUNT,
   arrive,
-  at,
   stroke as strokeEase,
-  strokeClip,
 } from "./motion";
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -63,12 +57,24 @@ export const MUTED = "var(--footer-muted)";
 export const UTILITY = "var(--footer-utility)";
 export const GOLD = "var(--footer-gold)";
 
-/** The company pages, one step back from the destinations. Prominence on this
-    site is colour, never scale (foundations §5), so the two ranks of navigation
-    are the same size and differ only here. */
+/**
+ * The company pages, one step back from the destinations. Prominence on this
+ * site is colour, never scale (foundations §5), so the two ranks of navigation
+ * are the same size and differ only here.
+ *
+ * The step used to be 0.66 / 0.62 and it was too wide: About, Careers, Contact
+ * and Press are real destinations, not metadata about the site, and at that
+ * strength they read as a caption under the ones that matter. The rank is still
+ * legible at 0.84 — set the two lists side by side and the order is obvious —
+ * but both now read as navigation.
+ */
 const SECOND_RANK: Record<Field, string> = {
-  ink: "rgba(250,247,242,0.66)",
-  cream: "rgba(15,23,42,0.62)",
+  /* Not the same number on both fields. Light type on a dark ground blooms, so
+     0.84 on the velvet reads as the same step that 0.78 gives on cream, and
+     matching the figures would make the rank vanish on ink and stay obvious on
+     cream. Measured by eye against both, which is the only way to set this. */
+  ink: "rgba(250,247,242,0.8)",
+  cream: "rgba(15,23,42,0.78)",
 };
 
 /** The utilities. Quiet, and still past 4.5:1 on either paper. */
@@ -194,26 +200,18 @@ function usePageEnd(): { field: Field; paper: string | null } {
    ══════════════════════════════════════════════════════════════════════ */
 
 export interface Scene {
-  progress: MotionValue<number>;
+  /** True once the footer has arrived and the signing has begun. Latches. */
+  signed: boolean;
   reduce: boolean;
 }
 
-/**
- * One scroll source for the whole signing: the footer's own arrival, read off
- * the real document position, 0 when its top edge reaches the bottom of the
- * viewport and 1 at the document's maximum scroll.
- *
- * The page's inertia layer already gives that position its weight
- * (lessons.md §45), so nothing here smooths it again: a second spring on top of
- * the page's lerp is how a scene starts swimming behind the hand (§45.3).
- */
-function useScene(ref: RefObject<HTMLElement | null>): Scene {
-  const reduce = useReducedMotion() ?? false;
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end end"],
-  });
-  return { progress: scrollYProgress, reduce };
+/** One transition for a beat, or no transition at all under reduced motion. */
+export function beat(
+  scene: Scene,
+  { delay, duration }: { delay: number; duration: number },
+  ease = arrive,
+) {
+  return scene.reduce ? { duration: 0 } : { delay, duration, ease };
 }
 
 export function FooterSurface({
@@ -224,7 +222,11 @@ export function FooterSurface({
   children: (scene: Scene) => ReactNode;
 }) {
   const ref = useRef<HTMLElement>(null);
-  const scene = useScene(ref);
+  const reduce = useReducedMotion() ?? false;
+  /* `once` latches it: the signing happens the first time the footer is
+     reached and never replays, however many times it is scrolled past. */
+  const inView = useInView(ref, { once: true, amount: TRIGGER_AMOUNT });
+  const scene: Scene = { signed: inView || reduce, reduce };
   const detected = usePageEnd();
   const field = forcedField ?? detected.field;
   const paper = forcedField ? null : detected.paper;
@@ -273,16 +275,21 @@ export function Contents({
   scene,
   children,
   className,
+  style,
 }: {
   scene: Scene;
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
 }) {
-  const y = useTransform(scene.progress, (p) =>
-    scene.reduce ? 0 : (1 - at(p, BEAT.contents, arrive)) * CONTENTS_RISE,
-  );
   return (
-    <motion.div className={className} style={{ y }}>
+    <motion.div
+      className={className}
+      style={style}
+      initial={{ y: CONTENTS_RISE }}
+      animate={{ y: scene.signed ? 0 : CONTENTS_RISE }}
+      transition={beat(scene, BEAT.contents)}
+    >
       {children}
     </motion.div>
   );
@@ -297,18 +304,19 @@ export function Contents({
  * signing, not the logotype.
  */
 export function Stroke({ scene }: { scene: Scene }) {
-  const clipPath = useTransform(scene.progress, (p) =>
-    strokeClip(scene.reduce ? 1 : at(p, BEAT.stroke, strokeEase)),
-  );
   return (
     <motion.span
       aria-hidden
+      initial={{ clipPath: STROKE_CLIP.undrawn }}
+      animate={{
+        clipPath: scene.signed ? STROKE_CLIP.drawn : STROKE_CLIP.undrawn,
+      }}
+      transition={beat(scene, BEAT.stroke, strokeEase)}
       style={{
         display: "block",
         height: 1,
         width: "100%",
         background: STROKE_GRADIENT,
-        clipPath,
       }}
     />
   );
@@ -331,14 +339,14 @@ export function Stroke({ scene }: { scene: Scene }) {
  * aid. Hidden from assistive technology, which has the site's name already.
  */
 export function Signature({ scene }: { scene: Scene }) {
-  const y = useTransform(scene.progress, (p) =>
-    scene.reduce ? 0 : -(1 - at(p, BEAT.name, arrive)) * NAME_FALL,
-  );
   return (
     <motion.span
       aria-hidden
       className="block text-[42px] md:text-[64px]"
-      style={{ y, marginBottom: `-${BASELINE_DROP_EM}em` }}
+      initial={{ y: -NAME_FALL }}
+      animate={{ y: scene.signed ? 0 : -NAME_FALL }}
+      transition={beat(scene, BEAT.name)}
+      style={{ marginBottom: `-${BASELINE_DROP_EM}em` }}
     >
       <Wordmark
         size="1em"
@@ -470,11 +478,20 @@ export function Imprint({ children }: { children: ReactNode }) {
 }
 
 /**
- * The address.
+ * The address, and the invitation.
  *
- * Set in the display serif at the navigation's size, because it is a
- * destination like the others rather than a headline. What marks it out is that
- * it is the only full-strength thing on the right of the frame.
+ * Gold, at the navigation's size. Colour is how this site says "this one", and
+ * spending it here is what lets the address be the primary invitation without
+ * being set larger than the destinations beside it: it is the only gold above
+ * the stroke, and the eye finds it before anything else in the upper frame.
+ *
+ * Not invented for this surface either. Every legal document in the repo
+ * already closes on its contact address set in the display serif in gold, so
+ * this is that move promoted from the corpus to the site.
+ *
+ * Because it rests gold, hover cannot be the usual shift to gold. It takes the
+ * other half of the site's hover vocabulary instead, a 1px rule, which is the
+ * same treatment the legal documents give their addresses.
  */
 export function AddressLink({ email }: { email: string }) {
   const [hover, setHover] = useState(false);
@@ -486,9 +503,11 @@ export function AddressLink({ email }: { email: string }) {
       className="inline-block text-[22px] leading-[1.45] focus:outline-none focus-visible:underline md:text-[24px]"
       style={{
         fontFamily: SERIF,
-        color: hover ? GOLD : INK,
-        textDecoration: "none",
-        transition: `color 0.42s ${EASE}`,
+        color: GOLD,
+        textDecoration: hover ? "underline" : "none",
+        textDecorationThickness: 1,
+        textUnderlineOffset: "0.28em",
+        transition: `text-decoration-color 0.42s ${EASE}`,
       }}
     >
       {email}

@@ -2833,3 +2833,318 @@ focusing the unchosen option saw nothing; the rule now draws on
 
 **The test.** Hover an action and be unable to name a second thing that
 happened. Read the billing band cold and get a price, not an offer.
+
+## 46. The sweep is a gesture, and a signature does not have to be large
+
+**Date:** 2026-09-25
+**Surface:** the whole footer (`components/footer/`)
+
+**What was built, and rejected, twice.** First a closing panel a viewport tall
+with PHOLIO stretched across the top of it over four labelled columns. Then a
+deconstructed version: the mark scaled until its painted glyphs spanned the
+viewport and bled off both edges, the address at 92px beside it, and the
+navigation, social and legal hung off the wordmark's letter stems.
+
+**What was wrong.**
+
+> "I don't like the current giant PHOLIO simply stretched across the top of the
+> footer."
+
+> "hello@pholio.studio is far too dominant ... the cropped giant PHOLIO feels
+> accidental ... there is excessive dead space in the upper-left ... navigation,
+> social and legal feel stranded in unrelated parts of the viewport ... the
+> email and PHOLIO wordmark compete for the final statement."
+
+> "The recent versions are worse because we're forcing asymmetry, giant
+> typography, cropping and unusual placement without a strong underlying
+> concept."
+
+> "Don't make something unusual merely to prove it's art-directed."
+
+**46.1 Both failures came from one bad premise: that "signature" means "large
+mark".** A signature is small, placed by hand, at the end. Every giant-wordmark
+footer this repo has produced was an attempt to make the logotype carry the
+frame on its own, and a logotype cannot: with nothing to relate to, the only
+variable left is scale, and scale alone is what "arbitrarily deconstructed"
+means.
+
+**The rule.** Before scaling a brand element up, ask what it is in relation to.
+If the answer is "the viewport", it will read as a crop or a stretch whatever
+size it is. Give it something to sit on, or leave it small.
+
+**46.2 The line is the subject; the mark signs it.** The footer is a single gold
+stroke across the measure with PHOLIO signing above it at 64px (42 on a phone),
+destinations and the address above that, utilities below. The mark can be that
+small precisely because the composition's subject is the act of signing rather
+than the logotype.
+
+**They must not touch.** The first build put the mark's baseline *on* the
+stroke, which was the literal reading and the wrong one:
+
+> "Detach the gold sweep from PHOLIO. Right now it reads like an underline
+> attached to the wordmark ... The sweep should feel like the gesture that
+> completes the footer, not part of the logo."
+
+At 64px against a 1px rule the eye does not see a signature resting on a line,
+it sees a wordmark that has acquired an underline, and the sweep stops being a
+gesture the moment that happens. `SIGN_GAP` is now about one cap height of the
+mark, measured from the baseline rather than from the line box.
+
+**46.3 The gold sweep is allowed on the footer, and §2 is overruled here.**
+
+> "Replace the static gold rule with Pholio's gold sweep. The sweep should be
+> the central motion gesture of the footer: it arrives/draws across with weight
+> and purpose, helping resolve the composition rather than acting as
+> decoration."
+
+§2 ruled that the sweep is the header's and that repeating it makes the
+original weaker. The owner overruled that on this surface. §2's actual
+requirement, that a shared accent be reinterpreted at lower volume rather than
+pasted, is met and stays in force: the header's sweep is symmetric
+(`transparent → gold → transparent`) because it is the bottom edge of a band
+and an edge has no direction; the footer's is directional, full from the left
+margin and lifting to nothing over the last third, because it is a stroke. Two
+jobs, one asset. **Do not paste the header's symmetric gradient here, and do
+not put this directional one anywhere else.**
+
+**46.4 A gesture needs somewhere to happen, and scroll was not it.** The first
+build tied the signing to the footer's scroll progress. The footer is about
+550px at the end of the document, so once its signature row is on screen there
+are roughly 160px of scroll left: the stroke drew almost entirely below the
+fold. The signing is now a 1.5s timeline played once when the footer enters the
+frame, on an `IntersectionObserver` that latches.
+
+**The rule.** Scroll-tie a scene only when there is scroll left to tie it to.
+Measure the remaining distance between the element appearing and the document
+ending before authoring against it.
+
+**46.5 The utilities have one voice, and it is not the serif italic.**
+
+> "the current italic serif feels inherited rather than intentionally designed"
+
+The legal links, the cookie control and the copyright are one class of thing and
+now read as one: Inter at 11.5px, 0.045em, sentence case, tabular lining
+figures. Giving the copyright a treatment of its own is what made it look
+inherited. This **amends §3**, which is still correct about what it banned
+(mono, because it reads as a developer tool): the fix it produced, serif italic,
+collided with the rule that italic on this site means a verdict. Not tracked
+caps either, which at this size is the eyebrow signature the ban list rations.
+
+**46.6 The footer takes the page's own paper, and is not a panel.** No forced
+ink field on `/`, no viewport takeover, no plate. The page runs out of content,
+leaves a lot of air, and is signed at the foot, so there is no boundary to
+design. The header no longer stands down for it either: the takeover exists for
+a surface that owns the screen, and this one is 550px with the page's last
+section still in frame beside it.
+
+**46.7 Second-rank navigation is still navigation.**
+
+> "especially the secondary group is too faded. These are real navigation
+> choices, not metadata."
+
+About, Careers, Contact and Press were at 0.66 on ink and 0.62 on cream, which
+reads as a caption under the destinations rather than as a second rank of them.
+They are 0.80 and 0.78 now. The two figures differ on purpose: light type on a
+dark ground blooms, so equal alphas do not give equal steps, and matching the
+numbers makes the rank vanish on ink while staying obvious on cream. Set this
+by eye against both fields, never by copying one figure across.
+
+**46.8 The address is gold, and that is what buys it prominence.**
+
+> "Give hello@pholio.studio more presence through color ... so it reads as the
+> primary invitation without becoming oversized."
+
+It sits at the navigation's size and is the only gold above the stroke, which
+is enough: colour is how this site says "this one" (foundations §5), and it
+means the invitation never has to compete with the signature on scale. Because
+it rests gold, its hover takes the other half of the site's hover vocabulary, a
+1px rule, which is also what the legal documents give their addresses. Three
+gold elements now share the frame, and they do not compete because they are at
+three different scales and two different jobs: the identity, the invitation,
+and the gesture.
+
+**Recorded rejections,** so they are not revisited: a photograph in the footer
+(sitewide imagery is a compliance surface and makes every page end heavier); the
+header's index panel lying down (§1, verbatim); a colophon at document scale
+with no display type (considered seriously, and it is the version to reach for
+if this one ever needs to get quieter).
+
+
+## 47. The favicon uses the wordmark, not a new monogram
+
+**Date:** 2026-09-26
+**Surface:** site favicon
+
+**What was built.** A standalone Noto Serif Display P in gold on velvet.
+
+> "Our logo is the pholio wordmark with/without the gold sweep. Find a favicon integration using that."
+
+**The rule.** Use the complete PHOLIO wordmark, with or without its gold
+sweep, for the favicon and touch icon. Do not invent a P monogram or another
+symbol to solve the small-size constraint. Preserve the recorded typeface,
+weight and tracking, and outline the glyphs so the icon needs no font load.
+
+## 47. Design the ideas, not containers for the copy
+
+**Date:** 2026-09-26
+**Surface:** `/about`, rebuilt from zero (`components/about/`)
+
+**What was built, and rejected, four times.** A proposition-led page with
+sections; a page of scenes where every chapter was a giant serif headline
+beside a paragraph; a Locomotive-style single field with no chapters at all;
+and a version with real chapters whose copy all spoke in the same quiet
+voice.
+
+**What was wrong, in the owner's words.**
+
+> "Most of the copy currently has the same quiet typographic voice. There are
+> very few real headline moments, so the page feels like small text and
+> photographs distributed through large spaces rather than a deliberately
+> composed editorial story."
+
+> "I don't want less writing simply for the sake of minimalism. I want the
+> writing designed. Some statements should dominate a viewport. Others can be
+> whispered."
+
+> "Don't choose photographs merely because they're black-and-white fashion
+> imagery. Every photograph needs a reason to exist in the narrative."
+
+> "Don't mistake empty space for luxury. A nearly empty viewport is powerful
+> only when the absence itself creates tension."
+
+> "The repeated contact-sheet portrait currently feels artificial rather than
+> meaningful."
+
+> "A list floating on the right and a small photograph on the left is not at
+> the level of the rest of the page."
+
+> "The plain body copy currently falls back to generic black/navy sans-serif
+> website text. It feels utilitarian next to the art-directed headline
+> moments."
+
+> "Most importantly: design the ideas, not containers for the copy."
+
+**The rules.**
+
+**47.1 A page needs a rank ladder, and every string sits on a rung.**
+`components/about/kit.tsx` now carries the whole system: Statement (display
+serif at viewport scale, four on the page), Deck (display serif at ~1.9rem,
+the reading voice), Note (display serif at ~1.1rem, the line attached to a
+photograph), Text (Inter 400 at 16px, only where there is a column to read),
+Label (mono, only ever on something real), Name (the Collective's,
+preserved). The ink ramp is five values and nothing sits between them. What
+made the page read as utilitarian was not the amount of copy, it was that
+supporting copy defaulted to 14px Inter Light at 60% on both fields.
+
+**47.2 Serif is a reading voice here, not only a shouting voice.** The fix
+for "generic body text" was not more serif headlines, it was moving the
+supporting register into the display serif at reading size with old-style
+figures. Inter stays, demoted to the one chapter that is genuinely a column.
+
+**47.3 A photograph earns its place by being a place or an act in the
+story.** The repeated contact sheet was one picture pretending to be
+eighteen, and it read as a device. What replaced it: a line-up of four models
+wearing numbered casting tags (the judgement ritual, and the only real
+numbers on the page), a studio sitting (what the money buys), models waiting
+between calls (the silence), and a stack of prints in someone's hands (the
+object the company exists to get right). Each one is listed in
+`public/about/README.md` with the reason it is there.
+
+**47.4 An emptied frame is only a composition when the absence has a
+subject.** The corridor chapter holds longest on the page and is nearly
+empty, but the photograph of everyone still waiting is in it at a third of
+its strength. An empty velvet frame with one line in it was the version that
+read as under-composed.
+
+**47.5 A sequence communicates through what it does, not through what it
+lists.** "Paid for before the looking" is now six slips of paper that arrive
+one at a time and land on her photograph, each a little lower than the last,
+until she is under all of it with only her top edge showing. Then the paper
+leaves in one movement, she is still there, and the total lands under her.
+The accumulation is the argument; the list was only its content.
+
+**47.6 A hero establishes what kind of experience the page is, before it
+shows anything.** The opening frame is the company speaking: one statement at
+viewport scale, the deck that says what Pholio is, and a hand's width of
+photograph standing at the right edge like a door ajar. Scrolling opens the
+door across the frame. It is the same gesture as the turn's seam, run at the
+other end of the page, which is what ties the two together.
+
+**47.7 One creative direction, six compositions.** The brief that produced
+this: *"I want distinct chapters with radically different compositions, but
+one continuous art-directed narrative."* The chapters share one pinned frame
+and one set of objects so nothing resets between them, and each is given the
+medium its own idea needs: photography, motion, typography, absence, a field
+change, a printed spread.
+
+**47.8 The Collective is recovered, not redesigned.** Restored from git for
+the third time (`lessons.md` §32), and it is the reason the rest of the page
+can be this different: a preserved chapter gives the reader somewhere the
+brand already lives.
+
+**The test.** Freeze the page at any scroll position and name the rank of
+every string in the frame. If two strings that mean different things are set
+the same way, the rank ladder is not being used.
+
+## 48. The Careers page is the previous site's, replicated
+
+**Date:** 2026-09-27
+**Surface:** `/careers` (`components/careers/`)
+
+**What was built first, and rejected.** A page designed from this repo's own
+first principles: an opening statement on velvet ("Every letter here gets an
+*answer*"), a reading spread about the company's stage, three hand-written
+roles divided by hairlines, a section publishing the timetable a letter is
+answered on, and two Unsplash plates sourced for the page. It was screened
+against the ban list section by section, and every choice in it could be
+defended by a rule.
+
+> "The careers page you made is not good. Stop iterating on that direction.
+> Go inspect: /Users/lenquanhone/Projects/pholio-landing. Find and study its
+> Careers page, then replicate that Careers page into this repo."
+
+**What that means.** The page is now `pholio-landing`'s
+`CareersHero.tsx` and `CareersContent.tsx`, replicated: the centred hero over
+a gold radial glow, "Build the Next *Standard* of Digital Identity", the
+scroll cue, the four values, the eight perks on white, the roles by
+department, and the closing "Don't see your role?" invitation. Composition,
+copy, scale and motion are the archive's.
+
+**48.1 The archive is not off limits when the owner points at it.**
+`CLAUDE.md` says to stop before copying a pattern from `pholio-landing`,
+because agents reading that repo have built on superseded premises. That rule
+is about *inferring* a decision from the archive. It does not apply when the
+owner names a surface there as the thing to build, which is §31.3's rule about
+recovery applied across repos: read the previous implementation and rebuild
+from it rather than citing it.
+
+**48.2 Five ban-list rules are suspended on this page, by the owner.**
+Recorded so nobody restores the rejected direction by citing a document:
+§2.1 (no eyebrow above an H1), §2.3 (no scroll cue), §2.6 (no gold glow behind
+a hero), §3.1 (eyebrow rationing: this page has four), §4.1/§4.2 (the four
+values and the eight perk cells). The bans stand everywhere else.
+
+**48.3 A replication still fixes what is broken, and says so.** Three things
+changed, none of them compositional, and each is visible in a component
+comment: the archive's role rows were `div`s with `cursor-pointer` and no
+destination, so they are now anchors to the address with the role in the
+subject; the archive's perk cells are `aspect-square` at every width and the
+longest labels printed outside their borders on a phone, so the square starts
+at `sm`; and the archive animated every section through framer regardless of
+`prefers-reduced-motion`, which the stylesheet's backstop cannot reach, so the
+travel is dropped when the preference is set. Nothing else was "improved".
+
+**48.4 What is flagged rather than shipped as settled.** The eight perks are
+employment promises (equity, sabbaticals, a stipend, a wellness fund) published
+by a company that is not incorporated, and the owner is rewriting them:
+"Replicate the block, I'll rewrite the eight later." The five roles are the
+archive's and are unconfirmed. `careers@pholio.studio` has to exist before the
+page is announced. And "We're always scouting for visionaries" keeps the word
+§23 retired sitewide; the owner confirmed it verbatim on 2026-09-27, which is
+the one entry in this file that reinstates banned vocabulary rather than
+removing it.
+
+**The rule.** When the owner names an existing page as the target, replicate
+it. Do not screen it against the ban list on the way in, do not improve its
+art direction, and do not negotiate its copy. Fix defects, flag promises, and
+write down every rule the replication suspends.

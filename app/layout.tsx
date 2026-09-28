@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Noto_Serif_Display, Inter, JetBrains_Mono } from "next/font/google";
 
 import "./globals.css";
+import { PHOLIO_TITLE, PHOLIO_DESCRIPTION } from "@/lib/brand";
 import SiteFooter from "@/components/footer/SiteFooter";
 import HeaderWrapper from "@/components/HeaderWrapper";
 import Providers from "@/components/Providers";
@@ -47,11 +48,10 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.pholio.studio"),
   title: {
-    default: "Pholio",
+    default: PHOLIO_TITLE,
     template: "%s | Pholio",
   },
-  description:
-    "Pholio is a verified-talent portfolio platform. Talent build a professional book; agencies discover and shortlist real people.",
+  description: PHOLIO_DESCRIPTION,
   openGraph: {
     siteName: "Pholio",
     type: "website",

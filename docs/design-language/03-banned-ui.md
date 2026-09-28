@@ -251,9 +251,13 @@ and dated. The previous site had one; it was not carried over.
 fourth accent, no semantic green/amber/red, no tinted category colours. See
 foundations §1.
 
-**5.2 No gradients as surfaces.** No blue-to-violet, no any-to-any. The single
-gradient on this site is the gold sweep, which is a 1px hairline fading to
-transparent at both ends, and it is furniture rather than a fill.
+**5.2 No gradients as surfaces.** No blue-to-violet, no any-to-any. The only
+gradient on this site is the gold sweep, a 1px hairline, and it is furniture
+rather than a fill. It exists in exactly two forms, one per surface: the
+header's fades to transparent at **both** ends, because it is the bottom edge of
+a band; the footer's is full from the left margin and lifts to transparent over
+the last third, because it is a stroke being drawn (`lessons.md` §46.3). Neither
+may be used on the other's surface, and there is no third form.
 
 **5.3 No gradient text.** No `background-clip: text`, no rainbow fill, no
 shimmering headline.
