@@ -1,0 +1,410 @@
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<div data-talent>
+<div id="bg" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="goldline" color-interpolation-filters="sRGB"><feComponentTransfer in="SourceAlpha" result="a"><feFuncA type="discrete" tableValues="0 1"/></feComponentTransfer><feMorphology in="a" operator="dilate" radius="3" result="d"/><feComposite in="d" in2="a" operator="out" result="o"/><feFlood flood-color="#c9a55a"/><feComposite in2="o" operator="in"/></filter></svg>
+
+
+<header class="hud" aria-label="Site">
+  <div class="hud-progress" aria-hidden="true"></div>
+  <div class="hud-top">
+    <a class="wordmark" href="#open" aria-label="Pholio, back to top">PHOLIO</a>
+    <a class="btn magnetic" href="{{SIGNUP_HREF}}">Apply free</a>
+  </div>
+  <div class="hud-bottom" aria-hidden="true">
+    <div class="hud-count">Fr <b id="fr">01</b> <span>/ 36</span></div>
+    <div class="hud-chapter" id="chap">Digitals</div>
+  </div>
+</header>
+
+<div class="tlk-main">
+<h1 class="sr">Pholio for talent. Your digitals, stats, book, comp card and every submission, kept in one place and kept current.</h1>
+
+<!-- ============ 01 OPEN ============ -->
+<section id="open" class="scene dark" data-label="Digitals" data-theme="dark">
+  <div class="pin">
+    <p class="o-intro note">A booker opens your digitals before anything else. So this starts where they do.</p>
+    <div class="o-frame">
+      <div class="o-cam">
+        <img class="o-photo" src="/images/talent/full.webp" alt="Elara Keats, full-length frame against a white studio wall, white tank top and jeans" fetchpriority="high">
+        <div class="o-giant" aria-hidden="true"><span>Head <em>to</em></span><span>toe.</span></div>
+        <img class="o-cut" src="/images/talent/cutout.webp" alt="" aria-hidden="true">
+      </div>
+      <div class="o-cap mono"><span id="ocap"><b>Headshot</b></span><span>Digitals · Shot 14 Sep 2026</span></div>
+    </div>
+    <div class="o-words">
+      <div class="o-line" data-i="0"><span class="h-xl">Plain <em>light.</em></span><span class="o-sub lede">No studio needed. Daylight from a window does the job.</span></div>
+      <div class="o-line" data-i="1"><span class="h-xl">No <em>filter.</em></span><span class="o-sub lede">Minimal makeup, hair off the face. The truth check, as agencies call it.</span></div>
+      <div class="o-line" data-i="2"><span class="h-xl">Head <em>to</em> toe.</span><span class="o-sub lede">Fitted clothes, flat light, the whole of you in frame.</span></div>
+    </div>
+    <div class="o-hint" aria-hidden="true">Scroll<i></i></div>
+  </div>
+</section>
+
+<!-- ============ 02 SET ============ -->
+<section id="set" class="scene dark" data-label="The set" data-theme="dark">
+  <div class="pin">
+    <div class="set-head">
+      <h2 class="h-l">Five frames. <em>Read first.</em></h2>
+      <p class="lede">Headshot, profile, three-quarter, full length, back. The same five slots an agency opens on its side, so what you work against is what they see. A phone and a plain wall are enough.</p>
+    </div>
+    <div class="slots" id="slots">
+      <figure class="slot"><div class="slot-frame"><img src="/images/talent/headshot.webp" alt="Headshot digital" style="object-position:50% 30%"></div><figcaption><b>Headshot</b><span class="dt">14 Sep</span></figcaption></figure>
+      <figure class="slot empty"><div class="slot-frame"><span>Add profile</span></div><figcaption><b>Profile</b><span>Not in your set</span></figcaption></figure>
+      <figure class="slot"><div class="slot-frame"><img src="/images/talent/three-quarter.webp" alt="Three-quarter digital" style="object-position:50% 15%"></div><figcaption><b>Three-quarter</b><span class="dt">14 Sep</span></figcaption></figure>
+      <figure class="slot"><div class="slot-frame"><img src="/images/talent/full.webp" alt="Full-length digital" style="object-position:50% 40%"></div><figcaption><b>Full length</b><span class="dt">14 Sep</span></figcaption></figure>
+      <figure class="slot empty"><div class="slot-frame"><span>Add back</span></div><figcaption><b>Back</b><span>Not in your set</span></figcaption></figure>
+    </div>
+    <div class="fresh">
+      <div class="fresh-week"><small>Since shot</small><span id="wk">Week 01</span></div>
+      <div class="fresh-state" id="fstate"><em>Current.</em></div>
+      <p class="fresh-copy">Digitals go out of date. Pholio dates the set from the day it was shot, never the day it was uploaded, and an undated set is never called current.</p>
+      <div class="fresh-bar"><i id="fbar"></i><b></b></div>
+    </div>
+    <div class="decision" id="dec">
+      <p>Your digitals are 14 weeks old, 14 days past the 12-week window.</p>
+      <a class="act" href="#capture">Shoot fresh digitals <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 CAPTURE ============ -->
+<section id="capture" class="scene dark" data-label="Guided capture" data-theme="dark">
+  <div class="pin">
+    <div class="cp-copy">
+      <h2 class="h-l">Point your phone. <em>Pholio says when it’s right.</em></h2>
+      <p class="lede">Guided capture walks you through each frame a house asks for. The framing is drawn on screen, light, focus, background and filters are checked live, and the shot is named as you take it.</p>
+      <p class="note">It checks the photograph, never the face.</p>
+      <span class="dev mono">In development</span>
+    </div>
+    <div class="phone" id="phone" aria-label="Guided capture on a phone, reshooting the full-length digital">
+      <div class="ph-screen">
+        <div class="vf">
+          <img class="vf-feed" id="vffeed" src="/images/talent/full.webp" alt="">
+          <img class="vf-ghost" id="vfghost" src="/images/talent/cutout.webp" alt="">
+          <div class="vf-grid"></div>
+          <div class="vf-top mono"><span>Reshoot</span><b>Full length</b><span>4 / 5</span></div>
+          <div class="vf-hint" id="vfhint">Step back until your feet are in frame</div>
+          <div class="vf-flash" id="vfflash"></div>
+        </div>
+        <ul class="vf-checks" id="vfchecks">
+          <li>Plain background</li><li>Even light</li><li>No filter</li><li>Camera at hip height</li><li>Head to toe in frame</li>
+        </ul>
+        <div class="vf-shutter" id="vfshutter"><i></i></div>
+      </div>
+    </div>
+    <div class="cp-result" id="cpres">
+      <div class="cp-thumb"><img src="/images/talent/full.webp" alt="The new full-length digital"></div>
+      <h3>Week 01. <em>Current.</em></h3>
+      <p class="mono"><b>Full length</b> · Digitals<br>Shot 29 Sep 2026<br>Dated from the day it was taken</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 TAPE ============ -->
+<section id="tape" class="scene light" data-label="Stats" data-theme="light">
+  <div class="pin">
+    <div class="tp-top">
+      <h2 class="h-l">The number that <em>walks in.</em></h2>
+      <div class="tp-read" aria-live="off"><span class="tp-cm" id="cm">150</span><span class="tp-unit">cm</span><span class="tp-ft" id="ft">4′11″</span></div>
+    </div>
+    <div class="tape" aria-hidden="true">
+      <div class="tape-strip" id="strip"></div>
+      <div class="tape-fade"></div>
+      <div class="tape-cursor"></div>
+    </div>
+    <div class="tp-stats" id="stats" aria-label="Stats line as printed on the card">
+      <span>Height <b>180 cm / 5′11″</b></span><span>Bust <b>32</b></span><span>Waist <b>25</b></span><span>Hips <b>35</b></span><span>Dress <b>4</b></span><span>Shoes <b>9</b></span><span>Hair <b>Black</b></span><span>Eyes <b>Brown</b></span>
+    </div>
+    <div class="tp-foot">
+      <p class="lede">Measured in both units and printed the way a board reads them. Pholio asks you to confirm them every 90 days, so the number on the card is the number that arrives.</p>
+      <p class="note" style="max-width:32ch">An adult's age is never printed on the card. Weight only appears for fitness work.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 CARD ============ -->
+<section id="card" class="scene light" data-label="Comp card" data-theme="light">
+  <div class="pin">
+    <div class="cd-index">
+      <h2 class="h-m">One set of photographs. <em>Nine editions.</em></h2>
+      <ol class="ed-list" id="edlist">
+        <li class="on"><button data-i="0"><span>01</span>The Standard</button></li>
+        <li><button data-i="1"><span>02</span>The Strip</button></li>
+        <li><button data-i="2"><span>03</span>The Monograph</button></li>
+        <li><button data-i="3"><span>04</span>The Masthead</button></li>
+        <li><button data-i="4"><span>05</span>The Grid</button></li>
+        <li><button data-i="5"><span>06</span>The Cover Story</button></li>
+        <li><button data-i="6"><span>07</span>The Night Edition</button></li>
+        <li><button data-i="7"><span>08</span>The Diptych</button></li>
+        <li><button data-i="8"><span>09</span>The Cutout</button></li>
+      </ol>
+    </div>
+
+    <div class="cd-stage" id="cdstage">
+      <div class="cd-tilt" id="cdtilt">
+        <div class="cd-card" id="cdcard" role="img" aria-label="Comp card for Elara Keats, current edition shown">
+          <div class="cd-face cd-front">
+            <!-- 01 Standard -->
+            <div class="ed e-std on"><img src="/images/talent/three-quarter.webp" alt=""><div class="band"><span class="nm">Elara Keats</span><span class="wm">PHOLIO</span></div></div>
+            <!-- 02 Strip -->
+            <div class="ed e-strip"><img class="hero" src="/images/talent/full.webp" alt="" style="object-position:50% 14%"><div class="row"><div><img src="/images/talent/headshot.webp" alt="" style="object-position:50% 30%"></div><div><img src="/images/talent/three-quarter.webp" alt="" style="object-position:50% 40%"></div><div><img src="/images/talent/full.webp" alt="" style="object-position:50% 85%"></div></div><div class="foot"><span class="nm">Elara Keats</span><span class="st">180 · 32 · 25 · 35</span></div></div>
+            <!-- 03 Monograph -->
+            <div class="ed e-mono"><div class="mat"><img src="/images/talent/headshot.webp" alt="" style="object-position:50% 35%"></div><div class="cap"><div class="nm">Elara Keats</div><div class="st">Height 180 · Bust 32 · Waist 25<br>Hips 35 · Shoes 9 · Eyes Brown</div></div><div class="wm">PHOLIO</div></div>
+            <!-- 04 Masthead -->
+            <div class="ed e-mast"><div class="nm">ELARA KEATS</div><div class="rule"></div><div class="date st"><span>Los Angeles</span><span>Autumn 2026</span></div><img src="/images/talent/three-quarter.webp" alt=""><div class="foot"><span class="st">5′11″ · 32 · 25 · 35 · Black · Brown</span><span class="wm">PHOLIO</span></div></div>
+            <!-- 05 Grid -->
+            <div class="ed e-grid"><div class="lines"></div><div class="spine"><b>Elara Keats</b></div><div class="cells"><div><img src="/images/talent/headshot.webp" alt="" style="object-position:50% 30%"></div><div><img src="/images/talent/full.webp" alt="" style="object-position:50% 30%"></div><div><img src="/images/talent/three-quarter.webp" alt="" style="object-position:50% 60%"></div><div style="background:var(--gold)"><img src="/images/talent/cutout.webp" alt="" style="object-fit:contain;object-position:50% 100%"></div></div><div class="gst">Height 180 cm · Bust 32 · Waist 25<br>Hips 35 · Dress 4 · Shoes 9</div><div class="wm">PHOLIO</div></div>
+            <!-- 06 Cover Story -->
+            <div class="ed e-cover"><img class="bgp" src="/images/talent/full.webp" alt=""><div class="big">Keats</div><img class="fg" src="/images/talent/cutout.webp" alt=""><div class="foot"><span class="st">Keats · 180 · 32 · 25 · 35</span><span class="wm">PHOLIO</span></div></div>
+            <!-- 07 Night -->
+            <div class="ed e-night"><img src="/images/talent/headshot.webp" alt="" style="object-position:50% 30%"><div class="fr"></div><div class="nm">Elara Keats</div><div class="st">180 · 32 · 25 · 35 · Black · Brown</div><div class="wm">PHOLIO</div></div>
+            <!-- 08 Diptych -->
+            <div class="ed e-dip"><div class="l"><img src="/images/talent/headshot.webp" alt="" style="object-position:50% 30%"></div><div class="hinge"></div><div class="r"><img src="/images/talent/full.webp" alt="" style="object-position:50% 40%"></div><div class="nm">Elara Keats</div><div class="st">Height 5′11″ · 32 · 25 · 35</div></div>
+            <!-- 09 Cutout -->
+            <div class="ed e-cut"><img class="fig" src="/images/talent/cutout.webp" alt=""><div class="v">Keats</div><div class="v2">Elara<br>180 · 32<br>25 · 35</div><div class="wm">PHOLIO</div></div>
+          </div>
+          <div class="cd-face cd-back">
+            <div class="bgrid"><div><img src="/images/talent/headshot.webp" alt="" style="object-position:50% 30%"></div><div><img src="/images/talent/three-quarter.webp" alt=""></div><div><img src="/images/talent/full.webp" alt="" style="object-position:50% 70%"></div><div style="background:var(--gold)"><img src="/images/talent/cutout.webp" alt="" style="object-fit:contain;object-position:50% 100%"></div></div>
+            <div class="bn">Elara Keats</div>
+            <div class="bs"><span>Height<b>180 / 5′11″</b></span><span>Dress<b>4</b></span><span>Bust<b>32</b></span><span>Shoes<b>9</b></span><span>Waist<b>25</b></span><span>Hair<b>Black</b></span><span>Hips<b>35</b></span><span>Eyes<b>Brown</b></span></div>
+            <div class="bu"><span>pholio.studio/elara-k</span><span class="wm">PHOLIO</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cd-meta">
+      <p class="cd-tag" id="edtag">The industry card. <em>One strong frame, a clean name band, a working back.</em></p>
+      <p class="cd-spec mono"><b>5.5 × 8.5 in</b> · the size a board files<br><b>Front</b> composed · <b>Back</b> programmed<br>The wordmark on the PDF opens your portfolio<br><b>Printed</b> · an NFC inlay opens it with a tap</p>
+      <button class="act cd-flip" id="flip" type="button">Turn the card <span aria-hidden="true">↻</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05b PASS ============ -->
+<section id="pass" class="scene dark" data-label="Pholio ID" data-theme="dark">
+  <div class="pin">
+    <div class="ps-copy">
+      <h2 class="h-l">Your card, in the Wallet <em>beside your boarding pass.</em></h2>
+      <p class="lede">The Pholio ID carries your face, your name and the one number every booker checks first. When someone asks for your card, hand them your phone. The code opens your current book, so the pass never goes out of date.</p>
+      <p class="ps-spec mono"><b>Front</b> · Face, name, height in both units<br><b>Back</b> · Stats in the card’s own order<br><b>Code</b> · Opens pholio.studio/elara-k</p>
+      <span class="dev mono">In development</span>
+    </div>
+    <div class="phone" aria-label="Pholio ID pass in Apple Wallet">
+      <div class="ph-screen">
+        <div class="wl">
+          <div class="wl-top mono"><b>Wallet</b><span>+</span></div>
+          <div class="wp wp1"><span>Boarding pass</span><span><small>GATE</small>B22</span></div>
+          <div class="wp wp2"><span>Studio key</span><span><small>FLOOR</small>4</span></div>
+          <div class="pass" id="passcard">
+            <div class="pass-in" id="passin">
+              <div class="pass-front">
+                <div class="pf-head"><span class="pf-logo">PHOLIO</span><span class="pf-h"><small>HEIGHT</small>180 cm / 5′11″</span></div>
+                <div class="pf-band"><div class="pf-disc"><img src="/images/talent/headshot.webp" alt=""></div></div>
+                <div class="pf-name">Elara Keats</div>
+                <div class="pf-foot"><span><small>BASED IN</small>Los Angeles</span><div class="pf-qr"><canvas id="qr" width="25" height="25"></canvas><i class="pf-scan" id="pfscan"></i></div></div>
+              </div>
+              <div class="pass-back">
+                <div class="pb-hd"><i>P</i><div><b>Pholio</b><span>Pholio ID for Elara Keats</span></div></div>
+                <div class="pb-row"><small>Portfolio</small><span>pholio.studio/elara-k</span></div>
+                <div class="pb-row"><small>Height</small><span>180 cm / 5′11″</span></div>
+                <div class="pb-row"><small>Bust · Waist · Hips</small><span>81 / 32″ · 64 / 25″ · 89 / 35″</span></div>
+                <div class="pb-row"><small>Hair · Eyes</small><span>Black · Brown</span></div>
+                <div class="pb-row"><small>Updated</small><span>Measurements confirmed Sep 12, 2026</span></div>
+                <div class="pb-row"><small>About this pass</small><span>Details as declared on the Pholio profile at the issue date. Scan the code for the current portfolio.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 BRIEF ============ -->
+<section id="brief" class="scene light" data-label="The market" data-theme="light">
+  <div class="pin">
+    <div class="br-copy">
+      <h2 class="h-l">The market’s shot lists, <em>read as one.</em></h2>
+      <p class="lede">Every house publishes its own list of pictures, and the lists mostly ask for the same ones. Pholio reads them together and shows which frames you already have. When a house takes submissions on its own form, Pholio prepares the files to that house’s limits and drafts the email.</p>
+    </div>
+    <div class="mk" aria-label="Five published shot lists merged into one list of frames">
+      <div class="mk-lists" id="mklists">
+        <div class="mk-col"><h4>New York · Mainboard</h4><ul><li data-k="hs">Headshot</li><li data-k="pr">Profile</li><li data-k="tq">Three-quarter</li><li data-k="fl">Full length</li><li data-k="bk">Back</li></ul></div>
+        <div class="mk-col"><h4>Paris · Women</h4><ul><li data-k="hs">Headshot</li><li data-k="cu">Close-up, hair back</li><li data-k="pr">Profile</li><li data-k="fl">Full length</li><li data-k="wv">Walk video</li></ul></div>
+        <div class="mk-col"><h4>London · Development</h4><ul><li data-k="hs">Headshot</li><li data-k="pr">Profile</li><li data-k="fl">Full length</li><li data-k="bk">Back</li></ul></div>
+        <div class="mk-col"><h4>Milan · Women</h4><ul><li data-k="hs">Headshot</li><li data-k="cu">Close-up, hair back</li><li data-k="pr">Profile</li><li data-k="tq">Three-quarter</li><li data-k="fl">Full length</li></ul></div>
+        <div class="mk-col"><h4>Los Angeles · Commercial</h4><ul><li data-k="hs">Headshot</li><li data-k="sm">Smiling</li><li data-k="tq">Three-quarter</li><li data-k="fl">Full length</li></ul></div>
+      </div>
+      <div class="mk-union" id="mkunion">
+        <p class="mk-verdict">5 houses publish a shot list; together the lists come to 8 frames. <em>3 of 8 already in your set.</em></p>
+        <ul class="mk-rows">
+          <li><div class="th have"><img src="/images/talent/headshot.webp" alt=""></div><span class="lb">Headshot</span><span class="ct">On 5 of 5 lists</span></li>
+          <li><div class="th have"><img src="/images/talent/full.webp" alt="" style="object-position:50% 30%"></div><span class="lb">Full length</span><span class="ct">On 5 of 5 lists</span></li>
+          <li><div class="th"></div><span class="lb">Profile</span><span class="ct">On 4 of 5 lists</span></li>
+          <li><div class="th have"><img src="/images/talent/three-quarter.webp" alt=""></div><span class="lb">Three-quarter</span><span class="ct">On 3 of 5 lists</span></li>
+          <li><div class="th"></div><span class="lb">Back</span><span class="ct">On 2 of 5 lists</span></li>
+          <li><div class="th"></div><span class="lb">Close-up, hair back</span><span class="ct">On 2 of 5 lists</span></li>
+          <li><div class="th"></div><span class="lb">Smiling<small>The only frame on Los Angeles · Commercial’s shot list not in your set.</small></span><span class="ct">On 1 of 5 lists</span></li>
+          <li><div class="th"></div><span class="lb">Walk video</span><span class="ct">On 1 of 5 lists</span></li>
+        </ul>
+        <p class="mk-foot">Each list is the house’s own, read from what it publishes, with repeated asks shown once. A matching set is a fact about your photographs, not standing with any house.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 DOSSIER ============ -->
+<section id="dossier" class="scene light" data-label="Submission" data-theme="light">
+  <div class="pin">
+    <div class="ds-copy">
+      <h2 class="h-l">Seven pages, addressed to <em>one house.</em></h2>
+      <p class="lede">Digitals, stats, book, comp card, a few lines in your own voice, then a last look. The draft saves as you go, and what you send is kept exactly as it was sent.</p>
+      <ol class="ds-tabs" id="dtabs">
+        <li class="on"><b>01 / 07</b>Submitting to</li><li><b>02 / 07</b>Digitals</li><li><b>03 / 07</b>Stats</li><li><b>04 / 07</b>Book</li><li><b>05 / 07</b>Comp card</li><li><b>06 / 07</b>The message</li><li><b>07 / 07</b>Review &amp; send</li>
+      </ol>
+    </div>
+    <div class="ds-stack" id="dstack">
+      <div class="seal" id="seal">
+        <svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="36" fill="none" stroke="#a8894e" stroke-width="1.2" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" class="seal-c"/><path d="M26 41 l9 9 l19 -20" fill="none" stroke="#a8894e" stroke-width="1.6" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" class="seal-k"/></svg>
+        <h4>Thank you, Elara.</h4>
+        <p>Your submission has been sent to <em>New York · Mainboard</em>.</p>
+        <p class="rc mono">29 Sep 2026 · Under review · 3 frames · Digitals · The Standard comp card</p>
+        <p class="keep">A submission is a request for review, and nobody can promise more. The profile, the digitals and the card are yours either way.</p>
+      </div>
+      <div class="pg" style="z-index:1"><div class="pg-top mono"><b>07 / 07</b><span>Draft · saved 21:04</span></div><h4>Review &amp; send</h4><p class="sf">A last look at everything enclosed, then it’s on its way.</p><div class="pg-body"><ul class="pg-check"><li>Digital headshot</li><li>Full-length digital</li><li>Current digitals</li><li>Measurements</li><li>Contact</li><li>Comp card</li></ul><p class="pg-terms">Your package is delivered to New York · Mainboard as a separate recipient for representation review. Withdrawal revokes access in Pholio but cannot recall copies already downloaded.</p></div></div>
+      <div class="pg" style="z-index:2"><div class="pg-top mono"><b>06 / 07</b><span>Draft · saved 21:03</span></div><h4>The message</h4><p class="sf">A few honest lines, in your own voice.</p><div class="pg-body"><p class="pg-msg" id="msg" data-text="Hi, I’m Elara, based in Los Angeles and free to travel. These digitals are from this month, no retouching. I’d love to be considered for your women’s board. Thank you for looking."></p></div></div>
+      <div class="pg" style="z-index:3"><div class="pg-top mono"><b>05 / 07</b><span>Draft · saved 21:02</span></div><h4>Comp card</h4><p class="sf">The leave-behind that travels with your package.</p><div class="pg-body"><div class="pg-mini"><img src="/images/talent/three-quarter.webp" alt=""><b>ELARA KEATS</b></div></div></div>
+      <div class="pg" style="z-index:4"><div class="pg-top mono"><b>04 / 07</b><span>Draft · saved 21:02</span></div><h4>Book</h4><p class="sf">Your best work, supporting your digitals, never replacing them. Hold back anything that doesn’t earn its place.</p><div class="pg-body"><div class="pg-thumbs"><div><img src="/images/talent/full.webp" alt="" style="object-position:50% 10%"><span>Lifestyle</span></div><div><img src="/images/talent/crouch.webp" alt="" style="object-position:50% 40%"><span>Test shoot</span></div><div><img src="/images/talent/three-quarter.webp" alt="" style="object-position:50% 70%"><span>Commercial</span></div></div></div></div>
+      <div class="pg" style="z-index:5"><div class="pg-top mono"><b>03 / 07</b><span>Draft · saved 21:01</span></div><h4>Stats</h4><p class="sf">Your measurements, exactly as the agency reads them.</p><div class="pg-body"><div class="pg-stats"><div><small>HEIGHT</small><b>180 cm</b></div><div><small>BUST</small><b>32</b></div><div><small>WAIST</small><b>25</b></div><div><small>HIPS</small><b>35</b></div><div><small>DRESS</small><b>4</b></div><div><small>SHOES</small><b>9</b></div><div><small>HAIR</small><b>Black</b></div><div><small>EYES</small><b>Brown</b></div></div></div></div>
+      <div class="pg" style="z-index:6"><div class="pg-top mono"><b>02 / 07</b><span>Draft · saved 21:00</span></div><h4>Digitals</h4><p class="sf">Your raw set, the truth check agencies assess first. Current, declared unretouched, head to toe.</p><div class="pg-body"><div class="pg-thumbs"><div><img src="/images/talent/headshot.webp" alt="" style="object-position:50% 30%"><span>Headshot</span></div><div><img src="/images/talent/three-quarter.webp" alt=""><span>Three-quarter</span></div><div><img src="/images/talent/full.webp" alt="" style="object-position:50% 40%"><span>Full length</span></div></div></div></div>
+      <div class="pg" style="z-index:7"><div class="pg-top mono"><b>01 / 07</b><span>Draft · saved 20:59</span></div><h4>Submitting to</h4><p class="sf">Choose the board this package is for.</p><div class="pg-body"><p class="pg-house">New York · Mainboard<small>Requirements read 22 Sep 2026 · reviews in batches</small></p><div class="pg-boards"><span class="on">Women</span><span>Development</span><span>Commercial</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 SILENCE ============ -->
+<section id="silence" class="scene dark" data-label="The wait" data-theme="dark">
+  <div class="pin">
+    <div class="sl-copy">
+      <h2 class="h-l">Most houses answer with silence. <em>Pholio gives it an end date.</em></h2>
+      <p class="lede">Houses on Pholio set a review window. If nothing is decided inside it, the submission closes and you are told plainly: no decision within 30 days, treat this as a pass. You stop refreshing your inbox. Six months on, it is fair to send again.</p>
+      <span class="mono">Timing shown is illustrative. Each house sets its own window, and a clock never predicts an outcome.</span>
+    </div>
+    <div class="clock" id="clock">
+      <svg viewBox="0 0 200 200" aria-hidden="true">
+        <circle class="trk" cx="100" cy="100" r="92"/>
+        <g id="ticks"></g>
+        <circle class="arc" id="arc" cx="100" cy="100" r="92" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+      </svg>
+      <div class="clock-in">
+        <div class="clock-day">Day<b id="day">1</b>since sent</div>
+        <div class="clock-state" id="cstate">Unread</div>
+        <p class="clock-exp" id="cexp">Most first reads happen in this stretch.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 09 LEDGER ============ -->
+<section id="ledger" class="scene light" data-label="The ledger" data-theme="light">
+  <div class="lg-head">
+    <div>
+      <h2 class="h-l">A career, read down <em>one line.</em></h2>
+      <p class="lede">Every submission, on Pholio or off it, grouped by the month it went out. Whether Pholio carried it or you sent it yourself is stated on every row.</p>
+    </div>
+    <div class="lg-filters" id="lgf">
+      <button class="on" data-f="all">All 9</button><button data-f="rev">In review 3</button><button data-f="adv">Advancing 2</button><button class="zero" data-f="rep">Represented 0</button><button data-f="cls">Closed 4</button><button class="lg-log" type="button">+ Log a submission</button>
+    </div>
+  </div>
+  <div class="lg" id="lg">
+    <div class="lg-spine" id="spine"></div>
+    <div class="lg-month">September 2026</div>
+    <div class="lg-row" data-c="adv"><span class="d">27</span><div><span class="h">Show casting · New York</span><span class="rt p">Sent through Pholio · paid, disclosed in the call</span></div><span class="s adv">Slot offered · answer within 72 hours</span></div>
+    <div class="lg-row" data-c="rev"><span class="d">29</span><div><span class="h">New York · Mainboard</span><span class="rt p">Sent through Pholio</span></div><span class="s">Under Review</span></div>
+    <div class="lg-row" data-c="rev"><span class="d">19</span><div><span class="h">Paris · Women</span><span class="rt p">Sent through Pholio</span></div><span class="s adv">More Requested</span></div>
+    <div class="lg-row" data-c="rev"><span class="d">11</span><div><span class="h">Los Angeles · Commercial</span><span class="rt">You sent it · recorded here</span></div><span class="s">Awaiting reply</span></div>
+    <div class="lg-month">August 2026</div>
+    <div class="lg-row" data-c="adv"><span class="d">28</span><div><span class="h">London · Development</span><span class="rt p">Sent through Pholio</span></div><span class="s adv">Go-See Requested</span></div>
+    <div class="lg-row" data-c="cls"><span class="d">14</span><div><span class="h">Milan · Women</span><span class="rt p">Sent through Pholio</span></div><span class="s cls">No Response</span></div>
+    <div class="lg-row" data-c="cls"><span class="d">03</span><div><span class="h">Los Angeles · Lifestyle</span><span class="rt">You sent it · recorded here</span></div><span class="s cls">Heard back</span></div>
+    <div class="lg-month">July 2026</div>
+    <div class="lg-row" data-c="cls"><span class="d">22</span><div><span class="h">Miami · Swim &amp; Fitness</span><span class="rt p">Sent through Pholio</span></div><span class="s cls">Kept on File</span></div>
+    <div class="lg-row" data-c="cls"><span class="d">09</span><div><span class="h">New York · Commercial</span><span class="rt p">Sent through Pholio</span></div><span class="s cls">Not Selected</span></div>
+  </div>
+</section>
+
+<!-- ============ 10 NEXT ============ -->
+<section id="next" class="scene dark" data-label="Next" data-theme="dark">
+  <div class="nx-head">
+    <h2 class="h-l">What to do next, with the <em>number that says why.</em></h2>
+    <p class="lede">Intel ranks the few things worth your time and shows its evidence. When nothing needs doing, it says so instead of inventing advice.</p>
+  </div>
+  <ul class="nx-list">
+    <li><div><p>Paris · Women asked for more materials 2 days ago.</p><small>The request is recorded on the submission and is waiting for your response.</small></div><a class="act" href="#dossier">Send what they asked for <span aria-hidden="true">↗</span></a></li>
+    <li><div><p>Your digitals are 14 weeks old, 14 days past the 12-week window.</p><small>Your recorded capture dates put this set outside the current window.</small></div><a class="act" href="#capture">Shoot fresh digitals <span aria-hidden="true">↺</span></a></li>
+    <li><div><p>Your measurements were last confirmed 96 days ago.</p><small>Pholio marks measurements for re-confirmation after 90 days.</small></div><a class="act" href="#tape">Re-confirm your stats <span aria-hidden="true">↗</span></a></li>
+  </ul>
+</section>
+
+<!-- ============ 11 YOURS ============ -->
+<section id="yours" class="scene light" data-label="Your terms" data-theme="light">
+  <div class="yr-grid">
+    <div class="yr-copy">
+      <h2 class="h-l">Your face is <em>not ours to use.</em></h2>
+      <p class="lede">Two separate permissions, each decided on its own. Neither comes with accepting the Terms, granting one never grants the other, and either can be withdrawn at any time. Every change is recorded.</p>
+    </div>
+    <div class="perm">
+      <div class="perm-row"><h3>Pholio using your name and images in its own marketing.</h3><button class="tog" role="switch" aria-checked="false" aria-label="Marketing use"><i></i></button><p>Not granted</p></div>
+      <div class="perm-row"><h3>An AI-generated or AI-enhanced likeness of you.</h3><button class="tog" role="switch" aria-checked="false" aria-label="AI likeness"><i></i></button><p>Not granted</p></div>
+    </div>
+  </div>
+  <div class="lens">
+    <h3>Who sees what, before anyone does.</h3>
+    <div class="lens-tabs" role="tablist" id="lenstabs">
+      <button class="on" data-l="pub" role="tab" aria-selected="true">A public visitor</button><button data-l="house" role="tab" aria-selected="false">A house you sent to</button><button data-l="you" role="tab" aria-selected="false">You</button>
+    </div>
+    <ul class="lens-fields" id="lensfields">
+      <li data-v="pub house you"><b>Name and city</b><span>Shown</span></li>
+      <li data-v="pub house you"><b>Book</b><span>Shown</span></li>
+      <li data-v="pub house you"><b>Height and measurements</b><span>Shown</span></li>
+      <li data-v="house you"><b>Digitals set</b><span>Shown</span></li>
+      <li data-v="house you"><b>Age</b><span>Shown</span></li>
+      <li data-v="house you"><b>Email and phone</b><span>Shown</span></li>
+      <li data-v="house you"><b>Your message and comp card</b><span>Shown</span></li>
+      <li data-v="you"><b>Date of birth</b><span>Shown</span></li>
+      <li data-v="you"><b>Every other submission</b><span>Shown</span></li>
+      <li data-v="you"><b>Likeness permissions</b><span>Shown</span></li>
+    </ul>
+    <span class="dev mono">In development</span>
+  </div>
+  <div class="yr-facts">
+    <div><h4>A portfolio at your own address.</h4><p>Your book lives at <code>pholio.studio/elara-k</code>. Share it where you like, and see which frames get opened.</p></div>
+    <div><h4>Booked out is a real status.</h4><p>Mark the dates you’re away. Agencies that open your profile see them before they ask.</p></div>
+    <div><h4>Under 18, nothing is public.</h4><p>A guardian signs first, measurements stay private, and the public link does not exist.</p></div>
+  </div>
+</section>
+
+<!-- ============ 12 CLOSE ============ -->
+<section id="close" class="scene dark" data-label="Apply" data-theme="dark">
+  <div class="pin">
+    <div class="fn-giant" aria-hidden="true"><span>Kept</span><span><em>here.</em></span></div>
+    <div class="fn-fig"><img src="/images/talent/cutout.webp" alt="" aria-hidden="true"></div>
+    <div class="fn-copy">
+      <h2 class="h-m">Every frame, card, answer and silence, <em>in one place.</em></h2>
+      <div class="fn-cta"><a class="btn magnetic" href="{{SIGNUP_HREF}}">Apply free</a><small>No fee to apply. No paid visibility. Agencies are never charged.</small></div>
+    </div>
+    <div class="fn-price">
+      <h3>Studio+ is for the craft you keep.</h3>
+      <p>Premium comp-card themes and 90-day portfolio analytics. Nothing an agency sees or receives changes with it.</p>
+      <span class="mono">$9.99 a month · $95.88 a year · 14-day trial</span>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer>
+  <p>Pholio is not an agency. It does not represent talent, and it cannot promise work, replies or representation.</p>
+  <p>Demo profile: Elara Keats. Photographs by sammy swae on Unsplash, used for this prototype only.</p>
+</footer>
+</div>
