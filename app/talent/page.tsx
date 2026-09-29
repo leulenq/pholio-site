@@ -1,20 +1,21 @@
-// Server component — metadata requires server component
-import TalentFlowPage from "@/components/talent-flow/TalentFlowPage";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Talent — Pholio",
+import { TalentPage } from "@/components/talent";
+
+export const metadata: Metadata = {
+  title: "Talent",
   description:
-    "For models, actors, and creatives: a comp card that composes itself, a book the booker sees on your terms, applications that arrive complete, and honest signal on who leaned in. Free to apply.",
+    "Your digitals, stats, book, comp card and every submission, kept in one place and kept current. Applying is free, and agencies are never charged.",
   openGraph: {
-    title: "Talent — Pholio",
+    title: "Talent | Pholio",
     description:
-      "A comp card that composes itself. A book on your terms. Applications that arrive complete, and honest signal on who leaned in. Free to apply — never a fee to be seen.",
+      "Your digitals, stats, book, comp card and every submission, kept in one place and kept current.",
     url: "https://www.pholio.studio/talent",
     siteName: "Pholio",
     type: "website",
   },
 };
 
-export default function TalentPage() {
-  return <TalentFlowPage />;
+export default function Talent() {
+  return <TalentPage />;
 }
