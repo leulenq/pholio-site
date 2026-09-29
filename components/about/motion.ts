@@ -52,7 +52,12 @@ const src = (id: string, w: number) =>
 /* ── stream ───────────────────────────────────────────────────────────── */
 
 const DRIFT = 0.03; // viewport widths per second at a column speed of 1
-const REST = 0.22; // the stream never stops: this much keeps moving inside the letters
+const REST = 0.22;
+// The opening scene's timeline, in screens of scroll. about.css places every
+// beat on the same ruler (--s): hero 0 → 3, mission 3 → 10.5, decisions
+// 10.5 → 19. The section is made exactly this long.
+const TIMELINE = 19;
+const HERO_END = 3; // the stream never stops: this much keeps moving inside the letters
 
 function streamHook(scene: HTMLElement): Hook {
   const cols = Array.from(scene.querySelectorAll<HTMLElement>("[data-col]"));
@@ -61,7 +66,6 @@ function streamHook(scene: HTMLElement): Hook {
   let offsets = cols.map((_, i) => i * 997);
   let rate = 1;
   let push = 0;
-
   const place = () => {
     cols.forEach((col, i) => {
       const c = cycles[i];
@@ -73,10 +77,24 @@ function streamHook(scene: HTMLElement): Hook {
     measure() {
       // Each column holds its tiles twice; one loop is half its height.
       cycles = cols.map((c) => Math.max(1, c.scrollHeight / 2));
+      scene.style.height = `${Math.round((TIMELINE + 1) * window.innerHeight)}px`;
       place();
     },
     frame(p) {
-      rate = 1 - (1 - REST) * smooth(clamp01((p - 0.06) / 0.4));
+      const s = p * TIMELINE;
+      scene.style.setProperty("--s", s.toFixed(4));
+      // The stream slows while the dark closes over it (0.3 → 1.4 screens).
+      rate = 1 - (1 - REST) * smooth(clamp01((s - 0.3) / 1.1));
+      const dec = s > 10.5;
+      if (dec !== ("dec" in scene.dataset)) {
+        if (dec) scene.dataset.dec = "";
+        else delete scene.dataset.dec;
+      }
+      const care = s > HERO_END;
+      if (care !== ("care" in scene.dataset)) {
+        if (care) scene.dataset.care = "";
+        else delete scene.dataset.care;
+      }
     },
     tick(dt, velocity) {
       const r = scene.getBoundingClientRect();
@@ -90,6 +108,10 @@ function streamHook(scene: HTMLElement): Hook {
     still() {
       cycles = cols.map((c) => Math.max(1, c.scrollHeight / 2));
       place();
+      scene.dataset.care = "";
+      scene.style.removeProperty("height");
+      scene.style.setProperty("--s", String(HERO_END)); // the hero, complete
+      scene.dataset.dec = "";
     },
   };
 }

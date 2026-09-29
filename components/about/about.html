@@ -9,10 +9,9 @@
 
   Chapters
     I    The wall          faces keep arriving; the dark closes in, and the phrase is cut from them
-    II   Hope              the word is made of faces, and falls apart one letter per problem
-    III  Two sides         two lists travel toward each other until every line has its pair
-    IV   We only           how the company decides: the easy ending, struck, then the one we chose
-    V    The Collective    the people, as an editorial spread
+    II   The mission       three full-screen worlds, a seam between each, one sentence across all; then daylight
+    III  How we decide     the thesis rises to become the premise; the decisions are made beneath it
+    IV   The people        a full-height portrait panel; each name written in; the panel splits into three at the end
     VI   The sentence      the future, read left to right, photographs standing in as words
     VII  The close
 -->
@@ -20,7 +19,7 @@
 <div class="ab" data-about>
 
   <!-- ══════════════════════════════════════════ I · SEEN BEFORE MET ══ -->
-  <section class="ab-wall fv" data-scene="pin" data-hook="stream" data-still="1" aria-labelledby="ab-wall-title">
+  <section class="ab-wall fv" data-scene="pin" data-hook="stream" data-still="0.42" aria-labelledby="ab-wall-title">
     <div class="ab-stage">
       <div class="ab-wall__cols" aria-hidden="true">
           <div class="ab-col" data-col data-speed="0.7" style="--c:0">
@@ -174,144 +173,121 @@
         <span class="ab-wall__look">first look</span>
       </div>
 
-      <h1 class="ab-wall__line">
+      <h1 class="ab-wall__line" id="ab-wall-title">
         <span class="ab-wall__pre">Pholio exists to make the</span>
         <span class="ab-sr">first look</span>
         <span class="ab-wall__post">an <span class="it g">honest</span> one.</span>
       </h1>
+
+
+
+
+      <!-- ── II · THE MISSION — the same stage, carried on ───────────── -->
+      <div class="ab-mis" aria-labelledby="ab-mis-title">
+        <!-- Taste: three worlds. Each is one photograph at its own shape, with
+             the colour of its backdrop carried out to fill the screen. A seam
+             sweeps from one world into the next, and the sentence is one layer
+             set identically in all three, so it changes colour where the seam
+             crosses it. -->
+        <p class="ab-sr">Who gets chosen will always come down to taste.</p>
+        <div class="ab-worlds">
+        <div class="ab-w ab-w--red" data-w="0">
+          <img src="https://images.unsplash.com/photo-1718251479696-36a6fab2a44b?w=1600&q=80&auto=format&fit=crop" alt="" loading="lazy" />
+          <p class="ab-w__say" aria-hidden="true"><span class="ab-w__a">Who gets chosen</span> <span class="ab-w__b">will always come down to</span> <span class="ab-w__c">taste.</span></p>
+        </div>
+        <div class="ab-w ab-w--wall" data-w="1">
+          <img src="https://images.unsplash.com/photo-1780566759997-6a4eabceaa10?w=1600&q=80&auto=format&fit=crop" alt="" loading="lazy" />
+          <p class="ab-w__say" aria-hidden="true"><span class="ab-w__a">Who gets chosen</span> <span class="ab-w__b">will always come down to</span> <span class="ab-w__c">taste.</span></p>
+        </div>
+        <div class="ab-w ab-w--blue" data-w="2">
+          <img src="https://images.unsplash.com/photo-1660681438660-2eb39cf9c423?w=1600&q=80&auto=format&fit=crop" alt="" loading="lazy" />
+          <p class="ab-w__say" aria-hidden="true"><span class="ab-w__a">Who gets chosen</span> <span class="ab-w__b">will always come down to</span> <span class="ab-w__c">taste.</span></p>
+        </div>
+        </div>
+
+        <div class="ab-mis__day">
+          <h2 class="ab-mis__thesis" id="ab-mis-title">
+            <span class="ab-mis__row" style="--r:0"><span>The way in</span></span>
+            <span class="ab-mis__row" style="--r:1"><span>should never come</span></span>
+            <span class="ab-mis__row" style="--r:2"><span>down to <span class="it g">luck.</span></span></span>
+          </h2>
+          <p class="ab-mis__sign">That is why Pholio exists.</p>
+        </div>
+
+        <!-- ── III · HOW THE COMPANY DECIDES — the same stage, carried on ─ -->
+        <!-- The thesis rises to the top and becomes the premise; "We only"
+             takes its place at the same size, and each decision arrives as
+             the easy ending, struck, then the one Pholio chose. -->
+        <div class="ab-dec" aria-labelledby="ab-dec-title">
+          <h2 class="ab-dec__we" id="ab-dec-title">We <span class="it g">only</span></h2>
+          <ol class="ab-dec__list">
+          <li class="ab-dec__item" style="--i:0">
+            <span class="ab-dec__slot"><span class="ab-dec__tempt" aria-hidden="true"><em>guess.</em></span><span class="ab-dec__real">say what we know.</span></span>
+            <p class="ab-dec__proof">A photograph with no date is never called current. A height nobody measured is marked self-reported. An outcome we never saw is never recorded.</p>
+          </li>
+          <li class="ab-dec__item" style="--i:1">
+            <span class="ab-dec__slot"><span class="ab-dec__tempt" aria-hidden="true"><em>sell visibility.</em></span><span class="ab-dec__real">charge for what you keep.</span></span>
+            <p class="ab-dec__proof">No agency pays us. Nobody pays to apply, to be reviewed, or to be seen. The only thing for sale is craft you keep.</p>
+          </li>
+          <li class="ab-dec__item" style="--i:2">
+            <span class="ab-dec__slot"><span class="ab-dec__tempt" aria-hidden="true"><em>use whatever we are given.</em></span><span class="ab-dec__real">share what you agreed to share.</span></span>
+            <p class="ab-dec__proof">Location data is stripped from every photograph. An adult’s age is never printed on their card. Permission is asked one purpose at a time, and starts at no.</p>
+          </li>
+          <li class="ab-dec__item" style="--i:3">
+            <span class="ab-dec__slot"><span class="ab-dec__tempt" aria-hidden="true"><em>rank people.</em></span><span class="ab-dec__real">let people judge people.</span></span>
+            <p class="ab-dec__proof">No scores, no rankings, no guesses at anyone’s potential. Software can tell a close-up from a full length. Who gets signed is a person’s call.</p>
+          </li>
+          <li class="ab-dec__item ab-dec__item--last" style="--i:4">
+            <span class="ab-dec__slot"><span class="ab-dec__tempt" aria-hidden="true"><em>do everything.</em></span><span class="ab-dec__real">build the part before the decision.</span></span>
+            <p class="ab-dec__proof">Bookings, contracts and commissions belong to the people in the room and the systems they already use. We stop at the door, on purpose.</p>
+          </li>
+          </ol>
+          <ol class="ab-dec__count" aria-hidden="true"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li></ol>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════ II · HOPE ══ -->
-  <section class="ab-hope fc" data-scene="pin" data-still="1" aria-labelledby="ab-hope-title">
+  <!-- ═══════════════════════════════════════════════ IV · THE PEOPLE ══ -->
+  <!-- The right side of the screen is the photograph. Each person's portrait
+       wipes up over the last while their name is written on the left. At
+       the end the panel splits into three strips, one face each, and the
+       names settle into a list beside them. -->
+  <section class="ab-sig fc" data-scene="pin" data-still="1" aria-labelledby="ab-sig-title">
     <div class="ab-stage">
-      <h2 class="ab-hope__lead d" id="ab-hope-title">The way into modeling runs on <span class="ab-sr">hope.</span></h2>
-
-      <p class="ab-hope__word" aria-hidden="true">
-        <span class="ab-hope__l" style="--i:0; --rot:-14deg; --img:url('https://images.unsplash.com/photo-1718251479696-36a6fab2a44b?w=1100&q=75&auto=format&fit=crop')">h</span><span
-              class="ab-hope__l" style="--i:1; --rot:9deg; --img:url('https://images.unsplash.com/photo-1633329712165-4e578376eb87?w=1100&q=75&auto=format&fit=crop')">o</span><span
-              class="ab-hope__l" style="--i:2; --rot:-6deg; --img:url('https://images.unsplash.com/photo-1683849121275-16929857ceb3?w=1100&q=75&auto=format&fit=crop')">p</span><span
-              class="ab-hope__l" style="--i:3; --rot:12deg; --img:url('https://images.unsplash.com/photo-1780566759983-483dd201237c?w=1100&q=75&auto=format&fit=crop')">e</span>
-      </p>
-
-      <ol class="ab-hope__why">
-        <li class="d" style="--i:0">Rules nobody writes down, so the same photographs get taken again and again.</li>
-        <li class="d" style="--i:1">Silence, which many agencies publish as policy.</li>
-        <li class="d" style="--i:2">Money spent on being noticed: fees to stay visible, paid opinions.</li>
-        <li class="d" style="--i:3">Agencies that turn out not to exist.</li>
+      <div class="ab-sig__panel">
+        <img class="ab-sig__img" style="--k:0; object-position:50% 30%" src="/assets/Leul_Portrait.PNG" alt="Leul Enquanhone" loading="lazy" />
+        <img class="ab-sig__img" style="--k:1; object-position:50% 30%" src="/assets/Natan_Portrait.png" alt="Natan Getahun" loading="lazy" />
+        <img class="ab-sig__img" style="--k:2; object-position:70% 40%" src="/assets/Alex_Portrait.jpg" alt="Alexander Rieder" loading="lazy" />
+      </div>
+      <h2 class="ab-sig__made" id="ab-sig-title">Pholio is made by</h2>
+      <div class="ab-sig__who" style="--k:0">
+        <p class="ab-sig__name">
+          <span class="ab-sig__given"><span>Leul</span></span>
+          <span class="ab-sig__family"><span>Enquanhone</span></span>
+        </p>
+        <p class="ab-sig__label">Co-founder. Designs and builds Pholio.</p>
+      </div>
+      <div class="ab-sig__who" style="--k:1">
+        <p class="ab-sig__name">
+          <span class="ab-sig__given"><span>Natan</span></span>
+          <span class="ab-sig__family"><span>Getahun</span></span>
+        </p>
+        <p class="ab-sig__label">Co-founder. Brings Pholio to the industry.</p>
+      </div>
+      <div class="ab-sig__who" style="--k:2">
+        <p class="ab-sig__name">
+          <span class="ab-sig__given"><span>Alexander</span></span>
+          <span class="ab-sig__family"><span>Rieder</span></span>
+        </p>
+        <p class="ab-sig__label">Advisor. Co-produces Fashion Week Brooklyn.</p>
+      </div>
+      <ol class="ab-sig__list">
+        <li style="--k:0"><span class="ab-sig__rn">Leul <span class="it">Enquanhone</span></span> <a class="ab-sig__rl" href="https://www.linkedin.com/in/leulenquanhone/" target="_blank" rel="noopener noreferrer">Co-founder, LinkedIn <span aria-hidden="true">↗</span></a></li>
+        <li style="--k:1"><span class="ab-sig__rn">Natan <span class="it">Getahun</span></span> <a class="ab-sig__rl" href="https://www.linkedin.com/in/naty-getahun/" target="_blank" rel="noopener noreferrer">Co-founder, LinkedIn <span aria-hidden="true">↗</span></a></li>
+        <li style="--k:2"><span class="ab-sig__rn">Alexander <span class="it">Rieder</span></span> <a class="ab-sig__rl" href="https://www.linkedin.com/in/alexander-rieder-2798351b8/" target="_blank" rel="noopener noreferrer">Advisor, LinkedIn <span aria-hidden="true">↗</span></a></li>
       </ol>
-
-      <p class="ab-hope__after d">Pholio exists to make the way in <span class="it g">honest.</span></p>
     </div>
-  </section>
-
-  <!-- ═════════════════════════════════════════════ III · TWO SIDES ══ -->
-  <section class="ab-zip fv" data-scene="pin" data-still="1" aria-labelledby="ab-zip-title">
-    <div class="ab-stage">
-      <h2 class="ab-zip__title d" id="ab-zip-title">Every introduction has <span class="it g">two sides.</span></h2>
-
-      <div class="ab-zip__col ab-zip__col--ask">
-        <p class="ab-zip__head">If you are asking to be seen, you should be able to expect</p>
-        <ul>
-          <li class="d">to know the rules before you send anything</li>
-          <li class="d">not to be left waiting</li>
-          <li class="d">never to pay for a chance</li>
-          <li class="d">that your face is not used without asking</li>
-          <li class="d">that nobody promises you work</li>
-        </ul>
-      </div>
-      <div class="ab-zip__col ab-zip__col--dec">
-        <p class="ab-zip__head">If you are deciding, you should be able to expect</p>
-        <ul>
-          <li class="d">to receive what you asked for</li>
-          <li class="d">not to owe everyone a letter</li>
-          <li class="d">never to pay to receive one</li>
-          <li class="d">that nobody can apply in your name</li>
-          <li class="d">that the decision stays yours</li>
-        </ul>
-      </div>
-      <div class="ab-zip__ties" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════ IV · WE ONLY ══ -->
-  <section class="ab-only fc" data-scene="pin" data-steps="5" data-still="1" aria-labelledby="ab-only-title">
-    <div class="ab-stage">
-      <p class="ab-only__kicker">How the company decides</p>
-
-      <h2 class="ab-only__sentence d" id="ab-only-title">
-        <span class="ab-only__we">We <span class="it g">only</span></span>
-        <span class="ab-only__slot">
-          <span class="ab-only__tempt" aria-hidden="true">
-            <span><em class="ab-x">guess.</em></span>
-            <span><em class="ab-x">sell visibility.</em></span>
-            <span><em class="ab-x">use whatever we are given.</em></span>
-            <span><em class="ab-x">rank people.</em></span>
-            <span><em class="ab-x">do everything.</em></span>
-          </span>
-          <span class="ab-only__reel">
-            <span>say what we know.</span>
-            <span>charge for what you keep.</span>
-            <span>share what you agreed to share.</span>
-            <span>let people judge people.</span>
-            <span>build the part before the decision.</span>
-          </span>
-        </span>
-      </h2>
-
-      <ol class="ab-only__proof">
-        <li>A photograph with no date is never called current. A height nobody measured is marked self-reported. An outcome we never saw is never recorded.</li>
-        <li>No agency pays us. Nobody pays to apply, to be reviewed, or to be seen. The only thing for sale is craft you keep.</li>
-        <li>Location data is stripped from every photograph. An adult’s age is never printed on their card. Permission is asked one purpose at a time, and starts at no.</li>
-        <li>No scores, no rankings, no guesses at anyone’s potential. Software can tell a close-up from a full length. Who gets signed is a person’s call.</li>
-        <li>Bookings, contracts and commissions belong to the people in the room and the systems they already use. We stop at the door, on purpose.</li>
-      </ol>
-
-      <ol class="ab-only__count" aria-hidden="true"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li></ol>
-    </div>
-  </section>
-
-  <!-- ═════════════════════════════════════════ V · THE COLLECTIVE ══ -->
-  <section class="ab-team fv" aria-labelledby="ab-team-title">
-    <header class="ab-team__head" data-scene="pass">
-      <p class="ab-team__label">The Collective</p>
-      <h2 class="ab-team__title d" id="ab-team-title">Engineering, business, and <span class="it g">the runway.</span></h2>
-    </header>
-
-    <article class="ab-person ab-person--1" data-scene="pass">
-      <figure class="ab-person__plate">
-        <img src="/assets/Leul_Portrait.PNG" alt="Leul Enquanhone" loading="lazy" style="object-position:50% 24%" />
-      </figure>
-      <div class="ab-person__credit">
-        <p class="ab-person__role">Co-founder, engineering</p>
-        <p class="ab-person__name d">Leul <span class="it">Enquanhone</span></p>
-        <a class="ab-person__link" href="https://www.linkedin.com/in/leulenquanhone/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      </div>
-    </article>
-
-    <article class="ab-person ab-person--2" data-scene="pass">
-      <figure class="ab-person__plate">
-        <img src="/assets/Natan_Portrait.png" alt="Natan Getahun" loading="lazy" style="object-position:50% 30%" />
-      </figure>
-      <div class="ab-person__credit">
-        <p class="ab-person__role">Co-founder, business</p>
-        <p class="ab-person__name d">Natan <span class="it">Getahun</span></p>
-        <a class="ab-person__link" href="https://www.linkedin.com/in/naty-getahun/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      </div>
-    </article>
-
-    <article class="ab-person ab-person--3" data-scene="pass">
-      <figure class="ab-person__plate">
-        <img src="/assets/Alex_Portrait.jpg" alt="Alexander Rieder" loading="lazy" style="object-position:50% 36%" />
-      </figure>
-      <div class="ab-person__credit">
-        <p class="ab-person__role">Industry advisor, co-producer of Fashion Week Brooklyn</p>
-        <p class="ab-person__name d">Alexander <span class="it">Rieder</span></p>
-        <a class="ab-person__link" href="https://www.linkedin.com/in/alexander-rieder-2798351b8/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      </div>
-    </article>
-
-    <p class="ab-team__foot d">Pholio began in <span class="it g">2025.</span></p>
   </section>
 
   <!-- ══════════════════════════════════════════════ VI · THE SENTENCE ══ -->

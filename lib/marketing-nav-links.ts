@@ -38,7 +38,7 @@ export interface NavEntry {
 export const PRIMARY_NAV: readonly NavEntry[] = [
   { label: "TALENT", href: "/talent", kind: "door", built: true },
   { label: "AGENCIES", href: "/agencies", kind: "door", built: false },
-  { label: "STUDIO+", href: "/studio-plus", kind: "tier", built: false },
+  { label: "STUDIO+", href: "/studio-plus", kind: "tier", built: true },
 ] as const;
 
 /** Company pages. The header index's clerical column. */

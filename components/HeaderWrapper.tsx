@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import {
-  DEFAULT_HEADER_VARIANT,
+  defaultHeaderVariantFor,
   isHeaderVariantId,
   type HeaderVariantId,
 } from "@/lib/header-variants";
@@ -34,14 +34,14 @@ const STORAGE_KEY = "pholio:header-variant";
 /**
  * Reads a header direction from `?header=<id>` and remembers it for the tab, so
  * a direction can be walked through the whole site while it is being reviewed.
- * Nothing is persisted for ordinary visitors: with no override,
- * DEFAULT_HEADER_VARIANT renders. `?header=reset` clears it.
+ * Nothing is persisted for ordinary visitors: with no override, the route's
+ * default renders (`defaultHeaderVariantFor`). `?header=reset` clears it.
  *
  * There is deliberately no on-page indicator of which variant is applied —
  * anything pinned to the viewport competes with the header itself.
  */
 function useHeaderVariant(): HeaderVariantId {
-  const [variant, setVariant] = useState<HeaderVariantId>(DEFAULT_HEADER_VARIANT);
+  const [override, setOverride] = useState<HeaderVariantId | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -50,22 +50,23 @@ function useHeaderVariant(): HeaderVariantId {
 
     if (fromQuery === "reset") {
       window.sessionStorage.removeItem(STORAGE_KEY);
-      setVariant(DEFAULT_HEADER_VARIANT);
+      setOverride(null);
       return;
     }
     if (isHeaderVariantId(fromQuery)) {
       window.sessionStorage.setItem(STORAGE_KEY, fromQuery);
-      setVariant(fromQuery);
+      setOverride(fromQuery);
       return;
     }
 
     const stored = window.sessionStorage.getItem(STORAGE_KEY);
     if (isHeaderVariantId(stored)) {
-      setVariant(stored);
+      setOverride(stored);
     }
   }, [pathname]);
 
-  return variant;
+  /* A route's own edition (Studio+) unless a review override is set. */
+  return override ?? defaultHeaderVariantFor(pathname);
 }
 
 export default function HeaderWrapper() {

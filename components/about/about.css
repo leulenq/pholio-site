@@ -148,7 +148,7 @@
    ══════════════════════════════════════════════════════════════════════════ */
 
 .ab-wall {
-  --len: 340vh;
+  --len: 720vh;
 }
 .ab-wall .ab-stage {
   --t: 9.8vw;
@@ -238,11 +238,11 @@
   translate: -0.02em 0.04em;
 }
 .ab-wall .ab-stage {
-  --cut: clamp(0, (var(--p, 0) - 0.08) / 0.34, 1);
+  --cut: clamp(0, (var(--hp) - 0.1) / 0.37, 1);
   /* The ground under the letters lifts only once the dark has mostly closed,
      so the wall never passes through a washed-out grey. */
-  --lift: clamp(0, (var(--p, 0) - 0.3) / 0.14, 1);
-  --say: clamp(0, (var(--p, 0) - 0.46) / 0.14, 1);
+  --lift: clamp(0, (var(--hp) - 0.37) / 0.13, 1);
+  --say: clamp(0, (var(--hp) - 0.5) / 0.13, 1);
 }
 
 /* The rest of the sentence: small, fixed, and in plain type. It comes after
@@ -309,382 +309,419 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   II · HOPE
-   The sentence ends on a word too big for the page, and the word is made of
-   the people it is about. Each thing the way in actually runs on is named,
-   and as it is named a letter drops out of the word. When the word is gone,
-   what is left is the reason the company exists.
+   II · THE MISSION
+   Not a new section: the hero's stage, carried on. Who gets chosen will
+   always be taste; the way in should never be luck. The first half lives in
+   the dark as images, the second in daylight as plain type.
    ══════════════════════════════════════════════════════════════════════════ */
 
-.ab-hope {
-  --len: 360vh;
+.ab-wall .ab-stage {
+  /* Three chapters, one timeline. motion.ts writes --s: the scroll position
+     inside this scene, measured in screens. Every beat below is placed on
+     that one ruler, so the pacing can be read and tuned as distances:
+       hero      0 → 3
+       mission   3 → 10.5
+       decisions 10.5 → 19 */
+  --hp: clamp(0, var(--s, 0) / 3, 1);
+  --cp: clamp(0, (var(--s, 0) - 3) / 7.5, 1);
+  --ds: calc(var(--s, 0) - 10.5);
+  --out: clamp(0, var(--cp) / 0.04, 1);
 }
-.ab-hope .ab-stage {
-  --a: clamp(0, (var(--p, 0) - 0.8) / 0.1, 1);
+.ab-wall__line {
+  opacity: calc(1 - var(--out));
 }
-.ab-hope__lead {
+/* Once the mission begins the wall is gone for good, not merely dark. */
+.ab-wall__cols,
+.ab-wall__cut {
+  visibility: visible;
+}
+.ab-wall[data-care] .ab-wall__cols {
+  opacity: calc(1 - var(--out));
+}
+/* The phrase dims back into the dark it was cut from. */
+.ab-wall__look {
+  color: color-mix(in srgb, var(--gold-light) calc((1 - var(--out)) * 100%), #000);
+}
+
+/* Taste, in the dark: three photographs arrive one at a time, each holding
+   the part of the sentence its own empty space can carry, and each steps
+   back to a corner when the next arrives, so the sentence builds across all
+   three. Then they rise away together, a gold line holds the place, and
+   daylight opens from it for the way in. */
+.ab-mis {
   position: absolute;
-  top: 13vh;
-  left: var(--gut);
-  font-size: clamp(28px, 3.2vw, 62px);
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  visibility: hidden;
+  --dayk: clamp(0, (var(--cp) - 0.747) / 0.066, 1);
+  --mid: calc(50% - 4vh);
+  /* The three worlds: the first opens from the line, the next two sweep in,
+     and all three close back to the line together before daylight. */
+  --shutw: clamp(0, (var(--cp) - 0.68) / 0.053, 1);
+  --w0: clamp(0, (var(--cp) - 0.04) / 0.067, 1);
+  --w1: clamp(0, (var(--cp) - 0.24) / 0.107, 1);
+  --w2: clamp(0, (var(--cp) - 0.453) / 0.107, 1);
+  --say-a: clamp(0, (var(--cp) - 0.133) / 0.033, 1);
+  --say-b: clamp(0, (var(--cp) - 0.347) / 0.033, 1);
+  --say-c: clamp(0, (var(--cp) - 0.56) / 0.04, 1);
 }
-.ab-hope__word {
+.ab-wall[data-care] .ab-mis {
+  visibility: visible;
+}
+/* All three worlds close back to the line together. */
+.ab-worlds {
   position: absolute;
-  left: calc(var(--gut) - 0.03em);
-  bottom: 2vh;
+  inset: 0;
+  clip-path: inset(calc(var(--shutw) * (50% - 4vh)) 0 calc(var(--shutw) * (50% + 4vh)) 0);
+}
+/* A world: the screen filled with the colour of one photograph's backdrop,
+   the photograph standing full height at the right with its left edge
+   dissolving into that colour. Nothing reads as a picture on a page. */
+.ab-w {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--field);
+  pointer-events: auto;
+}
+.ab-w img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.55) 26%, #000 56%);
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.55) 26%, #000 56%);
+  transform: translateX(calc(var(--drift, 0) * 1vw));
+}
+.ab-w--red {
+  --field: #86183a;
+  --ink-a: var(--cream);
+  --ink-c: var(--gold-light);
+  /* Opens out of the gold line the hero left behind. */
+  clip-path: inset(calc((1 - var(--w0)) * (50% - 4vh)) 0 calc((1 - var(--w0)) * (50% + 4vh)) 0);
+}
+.ab-w--red img {
+  /* Narrower than the print, to lose the studio stand at its right edge. */
+  aspect-ratio: 0.6;
+  object-position: 30% 50%;
+}
+.ab-w--wall {
+  --field: #dedede;
+  --ink-a: var(--ink);
+  --ink-c: var(--gold-dark);
+  --drift: calc((1 - var(--w1)) * 8);
+  /* The seam sweeps in from the right. */
+  clip-path: inset(0 0 0 calc((1 - var(--w1)) * 100%));
+}
+.ab-w--blue {
+  --field: #0062b4;
+  --ink-a: var(--cream);
+  --ink-c: var(--gold);
+  --drift: calc((1 - var(--w2)) * 6);
+  /* And the next rises from below. */
+  clip-path: inset(calc((1 - var(--w2)) * 100%) 0 0 0);
+}
+
+/* The sentence: the same layer, in the same place, in every world. */
+.ab-w__say {
+  position: absolute;
+  left: 7vw;
+  top: 50%;
+  width: 62vw;
+  translate: 0 -54%;
+  margin: 0;
   font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(44px, 6.6vw, 132px);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  color: var(--ink-a);
+}
+.ab-w__say > span {
+  display: block;
+  opacity: 0;
+}
+.ab-w__a {
+  opacity: var(--say-a) !important;
+}
+.ab-w__b {
+  padding-left: 8vw;
+  opacity: var(--say-b) !important;
+}
+.ab-w__c {
+  padding-left: 16vw;
   font-style: italic;
-  font-weight: 700;
-  font-size: 37vw;
-  line-height: 0.8;
-  letter-spacing: -0.06em;
-  white-space: nowrap;
-}
-.ab-hope__l {
-  --f: clamp(0, (var(--p, 0) - (0.16 + var(--i) * 0.15)) / 0.1, 1);
-  display: inline-block;
-  padding-right: 0.04em;
-  color: transparent;
-  background-image: var(--img);
-  background-size: cover;
-  background-position: 50% calc(25% + var(--p, 0) * 40%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  transform: translateY(calc(var(--f) * var(--f) * 80vh)) rotate(calc(var(--f) * var(--rot)));
-  transform-origin: 50% 100%;
-}
-.ab-hope__why {
-  position: absolute;
-  top: 13vh;
-  right: var(--gut);
-  width: min(560px, 38vw);
-  counter-reset: why;
-}
-.ab-hope__why li {
-  --in: clamp(0, (var(--p, 0) - (0.15 + var(--i) * 0.15)) * 14, 1);
-  position: relative;
-  padding-left: 2.2em;
-  margin-bottom: 2.6vh;
-  font-size: clamp(19px, 1.8vw, 34px);
-  line-height: 1.12;
-  opacity: var(--in);
-  transform: translateX(calc((1 - var(--in)) * 24px));
-}
-.ab-hope__why li::before {
-  counter-increment: why;
-  content: counter(why, lower-alpha);
-  position: absolute;
-  left: 0;
-  top: 0.15em;
-  font-family: var(--mono);
-  font-size: 0.5em;
-  letter-spacing: 0.1em;
-  color: var(--gold-dark);
-}
-.ab-hope__after {
-  position: absolute;
-  left: var(--gut);
-  right: var(--gut);
-  bottom: 10vh;
-  font-size: clamp(40px, 5.6vw, 110px);
-  opacity: var(--a);
-  transform: translateY(calc((1 - var(--a)) * 40px));
+  font-size: 1.9em;
+  line-height: 0.9;
+  color: var(--ink-c);
+  opacity: var(--say-c) !important;
 }
 
-@media (max-width: 820px) {
-  .ab-hope__lead {
-    top: 11vh;
-    font-size: 7vw;
-  }
-  .ab-hope__word {
-    font-size: 34vw;
-  }
-  .ab-hope__why {
-    top: 21vh;
-    left: var(--gut);
-    width: auto;
-  }
-  .ab-hope__why li {
-    font-size: 17px;
-  }
-  .ab-hope__after {
-    font-size: 10vw;
-  }
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   III · TWO SIDES
-   What the person asking is owed, and what the person deciding is owed,
-   start far apart and travelling in opposite directions. They close on
-   each other until every line is level with its pair, and gold ties them.
-   ══════════════════════════════════════════════════════════════════════════ */
-
-.ab-zip {
-  --len: 320vh;
-}
-.ab-zip .ab-stage {
-  --a: clamp(0, (var(--p, 0) - 0.04) / 0.62, 1);
-  --e: calc(var(--a) * var(--a) * (3 - 2 * var(--a)));
-  --tie: clamp(0, (var(--p, 0) - 0.68) / 0.14, 1);
-  --row: 9.4vh;
-  background: var(--velvet);
-}
-.ab-zip__title {
-  position: absolute;
-  top: 13vh;
-  left: var(--gut);
-  font-size: clamp(30px, 3.4vw, 64px);
-}
-.ab-zip__col {
-  position: absolute;
-  top: 31vh;
-  width: min(38vw, 620px);
-}
-.ab-zip__col--ask {
-  right: calc(50% + 3vw + (1 - var(--e)) * 7vw);
-  text-align: right;
-  translate: 0 calc((1 - var(--e)) * 54vh);
-}
-.ab-zip__col--dec {
-  left: calc(50% + 3vw + (1 - var(--e)) * 7vw);
-  translate: 0 calc((1 - var(--e)) * -54vh);
-}
-.ab-zip__head {
-  height: 4.4em;
-  margin-bottom: 1vh;
-  font-family: var(--mono);
-  font-size: 11px;
-  line-height: 1.6;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-.ab-zip__col li {
-  position: relative;
-  display: flex;
-  align-items: center;
-  height: var(--row);
-  font-size: clamp(18px, 1.7vw, 32px);
-  line-height: 1.1;
-}
-.ab-zip__col--ask li {
-  justify-content: flex-end;
-}
-.ab-zip__col li::after {
+.ab-mis::before {
   content: "";
   position: absolute;
-  top: 50%;
-  width: 3vw;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  top: var(--mid);
   height: 1px;
   background: var(--gold);
-  transform: scaleX(var(--tie));
-}
-.ab-zip__col--ask li::after {
-  right: -3vw;
-  transform-origin: left;
-}
-.ab-zip__col--dec li::after {
-  left: -3vw;
-  transform-origin: right;
-}
-
-@media (max-width: 820px) {
-  .ab-zip .ab-stage {
-    --row: 11vh;
-  }
-  .ab-zip__title {
-    top: 11vh;
-    right: var(--gut);
-    font-size: 8vw;
-  }
-  .ab-zip__col {
-    top: 25vh;
-    width: 43vw;
-  }
-  .ab-zip__col--ask {
-    right: calc(50% + 2vw + (1 - var(--e)) * 4vw);
-  }
-  .ab-zip__col--dec {
-    left: calc(50% + 2vw + (1 - var(--e)) * 4vw);
-  }
-  .ab-zip__col li {
-    font-size: 14px;
-  }
-  .ab-zip__head {
-    font-size: 8.5px;
-    height: 6em;
-  }
-  .ab-zip__col li::after {
-    width: 2vw;
-  }
-  .ab-zip__col--ask li::after {
-    right: -2vw;
-  }
-  .ab-zip__col--dec li::after {
-    left: -2vw;
-  }
+  /* The line holds the place before the first world opens and after the
+     last one closes. */
+  opacity: calc(
+    max(
+      clamp(0, (var(--cp) - 0.02) / 0.02, 1) * (1 - var(--w0)),
+      var(--shutw)
+    ) * (1 - var(--dayk))
+  );
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   IV · WE ONLY
-   How the company decides, shown as decisions being made. Each ending
-   starts as the easy one, the one this industry usually takes; it is
-   struck through, and the sentence rolls on to the ending we chose, with
-   the decision that backs it underneath.
-   ══════════════════════════════════════════════════════════════════════════ */
-
-.ab-only {
-  --len: 520vh;
-}
-.ab-only .ab-stage {
-  --st: 0;
-  --row: 2.1em;
-  --strike: clamp(0, (var(--sp, 0) - 0.1) / 0.26, 1);
+/* Daylight opens from the line. It stays: the decisions are made on it. */
+.ab-mis__day {
+  position: absolute;
+  inset: 0;
   background: var(--cream);
+  color: var(--ink);
+  clip-path: inset(calc((1 - var(--dayk)) * (50% - 4vh)) 0 calc((1 - var(--dayk)) * (50% + 4vh)) 0);
+  pointer-events: auto;
+  /* The hand-over. A gold line strikes "luck." (0.15 → 0.55 screens): the
+     belief carried out, and the same mark every decision below will use.
+     Then the thesis lifts away (0.65 → 1.1) as "We only" rises into the
+     space it leaves. */
+  --st: clamp(0, (var(--ds) - 0.15) / 0.4, 1);
+  --lv0: clamp(0, (var(--ds) - 0.65) / 0.45, 1);
+  --lv: calc(var(--lv0) * var(--lv0) * (3 - 2 * var(--lv0)));
 }
-.ab-only[data-step="1"] .ab-stage {
-  --st: 1;
-}
-.ab-only[data-step="2"] .ab-stage {
-  --st: 2;
-}
-.ab-only[data-step="3"] .ab-stage {
-  --st: 3;
-}
-.ab-only[data-step="4"] .ab-stage {
-  --st: 4;
-}
-.ab-only__kicker {
+.ab-mis__thesis {
   position: absolute;
-  top: 14vh;
-  left: var(--gut);
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  left: 8vw;
+  top: 50%;
+  margin: 0;
+  translate: 0 -58%;
+  transform: translateY(calc(var(--lv) * -14vh));
+  opacity: calc(1 - var(--lv));
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(48px, 8.4vw, 168px);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+/* The lines arrive whole, one per beat: a cut, not a wipe, so every frame
+   on the way is a finished composition. */
+.ab-mis__row {
+  display: block;
+  padding-left: calc(var(--r) * 12vw);
+}
+.ab-mis__row > span {
+  display: block;
+  opacity: clamp(0, (var(--cp) - (0.813 + var(--r) * 0.034)) * 1000, 1);
+}
+.ab-mis__thesis .g {
   color: var(--gold-dark);
+  background: linear-gradient(var(--gold-dark), var(--gold-dark)) no-repeat 0 60% /
+    calc(var(--st) * 100%) 0.05em;
 }
-.ab-only__sentence {
+.ab-mis__sign {
   position: absolute;
-  left: var(--gut);
-  right: var(--gut);
-  top: 21vh;
+  left: calc(8vw + 24vw);
+  top: calc(50% + 17vw);
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(20px, 1.9vw, 36px);
+  color: var(--ink);
+  opacity: calc(clamp(0, (var(--cp) - 0.92) / 0.03, 1) * (1 - clamp(0, var(--ds) / 0.2, 1)));
+}
+
+/* ── III · HOW THE COMPANY DECIDES ──────────────────────────────────────
+   "We only" arrives where the thesis stood, at the size it stood at. Each
+   decision then takes 1.35 screens: the easy ending rolls in (0.3), is read,
+   is struck (0.25), and rolls away as the chosen ending rolls in (0.3); the
+   decision behind it is read for the rest. The last one stays. */
+.ab-dec {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  color: var(--ink);
+  pointer-events: none;
+  --we: clamp(0, (var(--ds) - 0.95) / 0.35, 1);
+  visibility: hidden;
+}
+.ab-wall[data-dec] .ab-dec {
+  visibility: visible;
+}
+.ab-dec__we {
+  position: absolute;
+  left: 8vw;
+  top: 36vh;
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
   font-size: clamp(44px, 7vw, 138px);
   line-height: 1.02;
+  letter-spacing: -0.035em;
+  opacity: var(--we);
+  transform: translateY(calc((1 - var(--we)) * 0.35em));
 }
-.ab-only__we {
-  display: block;
+.ab-dec__we .g {
+  color: var(--gold-dark);
 }
-.ab-only__slot {
-  position: relative;
-  display: block;
-  height: var(--row);
-  overflow: hidden;
+.ab-dec__item {
+  --a: calc(1.3 + var(--i) * 1.35);
+  --t1: clamp(0, (var(--ds) - var(--a)) / 0.3, 1);
+  --t2: clamp(0, (var(--ds) - var(--a) - 0.62) / 0.3, 1);
+  --t3: clamp(0, (var(--ds) - var(--a) - 1.35) / 0.3, 1);
+  --e1: calc(var(--t1) * var(--t1) * (3 - 2 * var(--t1)));
+  --e2: calc(var(--t2) * var(--t2) * (3 - 2 * var(--t2)));
+  --e3: calc(var(--t3) * var(--t3) * (3 - 2 * var(--t3)));
+  --strike: clamp(0, (var(--ds) - var(--a) - 0.34) / 0.25, 1);
 }
-.ab-only__tempt,
-.ab-only__reel {
+.ab-dec__item--last {
+  --e3: 0;
+}
+.ab-dec__slot {
   position: absolute;
-  inset: 0 0 auto 0;
-  display: block;
-  transition: translate 0.75s var(--snap);
+  left: 8vw;
+  right: 6vw;
+  top: calc(36vh + clamp(44px, 7vw, 138px) * 1.02);
+  height: calc(clamp(44px, 7vw, 138px) * 2.2);
+  overflow: hidden;
+  font-family: var(--serif);
+  font-size: clamp(44px, 7vw, 138px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
 }
-.ab-only__tempt > span,
-.ab-only__reel > span {
-  display: block;
-  height: var(--row);
-  max-width: 19ch;
-  transform: translateY(calc(var(--st) * var(--row) * -1));
+.ab-dec__tempt,
+.ab-dec__real {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  max-width: 14em;
 }
-.ab-only__tempt {
-  color: rgba(15, 23, 42, 0.38);
+.ab-dec__tempt {
+  color: rgba(15, 23, 42, 0.36);
+  /* Travel is the window's full height, so a line at rest is always
+     outside it, above or below. */
+  transform: translateY(calc((1 - var(--e1)) * 2.4em - var(--e2) * 2.4em));
 }
-.ab-only .ab-x {
+.ab-dec__tempt em {
   font-style: normal;
   background: linear-gradient(var(--gold-dark), var(--gold-dark)) no-repeat 0 58% /
     calc(var(--strike) * 100%) 0.055em;
 }
-.ab-only__reel {
-  translate: 0 100%;
+.ab-dec__real {
+  transform: translateY(calc((1 - var(--e2)) * 2.4em - var(--e3) * 2.4em));
 }
-.ab-only[data-phase="real"] .ab-only__tempt {
-  translate: 0 -100%;
-}
-.ab-only[data-phase="real"] .ab-only__reel {
-  translate: 0 0;
-}
-.ab-only__proof {
+.ab-dec__proof {
   position: absolute;
-  left: var(--gut);
-  bottom: 11vh;
+  left: 8vw;
+  bottom: 10vh;
   width: min(560px, 44vw);
-  height: 8em;
-}
-.ab-only__proof li {
-  position: absolute;
-  inset: auto 0 0 0;
+  margin: 0;
   font-family: var(--sans);
   font-size: clamp(15px, 1.15vw, 18px);
   line-height: 1.55;
   color: rgba(15, 23, 42, 0.78);
-  opacity: 0;
-  transform: translateY(12px);
-  transition:
-    opacity 0.5s var(--ease),
-    transform 0.8s var(--ease);
+  opacity: calc(clamp(0, (var(--ds) - var(--a) - 0.85) / 0.12, 1) * (1 - clamp(0, (var(--ds) - var(--a) - 1.3) / 0.08, 1)));
 }
-.ab-only[data-phase="real"]:not([data-step]) .ab-only__proof li:nth-child(1),
-.ab-only[data-phase="real"][data-step="0"] .ab-only__proof li:nth-child(1),
-.ab-only[data-phase="real"][data-step="1"] .ab-only__proof li:nth-child(2),
-.ab-only[data-phase="real"][data-step="2"] .ab-only__proof li:nth-child(3),
-.ab-only[data-phase="real"][data-step="3"] .ab-only__proof li:nth-child(4),
-.ab-only[data-phase="real"][data-step="4"] .ab-only__proof li:nth-child(5) {
-  opacity: 1;
-  transform: none;
-  transition-delay: 0.35s;
+.ab-dec__item--last .ab-dec__proof {
+  opacity: clamp(0, (var(--ds) - var(--a) - 0.85) / 0.12, 1);
 }
-.ab-only__count {
+.ab-dec__count {
   position: absolute;
-  right: var(--gut);
+  right: 6vw;
   bottom: 10vh;
   display: flex;
   gap: 1.4vw;
+  margin: 0;
   font-family: var(--serif);
   font-size: clamp(22px, 2vw, 36px);
-  color: rgba(15, 23, 42, 0.18);
+  opacity: var(--we);
 }
-.ab-only__count li {
-  transition: color 0.5s var(--ease);
+.ab-dec__count li {
+  --c: clamp(0, (var(--ds) - (1.3 + (var(--n) - 1) * 1.35)) * 1000, 1);
+  --c2: clamp(0, (var(--ds) - (1.3 + var(--n) * 1.35)) * 1000, 1);
 }
-.ab-only:not([data-step]) .ab-only__count li:nth-child(1),
-.ab-only[data-step="0"] .ab-only__count li:nth-child(1),
-.ab-only[data-step="1"] .ab-only__count li:nth-child(2),
-.ab-only[data-step="2"] .ab-only__count li:nth-child(3),
-.ab-only[data-step="3"] .ab-only__count li:nth-child(4),
-.ab-only[data-step="4"] .ab-only__count li:nth-child(5) {
-  color: var(--gold-dark);
+.ab-dec__count li:nth-child(1) { --n: 1; }
+.ab-dec__count li:nth-child(2) { --n: 2; }
+.ab-dec__count li:nth-child(3) { --n: 3; }
+.ab-dec__count li:nth-child(4) { --n: 4; }
+.ab-dec__count li:nth-child(5) { --n: 5; --c2: 0; }
+.ab-dec__count li {
+  color: color-mix(in srgb, var(--gold-dark) calc(var(--c) * (1 - var(--c2)) * 100%), rgba(15, 23, 42, 0.18));
 }
 
 @media (max-width: 820px) {
-  .ab-only .ab-stage {
-    --row: 3.15em;
+  .ab-w img,
+  .ab-w--red img {
+    width: 100%;
+    height: 62%;
+    aspect-ratio: auto;
+    top: auto;
+    bottom: 0;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
   }
-  .ab-only__kicker {
-    top: 12vh;
+  .ab-w__say {
+    left: var(--gut);
+    right: var(--gut);
+    width: auto;
+    top: 13vh;
+    translate: 0 0;
+    font-size: 9.6vw;
   }
-  .ab-only__sentence {
-    top: 17vh;
-    font-size: 11.5vw;
+  .ab-w__b {
+    padding-left: 5vw;
   }
-  .ab-only__proof {
+  .ab-w__c {
+    padding-left: 10vw;
+  }
+  .ab-mis__thesis {
+    left: var(--gut);
+    font-size: 10.4vw;
+  }
+  .ab-mis__row {
+    padding-left: calc(var(--r) * 6vw);
+  }
+  .ab-mis__sign {
+    left: calc(var(--gut) + 12vw);
+    top: calc(50% + 26vw);
+    font-size: 5vw;
+  }
+  .ab-dec__we,
+  .ab-dec__slot {
+    left: var(--gut);
+    right: var(--gut);
+    font-size: 11vw;
+  }
+  .ab-dec__we {
+    top: 30vh;
+  }
+  .ab-dec__slot {
+    top: calc(30vh + 11vw * 1.02);
+    height: calc(11vw * 3.4);
+  }
+  .ab-dec__tempt,
+  .ab-dec__real {
+    transform: translateY(calc((1 - var(--e2)) * 3.5em - var(--e3) * 3.5em));
+  }
+  .ab-dec__tempt {
+    transform: translateY(calc((1 - var(--e1)) * 3.5em - var(--e2) * 3.5em));
+  }
+  .ab-dec__proof {
+    left: var(--gut);
     right: var(--gut);
     width: auto;
     bottom: 12vh;
-    height: 9em;
-  }
-  .ab-only__proof li {
     font-size: 14.5px;
   }
-  .ab-only__count {
+  .ab-dec__count {
     left: var(--gut);
     right: auto;
     bottom: 5vh;
@@ -693,163 +730,326 @@
   }
 }
 
+/* Reduced motion: the hero stands complete, and the mission follows it as
+   its own still page, taste above and the way in below, on cream. */
+.ab.is-still .ab-wall .ab-stage {
+  margin-bottom: 300vh;
+  overflow: visible;
+}
+.ab.is-still .ab-mis {
+  top: 100%;
+  bottom: auto;
+  height: 300vh;
+  visibility: visible;
+  --dayk: 1;
+  --cp: 1;
+}
+.ab.is-still .ab-mis::before {
+  display: none;
+}
+/* The last world, with the whole sentence, as the still frame. */
+.ab.is-still .ab-mis {
+  --shutw: 0;
+  --w0: 1;
+  --w1: 1;
+  --w2: 1;
+  --say-a: 1;
+  --say-b: 1;
+  --say-c: 1;
+}
+.ab.is-still .ab-worlds {
+  bottom: auto;
+  height: 100vh;
+}
+.ab.is-still .ab-mis__day {
+  top: 100vh;
+}
+.ab.is-still .ab-mis__thesis {
+  top: 50vh;
+}
+.ab.is-still .ab-mis__sign {
+  top: calc(50vh + 17vw);
+  opacity: 1;
+}
+/* The decisions, laid out whole: the chosen endings with what backs them. */
+.ab.is-still .ab-dec {
+  top: 200vh;
+  bottom: auto;
+  min-height: 100vh;
+  padding: 16vh 8vw 12vh;
+  position: absolute;
+}
+.ab.is-still .ab-dec__we,
+.ab.is-still .ab-dec__slot,
+.ab.is-still .ab-dec__proof,
+.ab.is-still .ab-dec__real {
+  position: static;
+  opacity: 1;
+  transform: none;
+  height: auto;
+  width: auto;
+  overflow: visible;
+}
+.ab.is-still .ab-dec__tempt,
+.ab.is-still .ab-dec__count {
+  display: none;
+}
+.ab.is-still .ab-dec__list {
+  display: grid;
+  gap: 4vh;
+  margin: 3vh 0 0;
+}
+.ab.is-still .ab-dec__slot {
+  display: block;
+  font-size: clamp(28px, 3.4vw, 64px);
+}
+.ab.is-still .ab-dec__real {
+  white-space: normal;
+}
+.ab.is-still .ab-dec__proof {
+  margin-top: 1vh;
+  max-width: 60ch;
+}
+
 /* ══════════════════════════════════════════════════════════════════════════
-   V · THE COLLECTIVE
-   Three people as an editorial spread on velvet. Each plate is printed up
-   into its frame as it arrives, comes into colour as it reaches the middle
-   of the page, and the picture drifts inside the frame while the name
-   travels the other way across it.
+   IV · THE PEOPLE
+   Cream on the left, the photograph on the right: a full-height panel, edge
+   to edge. Each person's portrait wipes up over the last while their name
+   is written on the left by the gold caret. The previous name lifts away
+   rather than piling up. At the end the panel splits into three strips, one
+   face each, and the three names settle into a single-line list.
+
+   Per person, u runs 0 → 1 over a 0.25 share of the scene (1.6 screens):
+     0.00–0.16 portrait wipes up     0.04–0.22 given name written
+     0.18–0.36 family name written   0.34–0.44 role line
+     0.84–0.98 name lifts away
+   Then 0.80 → 0.95 of the scene: the panel splits, the list arrives.
    ══════════════════════════════════════════════════════════════════════════ */
 
-.ab-team {
-  padding: 24vh 0 20vh;
-  overflow: hidden;
+.ab-sig {
+  --len: 700vh;
 }
-.ab-team__head {
-  padding: 0 var(--gut);
-}
-.ab-team__label {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-.ab-team__title {
-  margin-top: 3vh;
-  max-width: 11ch;
-  font-size: clamp(42px, 6vw, 118px);
-  line-height: 0.95;
-}
-.ab-person {
-  --in: clamp(0, (var(--p, 0.5) - 0.04) / 0.26, 1);
-  --col: clamp(0, (var(--p, 0.5) - 0.26) / 0.18, 1);
-  position: relative;
-}
-.ab-person__plate {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 4 / 5;
-  background: #111;
-  clip-path: inset(calc((1 - var(--in)) * 100%) 0 0 0);
-}
-.ab-person__plate img {
-  position: absolute;
-  left: 0;
-  top: -9%;
-  height: 118%;
-  filter: grayscale(calc(1 - var(--col)));
-  transform: translateY(calc((var(--p, 0.5) - 0.5) * -12%));
-}
-.ab-person__credit {
-  position: absolute;
-  z-index: 2;
-  bottom: 9%;
-  transform: translateX(calc((0.5 - var(--p, 0.5)) * 9vw));
-}
-.ab-person__role {
-  margin-bottom: 1.6vh;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-.ab-person__name {
-  font-size: clamp(46px, 6.4vw, 128px);
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-}
-.ab-person__name .it {
-  display: block;
-  color: var(--gold);
-}
-.ab-person__link {
-  display: inline-block;
-  margin-top: 2vh;
-  font-family: var(--sans);
-  font-size: 14px;
-  color: rgba(250, 247, 242, 0.75);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(201, 165, 90, 0.7);
-  padding-bottom: 3px;
-  transition: color 0.3s;
-}
-.ab-person__link:hover {
-  color: var(--gold);
-}
-.ab-person--1 {
-  margin-top: 14vh;
-}
-.ab-person--1 .ab-person__plate {
-  width: 36vw;
-  margin-left: 6vw;
-}
-.ab-person--1 .ab-person__credit {
-  left: calc(6vw + 36vw - 7vw);
-}
-.ab-person--2 {
-  margin-top: -26vh;
-}
-.ab-person--2 .ab-person__plate {
-  width: 27vw;
-  margin-left: auto;
-  margin-right: 8vw;
-}
-.ab-person--2 .ab-person__credit {
-  right: calc(8vw + 27vw - 6vw);
-  text-align: right;
-}
-.ab-person--3 {
-  margin-top: -6vh;
-}
-.ab-person--3 .ab-person__plate {
-  width: 31vw;
-  margin-left: 22vw;
-}
-.ab-person--3 .ab-person__credit {
-  left: calc(22vw + 31vw - 6vw);
-}
-.ab-team__foot {
-  padding: 18vh var(--gut) 0;
-  font-size: clamp(28px, 3vw, 58px);
-  text-align: right;
+.ab-sig .ab-stage {
+  background: var(--cream);
+  color: var(--ink);
+  --pw: 44vw;
+  --F: min(8vw, 14.5vh);
+  --top: 30vh;
+  --sp0: clamp(0, (var(--p, 0) - 0.8) / 0.12, 1);
+  --sp: calc(var(--sp0) * var(--sp0) * (3 - 2 * var(--sp0)));
+  --ls: clamp(0, (var(--p, 0) - 0.84) / 0.1, 1);
 }
 
+/* The panel. */
+.ab-sig__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--pw);
+  overflow: hidden;
+  background: var(--velvet);
+}
+.ab-sig__img {
+  --u: calc((var(--p, 0) - (0.03 + var(--k) * 0.25)) / 0.25);
+  --in: clamp(0, var(--u) / 0.16, 1);
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.05);
+  /* In: wipes up from the bottom. At the end: shows only its own central
+     third, moved to its strip, so the panel reads as three faces. */
+  clip-path: inset(
+    calc((1 - var(--in)) * 100%) calc(var(--sp) * 33.334%) 0 calc(var(--sp) * 33.334%)
+  );
+  transform: translateX(calc((var(--k) - 1) * var(--pw) / 3 * var(--sp)));
+}
+/* Hairlines between the strips once they have formed. */
+.ab-sig__panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--cream), var(--cream)) 33.333% 0 / 2px 100% no-repeat,
+    linear-gradient(var(--cream), var(--cream)) 66.666% 0 / 2px 100% no-repeat;
+  opacity: var(--sp);
+}
+
+/* The header: persistent, and in the end the head of the list. */
+.ab-sig__made {
+  position: absolute;
+  left: 8vw;
+  top: calc(var(--top) - 11vh + var(--ls) * 2vh);
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(22px, min(2.2vw, 4vh), 42px);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  opacity: clamp(0, var(--p, 0) / 0.03, 1);
+}
+
+.ab-sig__who {
+  --u: calc((var(--p, 0) - (0.03 + var(--k) * 0.25)) / 0.25);
+  --wg: clamp(0, (var(--u) - 0.04) / 0.18, 1);
+  --wf: clamp(0, (var(--u) - 0.18) / 0.18, 1);
+  --lb: clamp(0, (var(--u) - 0.34) / 0.1, 1);
+  --lv0: clamp(0, (var(--u) - 0.84) / 0.14, 1);
+  --lv: calc(var(--lv0) * var(--lv0) * (3 - 2 * var(--lv0)));
+  position: absolute;
+  left: 8vw;
+  top: var(--top);
+  width: calc(100vw - var(--pw) - 12vw);
+  opacity: calc(1 - var(--lv));
+  transform: translateY(calc(var(--lv) * -8vh));
+}
+.ab-sig__name {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--F);
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+.ab-sig__given,
+.ab-sig__family {
+  display: block;
+}
+.ab-sig__family {
+  padding-left: 0.35em;
+  font-style: italic;
+  color: var(--gold-dark);
+}
+/* Written: each line is uncovered left to right behind a gold caret. */
+.ab-sig__given > span,
+.ab-sig__family > span {
+  position: relative;
+  display: inline-block;
+  clip-path: inset(-0.2em calc((1 - var(--w)) * 100%) -0.3em 0.02em);
+}
+.ab-sig__given > span {
+  --w: var(--wg);
+}
+.ab-sig__family > span {
+  --w: var(--wf);
+}
+.ab-sig__given > span::after,
+.ab-sig__family > span::after {
+  content: "";
+  position: absolute;
+  top: 0.08em;
+  left: calc(var(--w) * 100% - 3px);
+  width: 3px;
+  height: 0.86em;
+  background: var(--gold);
+  opacity: min(1, var(--w) * 30, (1 - var(--w)) * 30);
+}
+.ab-sig__label {
+  margin: 3.4vh 0 0 calc(var(--F) * 0.35);
+  font-family: var(--sans);
+  font-size: clamp(15px, 1.15vw, 19px);
+  line-height: 1.5;
+  color: rgba(15, 23, 42, 0.82);
+  opacity: var(--lb);
+}
+
+/* The end: one line per person, name and role on a shared baseline. */
+.ab-sig__list {
+  position: absolute;
+  left: 8vw;
+  top: calc(var(--top) - 2vh);
+  width: calc(100vw - var(--pw) - 12vw);
+  margin: 0;
+  display: grid;
+  gap: 4.2vh;
+}
+.ab-sig__list li {
+  --in: clamp(0, (var(--ls) - var(--k) * 0.2) / 0.5, 1);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6vh 2.2vw;
+  padding-bottom: 2.2vh;
+  border-bottom: 1px solid rgba(15, 23, 42, calc(0.12 * var(--in)));
+  opacity: var(--in);
+  transform: translateY(calc((1 - var(--in)) * 16px));
+}
+.ab-sig__rn {
+  font-family: var(--serif);
+  font-size: clamp(30px, min(3.6vw, 7vh), 68px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+.ab-sig__rn .it {
+  color: var(--gold-dark);
+}
+.ab-sig__rl {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(15, 23, 42, 0.78);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(168, 137, 78, 0.6);
+  padding-bottom: 2px;
+  transition: color 0.3s;
+}
+.ab-sig__rl:hover,
+.ab-sig__rl:focus-visible {
+  color: var(--gold-dark);
+}
+
+/* A phone puts the photograph below: the bottom of the screen, edge to edge. */
 @media (max-width: 820px) {
-  .ab-person .ab-person__plate {
-    width: 74vw;
+  .ab-sig .ab-stage {
+    --pw: 100vw;
+    --F: 13vw;
+    --top: 24vh;
   }
-  .ab-person--1 .ab-person__plate {
-    margin-left: 6vw;
+  .ab-sig__panel {
+    top: auto;
+    height: 42vh;
   }
-  .ab-person--2 {
-    margin-top: 12vh;
+  .ab-sig__made,
+  .ab-sig__who,
+  .ab-sig__list {
+    left: var(--gut);
+    width: calc(100vw - 2 * var(--gut));
   }
-  .ab-person--2 .ab-person__plate {
-    margin-right: 6vw;
+  .ab-sig__made {
+    top: calc(var(--top) - 8vh);
   }
-  .ab-person--3 {
-    margin-top: 12vh;
+  .ab-sig__list {
+    top: calc(var(--top) - 3vh);
+    gap: 2.2vh;
   }
-  .ab-person--3 .ab-person__plate {
-    margin-left: 12vw;
+  .ab-sig__rn {
+    font-size: 8vw;
   }
-  .ab-person .ab-person__credit {
-    position: relative;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    margin: -2.2em var(--gut) 0;
-    text-align: left;
+  .ab-sig__rl {
+    font-size: 11px;
   }
-  .ab-person__name {
-    font-size: 12vw;
+  .ab-sig__label {
+    margin-top: 2vh;
+    font-size: 14px;
   }
+}
+
+/* Reduced motion: the end frame. */
+.ab.is-still .ab-sig .ab-stage {
+  height: 100vh;
+}
+.ab.is-still .ab-sig__who {
+  display: none;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   VI · THE SENTENCE
+   V · THE SENTENCE
    The future as one sentence read left to right. Photographs stand in the
    line like words; each one plays as it passes the reader, a few frames of
    its own sitting, and swells while it does. When the line comes to rest,
@@ -913,7 +1113,7 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   VII · THE CLOSE
+   VI · THE CLOSE
    ══════════════════════════════════════════════════════════════════════════ */
 
 .ab-close {
@@ -956,49 +1156,6 @@
   position: relative;
   height: auto;
   min-height: 100vh;
-}
-
-.ab.is-still .ab-only .ab-stage {
-  padding: 16vh var(--gut);
-}
-.ab.is-still .ab-only__kicker,
-.ab.is-still .ab-only__sentence,
-.ab.is-still .ab-only__proof {
-  position: static;
-  width: auto;
-  height: auto;
-}
-.ab.is-still .ab-only__sentence {
-  margin: 4vh 0 8vh;
-}
-.ab.is-still .ab-only__slot {
-  height: auto;
-}
-.ab.is-still .ab-only__tempt,
-.ab.is-still .ab-only__count {
-  display: none;
-}
-.ab.is-still .ab-only__reel {
-  position: static;
-}
-.ab.is-still .ab-only .ab-only__reel {
-  translate: 0 0;
-}
-.ab.is-still .ab-only__reel > span {
-  height: auto;
-  transform: none;
-  margin-bottom: 0.3em;
-}
-.ab.is-still .ab-only__proof {
-  display: grid;
-  gap: 1.2em;
-  max-width: 46ch;
-  list-style: decimal inside;
-}
-.ab.is-still .ab-only__proof li {
-  position: static;
-  opacity: 1;
-  transform: none;
 }
 
 .ab.is-still .ab-line .ab-stage {

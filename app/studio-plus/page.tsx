@@ -1,17 +1,13 @@
-export const metadata = {
+import type { Metadata } from "next";
+
+import { StudioPlusPage } from "@/components/studio-plus";
+
+export const metadata: Metadata = {
   title: "Studio+",
+  description:
+    "Studio+ is Pholio's talent subscription: seven premium comp-card themes, a site of your own, and ninety days of portfolio analytics with CSV export. $9.99 a month after a 14-day trial. Nothing an agency sees or receives changes with it.",
 };
 
-export default function StudioPlusPage() {
-  return (
-    <div className="min-h-mobile-screen bg-[#050505]">
-      <div className="pt-40 px-6">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="font-editorial text-5xl md:text-7xl text-[#FAF7F2] mb-6">
-            Studio+
-          </h1>
-        </div>
-      </div>
-    </div>
-  );
+export default function StudioPlus() {
+  return <StudioPlusPage />;
 }

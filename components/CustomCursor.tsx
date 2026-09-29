@@ -1,10 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion, useMotionValue, useSpring } from "framer-motion";
+
+/** Routes that carry their own cursor (mounted by the page's motion engine). */
+const OWN_CURSOR_ROUTES = new Set(["/studio-plus"]);
 
 export default function CustomCursor() {
   const [isTouch, setIsTouch] = useState(false);
+  const standDown = OWN_CURSOR_ROUTES.has(usePathname() ?? "");
 
   // Use refs instead of state to avoid re-renders on every mouse event
   const hoveredRef = useRef(false);
@@ -21,6 +26,7 @@ export default function CustomCursor() {
   const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
+    if (standDown) return;
     // Detect touch devices
     if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
       setIsTouch(true);
@@ -105,9 +111,9 @@ export default function CustomCursor() {
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
     };
-  }, [cursorX, cursorY]);
+  }, [cursorX, cursorY, standDown]);
 
-  if (isTouch) return null;
+  if (isTouch || standDown) return null;
 
   return (
     <>
