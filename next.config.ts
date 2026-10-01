@@ -114,6 +114,12 @@ const nextConfig: NextConfig = {
         // Zofia's site: the Studio+ prototype, a static document under
         // public/zofia. `/zofia` is its address; the home stage frames it.
         { source: "/zofia", destination: "/zofia/index.html" },
+        // The standalone talent page: a static document under
+        // public/talent-experience, built outside the app router.
+        {
+          source: "/talent-experience",
+          destination: "/talent-experience/index.html",
+        },
       ],
       afterFiles: [
         {

@@ -39,6 +39,23 @@ export function CareersHero() {
 
   return (
     <section className="relative flex min-h-[90vh] w-full items-center justify-center overflow-hidden bg-[#050505] px-6">
+      <img
+        src="https://images.unsplash.com/photo-1575354196644-9de51010f481?auto=format&fit=max&w=2400&q=80"
+        alt=""
+        aria-hidden
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        style={{
+          objectPosition: "center 35%",
+          filter: "grayscale(1) contrast(1.05)",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, rgba(5,5,5,0.78) 0%, rgba(5,5,5,0.45) 72%)",
+        }}
+      />
       {/* Background radial glow */}
       <div
         className="pointer-events-none absolute inset-0 opacity-20"
@@ -55,17 +72,16 @@ export function CareersHero() {
           transition={{ duration: reduce ? 0 : 1.5, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="mb-8 block text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C9A55A]">
-            Join the Pholio Collective
+            Careers
           </span>
           <h1 className="font-editorial text-[10vw] leading-[1.0] text-white sm:text-[9vw] md:text-[8vw] lg:text-[7vw]">
-            Build the Next
+            Build what
             <br />
             <span className="font-editorial-italic italic text-[#C9A55A]">
-              Standard
-            </span>{" "}
-            of
+              modeling
+            </span>
             <br />
-            Digital Identity.
+            still lacks.
           </h1>
         </motion.div>
       </div>
@@ -79,7 +95,7 @@ export function CareersHero() {
           className="flex flex-col items-center gap-4"
         >
           <span className="text-[9px] uppercase tracking-[0.2em] text-white/40">
-            Explore Roles
+            Open roles
           </span>
           <EditorialVerticalDivider />
         </motion.div>

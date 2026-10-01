@@ -103,10 +103,9 @@ export default function SiteFooter({ field }: { field?: Field } = {}) {
             </nav>
           </Contents>
 
-          {/* The signing, then the closing. `Signature` ends on its own
-              baseline, so `SIGN_GAP` is the true distance from the name's feet
-              to the stroke rather than a margin measured off a line box. See
-              `motion.ts` on why the two must not touch. */}
+          {/* The signing. `Signature` ends on its baseline, so `SIGN_GAP` is the
+              true distance from the name to the stroke. Short on purpose: the
+              mark and the sweep are one gesture. See `motion.ts`. */}
           <div style={{ marginTop: "clamp(64px, 8.6vw, 112px)" }}>
             <Signature scene={scene} />
             <div style={{ paddingTop: SIGN_GAP }}>

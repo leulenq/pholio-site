@@ -5,11 +5,11 @@ import { TalentPage } from "@/components/talent";
 export const metadata: Metadata = {
   title: "Talent",
   description:
-    "Your digitals, stats, book, comp card and every submission, kept in one place and kept current. Applying is free, and agencies are never charged.",
+    "Pholio keeps your digitals, book and comp card current, and prepares them the way each agency asks. Applying is free, and agencies are never charged.",
   openGraph: {
     title: "Talent | Pholio",
     description:
-      "Your digitals, stats, book, comp card and every submission, kept in one place and kept current.",
+      "Shoot your digitals once. Pholio keeps your digitals, book and comp card current, and prepares them the way each agency asks.",
     url: "https://www.pholio.studio/talent",
     siteName: "Pholio",
     type: "website",

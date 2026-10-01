@@ -54,8 +54,8 @@ import { cubicBezier } from "framer-motion";
    The beats overlap on purpose. Three that start and stop cleanly would be
    three states, and a visitor would see the states rather than the change
    (lessons.md §36). The name begins to settle while the contents still are, and
-   the stroke starts before the name has landed, so the whole thing is one
-   gesture over about 1.7 seconds. Then nothing on this surface ever moves again.
+   the stroke starts in the last part of the set-down, so the whole thing is one
+   gesture over about 1.9 seconds. Then nothing on this surface ever moves again.
 
    **The stroke is last, and that is the point.** It was second in the first
    build, which made the name land on a line already drawn and read as a
@@ -68,9 +68,17 @@ export const BEAT = {
   /** The page's last words come to rest. */
   contents: { delay: 0, duration: 0.92 },
   /** The name is set down. */
-  name: { delay: 0.3, duration: 0.78 },
-  /** The pen crosses the measure, and the frame is closed. */
-  stroke: { delay: 0.58, duration: 1.15 },
+  name: { delay: 0.28, duration: 0.7 },
+  /**
+   * The pen leaves the name and crosses the measure.
+   *
+   * It used to start while the mark was still high above the line, so the
+   * stroke arrived as a separate event under a wordmark that had not landed.
+   * It now begins in the last part of the set-down: the mark is arriving as
+   * the nib starts, and the line reads as let out from the name rather than
+   * drawn underneath it afterwards.
+   */
+  stroke: { delay: 0.74, duration: 1.12 },
 } as const;
 
 /**
@@ -113,9 +121,12 @@ export const CONTENTS_RISE = 40;
  *
  * A signature is put down onto the paper, not lifted onto it. Descending and
  * decelerating reads as weight; rising reads as a reveal, which is the move
- * `lessons.md` §18 retired.
+ * `lessons.md` §18 retired. The distance stays short because the resting gap
+ * below is short: a long fall across a wide gap reads as a reveal onto a
+ * separate rule, and this is a set-down onto a line that already belongs to
+ * the mark.
  */
-export const NAME_FALL = 18;
+export const NAME_FALL = 12;
 
 /* ══════════════════════════════════════════════════════════════════════
    THE STROKE
@@ -162,10 +173,9 @@ export const STROKE_CLIP = {
 
 /**
  * With `line-height: 1` the baseline sits this far above the line box's foot in
- * Noto Serif Display, so the mark is pushed down by it to put its baseline
- * exactly on the 1px stroke. The O's overshoot then dips a hair below the line,
- * which is how a round letter is drawn against a rule and what stops the
- * signature from looking aligned rather than written.
+ * Noto Serif Display. `Signature` sets that leading and then pulls the mark
+ * down by this amount, so the gap below is measured from the baseline and not
+ * from leftover half-leading in the line box.
  */
 export const BASELINE_DROP_EM = 0.112;
 
@@ -175,18 +185,17 @@ export const BASELINE_DROP_EM = 0.112;
    How far the stroke sits from the name, measured from the name's baseline
    rather than from its box, and how far the utilities sit below the stroke.
 
-   The first build put the baseline **on** the stroke. It was the literal
-   reading of "signed on a line" and it was wrong: at 64px against a 1px rule
-   the eye does not see a signature resting on a line, it sees a wordmark with
-   an underline, and the sweep stops being a gesture and becomes part of the
-   logotype.
+   The first build put the baseline **on** the stroke. That read as a wordmark
+   with an underline. The second build overcorrected: `SIGN_GAP` was a full cap
+   height, the distance at which the two stop being one object, and on
+   2026-09-29 the owner called them disconnected. The mark and the sweep are
+   one closing gesture. The clearance is short — enough that the round letters
+   do not sit on the rule, small enough that the sweep reads as let out from
+   the name rather than as a line drawn later, somewhere else.
 
-   `SIGN_GAP` is about one cap height of the mark at every width, which is the
-   distance at which the two stop being read as one object. `RULE_GAP` is a
-   little less, so the stroke is not equidistant between the name and the small
-   print: it hangs slightly nearer the print it closes off, and belongs to the
-   frame rather than to either group.
+   `RULE_GAP` is the larger interval on purpose, so the utilities stay the
+   quiet register under the gesture instead of sharing its air.
    ══════════════════════════════════════════════════════════════════════ */
 
-export const SIGN_GAP = "clamp(30px, 3.3vw, 48px)";
-export const RULE_GAP = "clamp(22px, 2.3vw, 34px)";
+export const SIGN_GAP = "clamp(14px, 1.1vw, 18px)";
+export const RULE_GAP = "clamp(28px, 2.8vw, 40px)";

@@ -1,12 +1,12 @@
 /**
- * /talent — one talent's set followed through the whole loop: the digitals,
- * guided capture, stats, the comp card, the Pholio ID, the market's shot
- * lists, the submission, the review window, the ledger, Intel, likeness and
- * the price.
+ * /talent: "Call time". A digitals sitting that becomes Guided Capture in a
+ * hand, the real Book on the desktop, the Market's briefs, the thirty days of
+ * silence, the Pholio ID in Apple Wallet, and everyone.
  *
  * Like /about and /studio-plus, the page is plain HTML (talent.html) with its
  * own stylesheet (talent.css) and motion engine (motion.js). This component
- * only places it between the site's global header and footer.
+ * only places it between the site's global header and footer. Assets live in
+ * public/calltime/.
  */
 
 import { readFileSync } from "node:fs";

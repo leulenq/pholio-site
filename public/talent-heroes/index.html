@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pholio /talent: A better introduction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+Display:ital,wght@0,200;0,300;0,400;0,600;1,300;1,400;1,600&family=Noto+Serif+JP:wght@300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --velvet: #050505; --cream: #f5f0e8; --paper: #f3eee4; --ink: #16130f; --gold: #c9a55a; --gold-deep: #8a6a40;
+  --serif: "Noto Serif Display", Georgia, serif; --sans: "Inter", system-ui, sans-serif; --mono: "JetBrains Mono", monospace;
+  --ease: cubic-bezier(.16,1,.3,1);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--velvet); color: var(--cream); font-family: var(--sans); overflow: hidden; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.c { position: fixed; inset: 0; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity .6s ease; }
+.c.is-on { opacity: 1; pointer-events: auto; }
+video, img { display: block; }
+.cta { display: inline-block; background: var(--gold); color: var(--velvet); padding: 14px 26px; text-decoration: none; font-size: 14px; font-weight: 500; letter-spacing: .01em; }
+
+/* explorer chrome */
+.nav { position: fixed; z-index: 100; left: 20px; bottom: 18px; display: flex; gap: 4px; align-items: center; background: rgba(5,5,5,.72); padding: 6px; border-radius: 10px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-family: var(--mono); font-size: 11px; letter-spacing: .08em; }
+.nav button { padding: 8px 11px; border-radius: 6px; color: rgba(245,240,232,.62); white-space: nowrap; }
+.nav button:hover { color: var(--cream); background: rgba(255,255,255,.06); }
+.nav button.is-on { color: var(--velvet); background: var(--cream); }
+.nav .rp { color: var(--gold); }
+.tag { position: fixed; z-index: 100; left: 22px; top: 18px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: rgba(245,240,232,.55); mix-blend-mode: difference; pointer-events: none; }
+.tag b { color: var(--gold); font-weight: 500; }
+@media (max-width: 760px) { .nav { left: 8px; right: 8px; bottom: 8px; overflow-x: auto; } .nav button { padding: 8px; } }
+
+/* ═══ 01 THE INBOX ═══ */
+.c-inbox { background: #0a0908; }
+.i-head { position: absolute; left: 5vw; right: 5vw; top: 8vh; display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: rgba(245,240,232,.55); z-index: 2; }
+.i-head b { color: var(--cream); font-weight: 500; font-size: 13px; }
+.i-head span[data-icount] { font-variant-numeric: tabular-nums; color: var(--gold); }
+.i-list { position: absolute; left: 5vw; right: 5vw; top: 14vh; bottom: 0; overflow: hidden; -webkit-mask-image: linear-gradient(#000 70%, transparent); mask-image: linear-gradient(#000 70%, transparent); }
+.i-rows { will-change: transform; }
+.i-row { display: grid; grid-template-columns: 22ch 1fr auto 8ch; gap: 3vw; padding: 1.15vh 0; border-top: 1px solid rgba(245,240,232,.06); font-family: var(--mono); font-size: clamp(11px, .95vw, 14px); color: rgba(245,240,232,.46); white-space: nowrap; overflow: hidden; }
+.i-row b { color: rgba(245,240,232,.72); font-weight: 400; overflow: hidden; text-overflow: ellipsis; }
+.i-row i { font-style: normal; overflow: hidden; text-overflow: ellipsis; }
+.i-row em { font-style: normal; color: rgba(245,240,232,.3); }
+.i-hero { position: absolute; left: 5vw; right: 5vw; top: 50%; height: 9vh; transform: translateY(-50%); background: var(--cream); color: var(--ink); display: grid; grid-template-columns: 22ch 1fr auto 8ch; gap: 3vw; align-items: center; padding: 0 2vw; font-family: var(--mono); font-size: clamp(11px, .95vw, 14px); opacity: 0; transition: all 1.3s var(--ease); z-index: 3; overflow: hidden; }
+.i-hero b { font-family: var(--serif); font-weight: 400; font-size: 1.7em; letter-spacing: -.01em; }
+.i-hero i { font-style: normal; }
+.i-hero em { font-style: normal; color: var(--gold-deep); }
+.c-inbox.is-arrive .i-hero { opacity: 1; }
+.c-inbox.is-open .i-hero { top: 0; left: 0; right: 0; height: 100%; transform: none; padding: 0; grid-template-columns: 1fr; }
+.c-inbox.is-open .i-hero > span { opacity: 0; }
+.i-open { position: absolute; inset: 0; display: grid; grid-template-columns: 1.05fr 1fr; opacity: 0; transition: opacity 1s ease .8s; pointer-events: none; }
+.c-inbox.is-open .i-open { opacity: 1; pointer-events: auto; }
+.i-open video { width: 100%; height: 100%; object-fit: cover; }
+.i-doc { padding: 12vh 5vw 10vh; display: flex; flex-direction: column; justify-content: space-between; color: var(--ink); }
+.i-doc h1 { margin: 0; font-family: var(--serif); font-weight: 300; font-size: clamp(46px, 5.6vw, 110px); line-height: .92; letter-spacing: -.035em; }
+.i-doc h1 em { color: var(--gold-deep); }
+.i-doc .i-who { font-family: var(--serif); font-size: clamp(22px, 2vw, 34px); }
+.i-doc .i-stats { margin-top: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-deep); }
+.i-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 22px; }
+.i-strip img { width: 100%; aspect-ratio: 4/5; object-fit: cover; }
+.c-inbox.is-open ~ .tag { color: var(--ink); }
+
+/* ═══ 02 HELLO ═══ */
+.c-hello { background: #070606; }
+.h-win { position: absolute; left: 50%; top: 50%; height: 78vh; aspect-ratio: 3/4; transform: translate(-50%, -50%); overflow: hidden; background: #111; }
+.h-win video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+.h-win video.is-on { opacity: 1; }
+.h-word { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: var(--serif), "Noto Serif JP", serif; font-weight: 300; font-size: clamp(70px, 14vw, 260px); letter-spacing: -.04em; line-height: 1; pointer-events: none; mix-blend-mode: difference; color: #fff; white-space: nowrap; }
+.h-lang { position: absolute; left: 50%; bottom: 7vh; transform: translateX(-50%); font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: rgba(245,240,232,.65); }
+.h-end { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; background: #070606; opacity: 0; pointer-events: none; transition: opacity 1.2s ease; }
+.h-end h1 { margin: 0 0 30px; font-family: var(--serif); font-weight: 300; font-size: clamp(54px, 8.4vw, 170px); letter-spacing: -.04em; line-height: .92; }
+.h-end h1 em { color: var(--gold); }
+.c-hello.is-end .h-end { opacity: 1; pointer-events: auto; }
+
+/* ═══ 03 THREE SECONDS ═══ */
+.c-three { background: var(--paper); color: var(--ink); }
+.t-clock { position: absolute; right: 4vw; top: 6vh; font-family: var(--mono); font-weight: 400; font-size: clamp(60px, 11vw, 210px); letter-spacing: -.04em; font-variant-numeric: tabular-nums; line-height: 1; color: var(--ink); }
+.t-clock small { font-size: .2em; letter-spacing: .1em; margin-left: .2em; color: var(--gold-deep); }
+.t-lead { position: absolute; left: 4vw; top: 9vh; max-width: 11ch; margin: 0; font-family: var(--serif); font-weight: 300; font-size: clamp(34px, 3.8vw, 72px); line-height: 1; letter-spacing: -.03em; transition: opacity .6s; }
+.t-lead em { color: var(--gold-deep); }
+.t-stage { position: absolute; left: 4vw; right: 4vw; bottom: 8vh; top: 36vh; }
+.t-f { position: absolute; opacity: 0; transition: opacity .25s ease, transform 1.4s var(--ease); }
+.t-f img, .t-f video { width: 100%; height: 100%; object-fit: cover; }
+.t-f.is-on { opacity: 1; }
+.t-name { position: absolute; left: 0; bottom: 0; font-family: var(--serif); font-weight: 300; font-size: clamp(48px, 7vw, 140px); line-height: .9; letter-spacing: -.035em; opacity: 0; transition: opacity .3s; }
+.t-stats { position: absolute; left: 0; bottom: calc(clamp(48px, 7vw, 140px) * 1.05); font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-deep); opacity: 0; transition: opacity .3s; }
+.t-end { position: absolute; left: 4vw; top: 9vh; right: 40vw; display: flex; align-items: flex-end; gap: 28px; opacity: 0; transition: opacity 1s ease; pointer-events: none; }
+.t-end h1 { margin: 0; font-family: var(--serif); font-weight: 300; font-size: clamp(34px, 3.8vw, 72px); line-height: .98; letter-spacing: -.035em; max-width: 14ch; }
+.t-end h1 em { color: var(--gold-deep); }
+.t-end .cta { flex: none; margin-bottom: 8px; pointer-events: auto; }
+.c-three.is-end .t-end { opacity: 1; }
+.c-three.is-end .t-lead { opacity: 0; }
+
+/* ═══ 04 THE CARD ═══ */
+.c-card { background: radial-gradient(ellipse at 50% 42%, #1c1915, #060505 68%); perspective: 1400px; }
+.cd-h { position: absolute; top: 50%; transform: translateY(-50%); margin: 0; font-family: var(--serif); font-weight: 300; font-size: clamp(44px, 6.6vw, 132px); letter-spacing: -.04em; line-height: 1; pointer-events: none; }
+.cd-h--l { left: 4vw; }
+.cd-h--r { right: 4vw; font-style: italic; color: var(--gold); }
+.cd-obj { position: absolute; left: 50%; top: 50%; width: min(30vw, 400px); aspect-ratio: 5.5/8.5; transform-style: preserve-3d; transform: translate(-50%, -50%); transition: transform .9s var(--ease); cursor: pointer; }
+.cd-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 3px; overflow: hidden; background: #f4efe4; color: #1a1611; box-shadow: 0 60px 120px rgba(0,0,0,.6); }
+.cd-face::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(0,0,0,.012) 0 2px, transparent 2px 4px); pointer-events: none; }
+.cd-back { transform: rotateY(180deg); }
+.cd-gloss { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at var(--gx, 30%) var(--gy, 20%), rgba(255,255,255,.55), rgba(255,255,255,0) 45%); mix-blend-mode: soft-light; }
+.cd-foil { background: linear-gradient(110deg, #8a6a40 0%, #e8d29a var(--fx, 45%), #a98548 calc(var(--fx, 45%) + 18%), #7d5f37 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cd-mark { position: absolute; left: 0; right: 0; top: 7%; text-align: center; font-family: var(--serif); font-size: clamp(11px, 1vw, 15px); letter-spacing: .38em; padding-left: .38em; }
+.cd-disc { position: absolute; left: 50%; top: 20%; width: 50%; aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%; background: center 20% / cover; box-shadow: inset 0 3px 8px rgba(0,0,0,.35), 0 0 0 1px rgba(138,106,64,.6); }
+.cd-name { position: absolute; left: 0; right: 0; top: 60%; text-align: center; font-family: var(--serif); font-weight: 400; font-size: clamp(26px, 2.6vw, 42px); letter-spacing: -.01em; color: #1a1611; text-shadow: 0 1px 0 rgba(255,255,255,.7), 0 -1px 0 rgba(0,0,0,.18); }
+.cd-line { position: absolute; left: 0; right: 0; top: 72%; text-align: center; font-family: var(--mono); font-size: clamp(8px, .7vw, 10.5px); letter-spacing: .2em; text-transform: uppercase; color: #8a6a40; }
+.cd-foot { position: absolute; left: 0; right: 0; bottom: 6%; text-align: center; font-family: var(--serif); font-style: italic; font-size: clamp(12px, 1vw, 15px); color: #6b5a44; }
+.cd-back { padding: 12% 10%; display: flex; flex-direction: column; justify-content: space-between; }
+.cd-back dl { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 10px; font-family: var(--mono); font-size: clamp(8px, .7vw, 11px); letter-spacing: .12em; text-transform: uppercase; }
+.cd-back dt { color: #8a6a40; } .cd-back dd { margin: 3px 0 0; color: #1a1611; }
+.cd-back .cd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.cd-back .cd-grid img { width: 100%; aspect-ratio: 4/5; object-fit: cover; }
+.cd-hint { position: absolute; left: 50%; bottom: 10vh; transform: translateX(-50%); font-family: var(--mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: rgba(245,240,232,.5); }
+.cd-cta { position: absolute; right: 4vw; bottom: 10vh; }
+
+/* ═══ 05 THE DRAFT ═══ */
+.c-draft { background: #e9e4da; color: var(--ink); display: grid; grid-template-columns: 1.1fr 1fr; }
+.d-mail { margin: 8vh 0 8vh 5vw; background: #fbf9f5; box-shadow: 0 40px 100px rgba(0,0,0,.18); display: flex; flex-direction: column; font-family: var(--sans); font-size: clamp(13px, 1.02vw, 16px); overflow: hidden; }
+.d-bar { padding: 14px 20px; border-bottom: 1px solid #ebe6dc; display: flex; gap: 8px; font-size: 12px; color: #857c6e; }
+.d-bar i { width: 10px; height: 10px; border-radius: 50%; background: #d8d2c6; }
+.d-f { padding: 12px 22px; border-bottom: 1px solid #f0ebe2; color: #6f675b; }
+.d-f b { color: var(--ink); font-weight: 500; }
+.d-body { flex: 1; padding: 22px; line-height: 1.6; white-space: pre-wrap; color: #262019; overflow: hidden; }
+.d-body .caret { display: inline-block; width: 1.5px; height: 1.1em; background: var(--ink); vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.d-att { padding: 14px 22px 22px; display: flex; flex-wrap: wrap; gap: 8px; min-height: 64px; }
+.d-chip { display: inline-flex; gap: 8px; align-items: center; padding: 8px 12px; background: #f1ece3; border: 1px solid #e3dccf; font-family: var(--mono); font-size: 11.5px; color: #4b4337; }
+.d-chip.is-bad { color: #9a3b2a; border-color: #e7c9bf; background: #faeee9; }
+.d-chip.is-good { color: #5e4a25; border-color: #d9c58f; background: #f6efdc; }
+.d-chip img { width: 22px; height: 28px; object-fit: cover; }
+.d-side { padding: 10vh 5vw 10vh 4vw; display: flex; flex-direction: column; justify-content: space-between; }
+.d-side h1 { margin: 0; font-family: var(--serif); font-weight: 300; font-size: clamp(46px, 6vw, 118px); line-height: .92; letter-spacing: -.04em; }
+.d-side h1 em { color: var(--gold-deep); }
+.d-side p { margin: 0 0 20px; max-width: 32ch; font-size: 15px; line-height: 1.6; color: #4b4337; }
+.d-state { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-deep); min-height: 1.4em; }
+@media (max-width: 760px) { .c-draft { grid-template-columns: 1fr; } .d-mail { margin: 10vh 4vw 0; } .d-side { padding: 4vh 6vw; } }
+
+/* ═══ 06 SPOTLIGHT ═══ */
+.c-spot { background: #000; cursor: none; }
+.sp-film { position: absolute; inset: 0; -webkit-mask-image: radial-gradient(circle var(--r, 22vmax) at var(--mx, 50%) var(--my, 45%), #000 0%, rgba(0,0,0,.85) 35%, transparent 100%); mask-image: radial-gradient(circle var(--r, 22vmax) at var(--mx, 50%) var(--my, 45%), #000 0%, rgba(0,0,0,.85) 35%, transparent 100%); }
+.sp-film video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sp-h { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; pointer-events: none; }
+.sp-h h1 { margin: 0; font-family: var(--serif); font-weight: 200; font-size: clamp(60px, 10.5vw, 210px); line-height: .88; letter-spacing: -.045em; color: #fff; mix-blend-mode: overlay; }
+.sp-h h1 em { font-weight: 300; }
+.sp-dim { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; pointer-events: none; }
+.sp-dim h1 { margin: 0; font-family: var(--serif); font-weight: 200; font-size: clamp(60px, 10.5vw, 210px); line-height: .88; letter-spacing: -.045em; color: rgba(245,240,232,.07); }
+.sp-foot { position: absolute; left: 0; right: 0; bottom: 9vh; display: flex; flex-direction: column; align-items: center; gap: 16px; opacity: 0; transition: opacity 1.4s ease; }
+.sp-foot p { margin: 0; font-family: var(--serif); font-style: italic; font-size: clamp(16px, 1.4vw, 22px); color: rgba(245,240,232,.85); }
+.c-spot.is-lit .sp-foot { opacity: 1; }
+.c-spot.is-lit { cursor: default; }
+.sp-hint { position: absolute; left: 50%; top: 8vh; transform: translateX(-50%); font-family: var(--mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: rgba(245,240,232,.35); transition: opacity .6s; }
+.c-spot.is-lit .sp-hint { opacity: 0; }
+</style>
+</head>
+<body>
+<p class="tag"><b>Pholio</b> &nbsp;/talent &mdash; a better introduction</p>
+
+<!-- ═══════════════ 01 THE INBOX ═══════════════ -->
+<section class="c c-inbox" data-c="inbox">
+  <div class="i-head"><b>Submissions</b><span><span data-icount>0</span> unread</span></div>
+  <div class="i-list"><div class="i-rows" data-irows></div></div>
+  <div class="i-hero" data-ihero>
+    <span><b>Elara Keats</b></span><span><i>Digitals, book, comp card</i></span><span><em>via Pholio</em></span><span>now</span>
+    <div class="i-open">
+      <video muted playsinline loop preload="none" data-src="media/dunes.mp4"></video>
+      <div class="i-doc">
+        <h1>A better<br><em>introduction.</em></h1>
+        <div>
+          <div class="i-who">Elara Keats</div>
+          <div class="i-stats">178 cm &middot; 81 &middot; 61 &middot; 89 &middot; Digitals current &middot; New York</div>
+          <div class="i-strip">
+            <img src="media/el1.jpg" alt=""><img src="media/el2.jpg" alt=""><img src="media/el3.jpg" alt=""><img src="media/el4.jpg" alt=""><img src="media/el5.jpg" alt="">
+          </div>
+          <p style="margin:26px 0 0"><a class="cta" href="#">Start free</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 02 HELLO ═══════════════ -->
+<section class="c c-hello" data-c="hello">
+  <div class="h-win" data-hwin></div>
+  <div class="h-word" data-hword></div>
+  <div class="h-lang" data-hlang></div>
+  <div class="h-end"><div><h1>A better<br><em>introduction.</em></h1><a class="cta" href="#">Start free</a></div></div>
+</section>
+
+<!-- ═══════════════ 03 THREE SECONDS ═══════════════ -->
+<section class="c c-three" data-c="three">
+  <p class="t-lead">An agency gives you about <em>three seconds.</em></p>
+  <div class="t-clock"><span data-tclock>3.00</span><small>sec</small></div>
+  <div class="t-stage" data-tstage>
+    <div class="t-f" data-tf="0" style="left:0;top:0;width:24%;height:74%"><img src="media/el1.jpg" alt=""></div>
+    <div class="t-f" data-tf="1" style="left:26%;top:6%;width:24%;height:74%"><img src="media/el3.jpg" alt=""></div>
+    <div class="t-f" data-tf="2" style="left:52%;top:0;width:48%;height:100%"><video muted playsinline loop preload="none" data-src="media/dunes.mp4"></video></div>
+    <div class="t-stats" data-tstats>178 cm &middot; Bust 81 &middot; Waist 61 &middot; Hips 89 &middot; Digitals current</div>
+    <div class="t-name" data-tname>Elara Keats</div>
+  </div>
+  <div class="t-end"><h1>Make them count. A better <em>introduction.</em></h1><a class="cta" href="#">Start free</a></div>
+</section>
+
+<!-- ═══════════════ 04 THE CARD ═══════════════ -->
+<section class="c c-card" data-c="card">
+  <h1 class="cd-h cd-h--l">A better</h1>
+  <h1 class="cd-h cd-h--r">introduction.</h1>
+  <div class="cd-obj" data-cdobj>
+    <div class="cd-face">
+      <div class="cd-mark cd-foil">PHOLIO</div>
+      <div class="cd-disc" style="background-image:url(media/el1.jpg)"></div>
+      <div class="cd-name">Elara Keats</div>
+      <div class="cd-line">178 cm &middot; New York &middot; Digitals current</div>
+      <div class="cd-foot">pholio.studio/elara-keats</div>
+      <div class="cd-gloss"></div>
+    </div>
+    <div class="cd-face cd-back">
+      <div class="cd-grid"><img src="media/el2.jpg" alt=""><img src="media/el3.jpg" alt=""><img src="media/el4.jpg" alt=""><img src="media/el5.jpg" alt=""></div>
+      <dl><div><dt>Height</dt><dd>178 cm / 5&prime;10&Prime;</dd></div><div><dt>Bust</dt><dd>81 / 32&Prime;</dd></div><div><dt>Waist</dt><dd>61 / 24&Prime;</dd></div><div><dt>Hips</dt><dd>89 / 35&Prime;</dd></div><div><dt>Hair</dt><dd>Brown</dd></div><div><dt>Eyes</dt><dd>Brown</dd></div></dl>
+      <div class="cd-mark cd-foil" style="position:static;padding:0">PHOLIO</div>
+      <div class="cd-gloss"></div>
+    </div>
+  </div>
+  <span class="cd-hint">Move to catch the light &middot; click to turn it over</span>
+  <a class="cta cd-cta" href="#">Start free</a>
+</section>
+
+<!-- ═══════════════ 05 THE DRAFT ═══════════════ -->
+<section class="c c-draft" data-c="draft">
+  <div class="d-mail">
+    <div class="d-bar"><i></i><i></i><i></i><span style="margin-left:10px">New message</span></div>
+    <div class="d-f">To <b>scouting@musenyc.com</b></div>
+    <div class="d-f">Subject <b data-dsub></b></div>
+    <div class="d-body" data-dbody></div>
+    <div class="d-att" data-datt></div>
+  </div>
+  <div class="d-side">
+    <div class="d-state" data-dstate></div>
+    <div>
+      <h1>A better<br><em>introduction.</em></h1>
+      <p style="margin-top:26px">Your details in the order each agency reads them, your photos in the sizes they ask for, and a message that sounds like you on a good day.</p>
+      <a class="cta" href="#">Start free</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 06 SPOTLIGHT ═══════════════ -->
+<section class="c c-spot" data-c="spot">
+  <div class="sp-dim"><h1>A better<br><em>introduction.</em></h1></div>
+  <div class="sp-film" data-spfilm>
+    <video muted playsinline loop preload="none" data-src="media/hat.mp4"></video>
+    <div class="sp-h"><h1>A better<br><em>introduction.</em></h1></div>
+  </div>
+  <p class="sp-hint">Move the light</p>
+  <div class="sp-foot"><p>Be seen properly, the first time.</p><a class="cta" href="#">Start free</a></div>
+</section>
+
+<nav class="nav" data-nav></nav>
+
+<script>
+(() => {
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+const lerp = (a, b, t) => a + (b - a) * t;
+const load = (v) => { if (!v.src && v.dataset.src) v.src = v.dataset.src; return v; };
+const play = (v) => { load(v); v.play().catch(() => {}); };
+
+/* ═══ 01 THE INBOX ═══ */
+const inbox = (() => {
+  const el = $('[data-c="inbox"]'), rows = $('[data-irows]'), count = $('[data-icount]'), vid = $('.i-open video', el);
+  const who = ['maya.k2004@gmail.com','Jordan','model.hopeful_22','Bree T','sofia rivera','no-reply@formsubmit','Kay','Tyler B.','amira.h','daniela.m.official','J. Okafor','lil_modelgirl','Chloe ✨','Priya S','Ava','unknown sender','Marcus Lee','Hana','T.','Isabella R'];
+  const subj = ['hiii pls check my pics!!','Modeling application','(no subject)','Fwd: Fwd: submission','5’7 wanna model','photos attached i think','application - resend','hi is this the right email?','Re: new face??','my portfolio (link inside)','submission for fall','im 16 is that ok','here r my measurements','resending bc last one bounced','Hello','please sign me','Model inquiry','(no subject)','application!!!','test'];
+  const att = ['IMG_4471.HEIC  8.2 MB','screenshot.png','DSC00231.jpg +11','no attachment','link.txt','video.MOV  212 MB','IMG_2231.HEIC','selfie.jpg','portfolio_final_FINAL.pdf','photo.jpeg +4'];
+  let n = 0, raf = 0;
+  const build = () => {
+    rows.innerHTML = '';
+    for (let i = 0; i < 140; i++) {
+      const r = document.createElement('div'); r.className = 'i-row';
+      r.innerHTML = `<b>${who[(i * 7) % who.length]}</b><i>${subj[(i * 3 + 1) % subj.length]}</i><em>${att[(i * 5) % att.length]}</em><span>${(i % 12) + 1}:${String((i * 13) % 60).padStart(2, '0')}</span>`;
+      rows.appendChild(r);
+    }
+  };
+  return {
+    el,
+    async start() {
+      n++; const me = n; cancelAnimationFrame(raf);
+      el.classList.remove('is-arrive', 'is-open'); build();
+      let y = 0, v = 26, total = 0; const t0 = performance.now();
+      const step = (now) => {
+        const t = (now - t0) / 1000;
+        v = t < 2.6 ? 26 : Math.max(0, v * 0.93);
+        y -= v; const h = rows.scrollHeight / 2; if (-y > h) y += h;
+        rows.style.transform = `translateY(${y}px)`; rows.style.filter = `blur(${Math.min(1.4, v / 18)}px)`;
+        total = Math.min(1284, total + v * 0.9); count.textContent = Math.round(total).toLocaleString();
+        if (me === n && v > 0.05) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+      await wait(3600); if (me !== n) return;
+      el.classList.add('is-arrive');
+      await wait(1500); if (me !== n) return;
+      play(vid); el.classList.add('is-open');
+    },
+    stop() { n++; cancelAnimationFrame(raf); vid.pause(); },
+  };
+})();
+
+/* ═══ 02 HELLO ═══ */
+const hello = (() => {
+  const el = $('[data-c="hello"]'), win = $('[data-hwin]'), word = $('[data-hword]'), lang = $('[data-hlang]');
+  const seq = [['Hello.', 'English', 'f1'], ['Bonjour.', 'Français', 'f2'], ['Ciao.', 'Italiano', 'f3'], ['Hola.', 'Español', 'f4'], ['Olá.', 'Português', 'f5'], ['こんにちは', '日本語', 'f6'], ['Merhaba.', 'Türkçe', 'f7'], ['Hallo.', 'Deutsch', 'f8'], ['Здравствуйте.', 'Русский', 'f9']];
+  const vids = seq.map(([, , f]) => { const v = document.createElement('video'); v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto'; v.src = `/calltime/faces/${f}.mp4`; win.appendChild(v); return v; });
+  let n = 0;
+  return {
+    el,
+    async start() {
+      n++; const me = n; el.classList.remove('is-end'); word.textContent = ''; lang.textContent = '';
+      await wait(400);
+      for (let i = 0; i < seq.length; i++) {
+        if (me !== n) return;
+        vids.forEach((v, j) => { v.classList.toggle('is-on', j === i); if (j === i) { v.currentTime = 0; v.play().catch(() => {}); } else v.pause(); });
+        word.textContent = seq[i][0]; word.style.fontSize = seq[i][0].length > 9 ? 'clamp(40px, 8vw, 150px)' : '';
+        lang.textContent = seq[i][1];
+        await wait(i < 2 ? 1300 : 850);
+      }
+      if (me !== n) return;
+      el.classList.add('is-end');
+    },
+    stop() { n++; vids.forEach((v) => v.pause()); },
+  };
+})();
+
+/* ═══ 03 THREE SECONDS ═══ */
+const three = (() => {
+  const el = $('[data-c="three"]'), clock = $('[data-tclock]'), fs = $$('.t-f', el), name = $('[data-tname]'), stats = $('[data-tstats]'), vid = $('video', el);
+  let n = 0, raf = 0;
+  return {
+    el,
+    async start() {
+      n++; const me = n; cancelAnimationFrame(raf);
+      el.classList.remove('is-end'); clock.textContent = '3.00'; fs.forEach((f) => f.classList.remove('is-on')); name.style.opacity = stats.style.opacity = 0;
+      play(vid);
+      await wait(1800); if (me !== n) return;
+      const t0 = performance.now();
+      const beats = [[0.15, () => fs[0].classList.add('is-on')], [0.7, () => fs[1].classList.add('is-on')], [1.2, () => fs[2].classList.add('is-on')], [1.8, () => { stats.style.opacity = 1; }], [2.25, () => { name.style.opacity = 1; }]];
+      let b = 0;
+      const step = (now) => {
+        const t = (now - t0) / 1000;
+        clock.textContent = Math.max(0, 3 - t).toFixed(2);
+        while (b < beats.length && t >= beats[b][0]) beats[b++][1]();
+        if (t < 3 && me === n) raf = requestAnimationFrame(step);
+        else if (me === n) setTimeout(() => { if (me === n) el.classList.add('is-end'); }, 700);
+      };
+      raf = requestAnimationFrame(step);
+    },
+    stop() { n++; cancelAnimationFrame(raf); vid.pause(); },
+  };
+})();
+
+/* ═══ 04 THE CARD ═══ */
+const card = (() => {
+  const el = $('[data-c="card"]'), obj = $('[data-cdobj]');
+  let flipped = false, rx = 0, ry = 0, tx = 0, ty = 0, raf = 0, idle = true, t0 = 0;
+  el.addEventListener('pointermove', (e) => { idle = false; tx = (e.clientX / innerWidth - 0.5) * 2; ty = (e.clientY / innerHeight - 0.5) * 2; });
+  obj.addEventListener('click', () => { flipped = !flipped; });
+  const tick = (now) => {
+    if (idle) { const t = (now - t0) / 1000; tx = Math.sin(t * 0.7) * 0.6; ty = Math.sin(t * 0.5) * 0.3; }
+    rx += (ty - rx) * 0.07; ry += (tx - ry) * 0.07;
+    obj.style.transform = `translate(-50%, -50%) rotateX(${-rx * 14}deg) rotateY(${ry * 20 + (flipped ? 180 : 0)}deg)`;
+    const gx = 50 + ry * 40, gy = 30 + rx * 40;
+    obj.style.setProperty('--gx', gx + '%'); obj.style.setProperty('--gy', gy + '%'); obj.style.setProperty('--fx', (40 + ry * 30) + '%');
+    raf = requestAnimationFrame(tick);
+  };
+  return { el, start() { flipped = false; idle = true; t0 = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); }, stop() { cancelAnimationFrame(raf); } };
+})();
+
+/* ═══ 05 THE DRAFT ═══ */
+const draft = (() => {
+  const el = $('[data-c="draft"]'), body = $('[data-dbody]'), sub = $('[data-dsub]'), att = $('[data-datt]'), state = $('[data-dstate]');
+  const BAD = 'hiii!! my names elara and i reallyyy want to model 🙏 im like 5’10 i think?? here r some pics lmk!!\n\nsent from my iphone';
+  const GOOD = 'Dear Muse Management,\n\nMy name is Elara Keats. I’m 23, based in New York, and not currently represented.\n\nHeight 178 cm (5’10″), bust 81, waist 61, hips 89.\n\nAs your page asks, I’ve attached a close-up with my hair up, a close-up with my hair down, and a full length, each around 1 MB. My book and comp card are at pholio.studio/elara-keats.\n\nThank you for your time.\nElara';
+  const badChips = ['IMG_4471.HEIC · 8.2 MB', 'screenshot.png', 'IMG_2231.HEIC · 6.9 MB'];
+  const goodChips = [['elara-keats_closeup-hair-up.jpg · 0.9 MB', 'el1'], ['elara-keats_closeup-hair-down.jpg · 1.0 MB', 'el3'], ['elara-keats_full-length.jpg · 0.9 MB', 'el4']];
+  let n = 0;
+  const type = async (text, me, speed) => { for (let i = 1; i <= text.length; i++) { if (me !== n) return; body.innerHTML = escape(text.slice(0, i)) + '<span class="caret"></span>'; await wait(speed + (text[i - 1] === '\n' ? speed * 6 : 0)); } };
+  const escape = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const erase = async (me) => { let s = body.textContent; while (s.length) { if (me !== n) return; s = s.slice(0, -Math.max(2, Math.ceil(s.length / 18))); body.innerHTML = escape(s) + '<span class="caret"></span>'; await wait(16); } };
+  return {
+    el,
+    async start() {
+      n++; const me = n; body.innerHTML = '<span class="caret"></span>'; att.innerHTML = ''; sub.textContent = ''; state.textContent = '';
+      await wait(500);
+      sub.textContent = 'modeling!!';
+      await type(BAD, me, 34); if (me !== n) return;
+      for (const c of badChips) { const s = document.createElement('span'); s.className = 'd-chip is-bad'; s.textContent = c; att.appendChild(s); await wait(220); }
+      await wait(1200); if (me !== n) return;
+      state.textContent = 'Rewriting the way Muse asks for it';
+      await erase(me); att.innerHTML = ''; sub.textContent = 'Application: Elara Keats, New York';
+      await type(GOOD, me, 14); if (me !== n) return;
+      for (const [c, im] of goodChips) { const s = document.createElement('span'); s.className = 'd-chip is-good'; s.innerHTML = `<img src="media/${im}.jpg" alt="">${c}`; att.appendChild(s); await wait(260); }
+      state.textContent = 'Ready to send';
+    },
+    stop() { n++; },
+  };
+})();
+
+/* ═══ 06 SPOTLIGHT ═══ */
+const spot = (() => {
+  const el = $('[data-c="spot"]'), film = $('[data-spfilm]'), vid = $('video', film);
+  let mx = 50, my = 45, tx = 50, ty = 45, r = 16, tr = 16, raf = 0, moved = 0, idle = true, t0 = 0, lit = false;
+  el.addEventListener('pointermove', (e) => { idle = false; tx = (e.clientX / innerWidth) * 100; ty = (e.clientY / innerHeight) * 100; moved += Math.abs(e.movementX) + Math.abs(e.movementY); if (moved > 2600 && !lit) { lit = true; tr = 120; el.classList.add('is-lit'); } });
+  const tick = (now) => {
+    if (idle && !lit) { const t = (now - t0) / 1000; tx = 50 + Math.sin(t * 0.6) * 22; ty = 45 + Math.sin(t * 0.9) * 12; if (t > 9) { lit = true; tr = 120; el.classList.add('is-lit'); } }
+    mx += (tx - mx) * 0.08; my += (ty - my) * 0.08; r += (tr - r) * 0.03;
+    film.style.setProperty('--mx', mx + '%'); film.style.setProperty('--my', my + '%'); film.style.setProperty('--r', r + 'vmax');
+    raf = requestAnimationFrame(tick);
+  };
+  return { el, start() { lit = false; moved = 0; idle = true; r = 0; tr = 18; t0 = performance.now(); el.classList.remove('is-lit'); play(vid); cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); }, stop() { cancelAnimationFrame(raf); vid.pause(); } };
+})();
+
+/* ═══ explorer ═══ */
+const C = [['01', 'The Inbox', inbox], ['02', 'Hello', hello], ['03', 'Three Seconds', three], ['04', 'The Card', card], ['05', 'The Draft', draft], ['06', 'Spotlight', spot]];
+const nav = $('[data-nav]');
+let cur = -1;
+C.forEach(([k, name], i) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = `${k} ${name}`; b.onclick = () => show(i); nav.appendChild(b); });
+const rp = document.createElement('button'); rp.type = 'button'; rp.className = 'rp'; rp.textContent = '↺ replay'; rp.onclick = () => show(cur, true); nav.appendChild(rp);
+function show(i, force) {
+  if (i === cur && !force) return;
+  if (cur >= 0) { C[cur][2].stop(); C[cur][2].el.classList.remove('is-on'); }
+  cur = i; const c = C[i][2];
+  c.el.classList.add('is-on');
+  $$('button', nav).forEach((b, j) => b.classList.toggle('is-on', j === i));
+  if (location.hash !== '#' + (i + 1)) history.replaceState(null, '', '#' + (i + 1));
+  c.start();
+}
+addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') show((cur + 1) % C.length);
+  if (e.key === 'ArrowLeft') show((cur + C.length - 1) % C.length);
+  if (/^[1-6]$/.test(e.key)) show(+e.key - 1);
+});
+addEventListener('hashchange', () => { const i = (parseInt(location.hash.slice(1), 10) || 1) - 1; if (i !== cur && i >= 0 && i < C.length) show(i); });
+document.fonts.ready.then(() => show(Math.max(0, Math.min(C.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1))));
+})();
+</script>
+</body>
+</html>

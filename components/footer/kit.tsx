@@ -326,10 +326,11 @@ export function Stroke({ scene }: { scene: Scene }) {
  * The name, set down on the line.
  *
  * The real `Wordmark`, so the letterforms, tracking and gold are the header's
- * exactly; only the scale and the placement belong to this surface. It sits
- * with its baseline on the stroke, which puts the O's overshoot a hair below
- * the rule, the way a round letter is drawn against a line and what keeps the
- * signature from looking aligned rather than written.
+ * exactly; only the scale and the placement belong to this surface. Leading is
+ * collapsed to 1 so `SIGN_GAP` is the true distance from the baseline to the
+ * stroke, and the two read as one gesture rather than a name floating over a
+ * line. The baseline does not sit on the rule: that turns the sweep into an
+ * underline.
  *
  * It travels down and decelerates into place, and it is on the stage from the
  * first frame, so no frame of the arrival is missing its signature.
@@ -342,7 +343,7 @@ export function Signature({ scene }: { scene: Scene }) {
   return (
     <motion.span
       aria-hidden
-      className="block text-[42px] md:text-[64px]"
+      className="block text-[42px] leading-none md:text-[64px]"
       initial={{ y: -NAME_FALL }}
       animate={{ y: scene.signed ? 0 : -NAME_FALL }}
       transition={beat(scene, BEAT.name)}
@@ -369,6 +370,16 @@ const NAV: Record<Rank, string> = {
   company: MUTED,
 };
 
+/**
+ * Destinations and the address. One size; rank is colour, never scale.
+ *
+ * 22/24 read as small print parked above a 64px signature. This step gives the
+ * navigation presence without letting it compete with the mark: at desktop the
+ * signature is still twice the column.
+ */
+const DESTINATION =
+  "inline-block text-[26px] leading-[1.22] focus:outline-none focus-visible:underline md:text-[32px] md:leading-[1.18]";
+
 /** A destination. Display serif, because these are the only words in the footer
     a visitor came looking for. */
 export function NavLink({
@@ -386,7 +397,7 @@ export function NavLink({
       href={href}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className="inline-block text-[22px] leading-[1.45] focus:outline-none focus-visible:underline md:text-[24px]"
+      className={DESTINATION}
       style={{
         fontFamily: SERIF,
         textDecoration: "none",
@@ -500,7 +511,7 @@ export function AddressLink({ email }: { email: string }) {
       href={`mailto:${email}`}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className="inline-block text-[22px] leading-[1.45] focus:outline-none focus-visible:underline md:text-[24px]"
+      className={DESTINATION}
       style={{
         fontFamily: SERIF,
         color: GOLD,

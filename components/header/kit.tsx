@@ -400,6 +400,14 @@ function useFieldPolarity({
         for (const el of stack) {
           if (!(el instanceof HTMLElement)) continue;
           if (el.closest("[data-site-header]")) continue;
+          /* A full-bleed film scene opts out of the band: the marks take its
+             polarity, but no paper is painted over the picture. */
+          const clear = el.closest<HTMLElement>("[data-header-clear]");
+          if (clear) {
+            setField(clear.dataset.headerClear === "cream" ? "cream" : "ink");
+            setPaper("transparent");
+            return;
+          }
           const bg = window.getComputedStyle(el).backgroundColor;
           if (OPAQUE_SKIP.has(bg)) continue;
           const match = bg.match(

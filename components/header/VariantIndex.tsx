@@ -103,7 +103,7 @@ export default function VariantIndex({
             Only shows once there's paper under it (condensed, index closed) —
             a permanent line at true page-top would sit on raw hero imagery. */}
         <GoldSweep
-          opacity={onPaper ? 1 : 0}
+          opacity={onPaper && paper !== "transparent" ? 1 : 0}
           style={{
             position: "absolute",
             left: 0,

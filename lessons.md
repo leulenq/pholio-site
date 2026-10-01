@@ -3148,3 +3148,14 @@ removing it.
 it. Do not screen it against the ban list on the way in, do not improve its
 art direction, and do not negotiate its copy. Fix defects, flag promises, and
 write down every rule the replication suspends.
+
+**48.5 The owner later rewrote the words, and kept the composition.** On
+2026-09-30 the brief was to replace the archive copy with a careers
+proposition for an early-stage company that is actually hiring: realistic
+roles, realistic terms, no corporate brochure. The hero, the four values,
+the eight cells, the roles by department, and the close stay the replicated
+layout. The words do not. "Scouting" comes back out (§23). The eight cells
+are early-stage terms the owner authorized inventing (remote work, early
+equity, stipends, leave, tools), not a filed handbook and not proof the
+company is incorporated. `careers@pholio.studio` still has to exist before
+the page is announced. Do not restore the archive sentences.
