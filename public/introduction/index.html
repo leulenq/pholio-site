@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pholio — A better introduction</title>
+<meta name="description" content="Digitals, comp card and applications, made right for every agency. Free to apply. Agencies are never charged.">
+<meta name="theme-color" content="#050505">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+Display:ital,wght@0,200;0,300;0,400;1,200;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="seq/seq-001.webp">
+<link rel="stylesheet" href="intro.css">
+</head>
+<body>
+
+<!-- ── Loader: the wordmark, and a count of frames in hand ──────────── -->
+<div class="ld" data-ld aria-hidden="true">
+  <span class="wm ld__wm">PHOLIO</span>
+  <span class="ld__n" data-ld-n>000</span>
+</div>
+
+<!-- ── Header ────────────────────────────────────────────────────────── -->
+<header class="hd" data-hd>
+  <a class="wm hd__wm" href="#top" aria-label="Pholio, back to top">PHOLIO</a>
+  <nav class="hd__nav">
+    <a href="https://app.pholio.studio">Sign in</a>
+    <a class="hd__cta" href="https://app.pholio.studio/onboarding">Start free</a>
+  </nav>
+</header>
+
+<!-- ── Running timecode: the whole page is one take ─────────────────── -->
+<div class="tc" data-tc aria-hidden="true">
+  <span class="tc__rec"></span><span data-tc-time>00:00:00:00</span><span class="tc__sep">/</span><span data-tc-ch>Arrival</span>
+</div>
+
+<main id="top">
+
+  <!-- ═══ ONE TAKE: arrival · measure · digitals ═══════════════════════
+       A single pinned stage and a single canvas. She sits, rises, walks
+       through the word, is measured, then turns while six frames are
+       taken and laid out as her digitals. No cuts. -->
+  <section class="stage" data-stage data-theme="dark">
+    <div class="stage__pin">
+      <p class="call" data-call aria-hidden="true"></p>
+      <canvas class="stage__cv" data-cv aria-hidden="true"></canvas>
+
+      <!-- Arrival -->
+      <div class="hero" data-hero>
+        <h1 class="sr">A better introduction.</h1>
+        <p class="hero__a" data-hero-a aria-hidden="true">A better</p>
+        <div class="hero__foot" data-hero-foot>
+          <p>Digitals, comp card and applications, made right for every agency.</p>
+          <a class="btn" href="https://app.pholio.studio/onboarding">Start free</a>
+        </div>
+        <p class="hero__cue" data-hero-cue aria-hidden="true"><i></i>Scroll</p>
+      </div>
+
+      <p class="walk walk--l" data-walk-l><span>First impressions</span></p>
+      <p class="walk walk--r" data-walk-r><span>arrive <em>before you do.</em></span></p>
+
+      <!-- Measure -->
+      <div class="ms" data-ms>
+        <h2 class="ms__h"><span>Exact to the</span> <em>centimetre.</em></h2>
+        <p class="ms__p">Height, bust, waist, hips, shoes. Entered once, printed in both units on everything you send.</p>
+        <dl class="ms__dl">
+          <div><dt>Hair</dt><dd>Blonde</dd></div>
+          <div><dt>Eyes</dt><dd>Green</dd></div>
+          <div><dt>Shoes</dt><dd>EU 39 · US 8.5</dd></div>
+          <div><dt>Dress</dt><dd>EU 34 · US 2</dd></div>
+        </dl>
+      </div>
+
+      <!-- Digitals -->
+      <div class="tk" data-tk>
+        <h2 class="tk__h">Six frames, <em>called one at a time.</em></h2>
+        <p class="tk__p">Pholio guides you through the digitals agencies expect, and dates every set so you know when it’s time to reshoot.</p>
+      </div>
+      <p class="tk__count" data-tk-count aria-hidden="true"><b data-tk-n>00</b> / 06</p>
+      <p class="tk__done" data-tk-done>Digitals <span>·</span> dated <span data-today></span></p>
+
+      <div class="flash" data-flash></div>
+      <div class="wash" data-wash></div>
+    </div>
+  </section>
+
+  <!-- ═══ THE CARD ═════════════════════════════════════════════════════ -->
+  <section class="cd" data-cd data-theme="light">
+    <div class="cd__pin" data-cd-pin>
+      <div class="cd__copy" data-cd-copy>
+        <h2 class="cd__h">One card, <em>every edition.</em></h2>
+        <p class="cd__p">Composed from your own frames, front and back. Change the edition and it sets itself again.</p>
+      </div>
+
+      <div class="cc" data-cc data-ed="standard">
+        <div class="cc__tilt" data-cc-tilt>
+          <div class="cc__flip" data-cc-flip>
+
+            <div class="cc__face cc__front" aria-label="Comp card, front">
+              <div class="cc__seam"></div>
+              <p class="cc__mast" data-name-up>ELARA KEATS</p>
+              <img class="cc__fig" data-cc-fig src="seq/seq-103.webp" alt="Full-length digital, facing camera" draggable="false">
+              <div class="cc__band">
+                <p class="cc__name" data-name>Elara Keats</p>
+                <p class="cc__stats">Height 178 <i>·</i> Bust 81 <i>·</i> Waist 61 <i>·</i> Hips 89 <i>·</i> Shoes 39</p>
+              </div>
+            </div>
+
+            <div class="cc__face cc__back" aria-label="Comp card, back">
+              <div class="cc__grid">
+                <div class="crop" data-crop="close"><img src="seq/seq-175.webp" alt="Close-up" draggable="false"></div>
+                <div class="crop" data-crop="profile"><img src="seq/seq-139.webp" alt="Profile" draggable="false"></div>
+                <div class="crop" data-crop="back"><img src="seq/seq-145.webp" alt="Back" draggable="false"></div>
+                <div class="crop" data-crop="move"><img src="seq/seq-157.webp" alt="In movement" draggable="false"></div>
+              </div>
+              <div class="cc__bk">
+                <p class="cc__bname" data-name>Elara Keats</p>
+                <dl class="cc__bstats">
+                  <div><dt>Height</dt><dd>178 cm <small>5′10″</small></dd></div>
+                  <div><dt>Bust</dt><dd>81 <small>32″</small></dd></div>
+                  <div><dt>Waist</dt><dd>61 <small>24″</small></dd></div>
+                  <div><dt>Hips</dt><dd>89 <small>35″</small></dd></div>
+                  <div><dt>Shoes</dt><dd>39 <small>8.5</small></dd></div>
+                  <div><dt>Eyes</dt><dd>Green</dd></div>
+                </dl>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="cd__ctl" data-cd-ctl>
+        <div class="ed" role="radiogroup" aria-label="Comp card edition">
+          <button type="button" role="radio" aria-checked="true" data-ed-btn="standard"><span>The Standard</span></button>
+          <button type="button" role="radio" aria-checked="false" data-ed-btn="cover"><span>The Cover Story</span></button>
+          <button type="button" role="radio" aria-checked="false" data-ed-btn="night"><span>The Night Edition</span></button>
+        </div>
+        <label class="nm">
+          <span>Set your name</span>
+          <input type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Elara Keats" data-nm>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ REQUIREMENTS ═════════════════════════════════════════════════ -->
+  <section class="ft" data-ft data-theme="dark">
+    <div class="ft__pin">
+      <div class="ft__view" data-ft-view>
+        <div class="ft__seam"></div>
+        <img class="ft__img" data-ft-img src="seq/seq-097.webp" alt="" draggable="false">
+        <div class="ft__dim" data-ft-dim></div>
+        <div class="ft__crop" data-ft-crop><i></i><i></i><i></i><i></i></div>
+        <div class="ft__miss" data-ft-miss><span>Not in this set</span></div>
+        <p class="ft__spec" data-ft-spec></p>
+      </div>
+      <div class="ft__side">
+        <h2 class="ft__h">One sitting. <em>Cut to every brief.</em></h2>
+        <ol class="ft__list" data-ft-list></ol>
+        <p class="ft__p" data-ft-p>Pholio checks your set against each agency’s published requirements, and tells you what’s missing before you send.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE WAIT ═════════════════════════════════════════════════════ -->
+  <section class="wt" data-wt data-theme="dark">
+    <div class="wt__pin">
+      <p class="wt__sent" data-wt-sent>Sent <span data-sent></span></p>
+      <h2 class="wt__h" data-wt-h>Most agencies never <em>write back.</em></h2>
+      <p class="wt__day" aria-hidden="true"><span class="wt__lab">Day</span><span class="wt__n" data-wt-n>1</span></p>
+      <div class="wt__ticks" data-wt-ticks aria-hidden="true"></div>
+      <div class="wt__end" data-wt-end>
+        <h2 class="wt__h2">Pholio tells you when silence <em>means no.</em></h2>
+        <p class="wt__chip"><i></i><span>No reply · window closed <b data-close></b></span><span class="wt__re">Re-apply from <b data-reapply></b></span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ YOU ══════════════════════════════════════════════════════════ -->
+  <section class="yu" data-yu data-theme="dark">
+    <div class="yu__pin">
+      <p class="wm yu__wm" data-yu-wm aria-hidden="true">PHOLIO</p>
+      <canvas class="yu__cv" data-yu-cv aria-hidden="true"></canvas>
+      <div class="yu__copy">
+        <h2 class="yu__h">Introduce <em>yourself.</em></h2>
+        <div class="yu__row">
+          <a class="btn btn--lg" href="https://app.pholio.studio/onboarding">Start free</a>
+          <p>Free to apply.<br>Agencies are never charged.</p>
+        </div>
+      </div>
+      <p class="yu__hint" data-yu-hint aria-hidden="true">Move to turn her</p>
+    </div>
+  </section>
+
+</main>
+
+<div class="grain" aria-hidden="true"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="intro.js" defer></script>
+</body>
+</html>

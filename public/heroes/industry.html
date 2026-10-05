@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pholio · The industry, as it is</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=JetBrains+Mono:wght@400&family=Noto+Serif+Display:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="heroes.css">
+<style>
+  /*
+   * 01 · The industry, as it is.
+   *
+   * Open on the real thing, not a beauty shot: backstage, a studio, a
+   * line-up, hands holding polaroids, a fitting, a runway. Hard cuts, full
+   * bleed, documentary. The world is crowded and serious, and everyone in it
+   * is introducing themselves. Over it, once: A better introduction.
+   *
+   * Scroll and the world steps back into a frame; one person is left in
+   * front of you, holding her digital over her face. The scroll lowers it.
+   */
+  .stage { position: fixed; inset: 0; overflow: hidden; }
+  .reel { position: absolute; inset: 0; transform-origin: 26% 50%; will-change: transform; }
+  .reel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: contrast(1.06) saturate(.86) brightness(.92); }
+  .reel::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 120% 90% at 50% 40%, rgba(5,5,5,0) 40%, rgba(5,5,5,.55) 100%), linear-gradient(180deg, rgba(5,5,5,.35) 0%, rgba(5,5,5,0) 22%, rgba(5,5,5,0) 50%, rgba(5,5,5,.82) 100%); }
+  .hero { position: absolute; left: var(--gut); right: var(--gut); bottom: calc(var(--gut) + 2vh); }
+  .hero h1 { font-family: var(--serif); font-weight: 300; letter-spacing: -.035em; line-height: .9; font-size: clamp(64px, 11.5vw, 19vh); }
+  .hero h1 .l { display: block; overflow: hidden; padding: 0 .08em .12em 0; margin-bottom: -.12em; }
+  .hero h1 .l > span { display: block; transform: translateY(105%); transition: transform 1.6s cubic-bezier(.16,1,.3,1); }
+  .hero h1 .l:nth-child(2) > span { transition-delay: .14s; padding-left: .55em; }
+  .is-in .hero h1 .l > span { transform: none; }
+  .hero__under { margin-top: 3.2vh; display: flex; justify-content: space-between; align-items: end; gap: 24px; font-size: 13px; color: rgba(250,247,242,.7); opacity: 0; transition: opacity 1.4s 1.1s; }
+  .is-in .hero__under { opacity: 1; }
+  .hero__under p { max-width: 30em; line-height: 1.55; }
+  .hero__cta { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--velvet); background: var(--cream); padding: 16px 28px; white-space: nowrap; transition: background .3s; }
+  .hero__cta:hover { background: var(--gold); }
+
+  .reveal { position: absolute; top: 50%; left: 66%; height: 80vh; aspect-ratio: 720 / 1366; transform: translate(-50%, -50%); will-change: transform; }
+  .reveal canvas { width: 100%; height: 100%; display: block; box-shadow: 0 60px 120px -40px rgba(0,0,0,.9); }
+  .after { position: absolute; left: var(--gut); top: 50%; transform: translateY(-50%); max-width: 36vw; }
+  .after h2 { font-family: var(--serif); font-weight: 300; letter-spacing: -.03em; line-height: .95; font-size: clamp(40px, 5.6vw, 9.5vh); }
+  .after h2 .l { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
+  .after h2 .l > span { display: block; will-change: transform; }
+  .track { height: 340vh; }
+  @media (max-width: 760px) {
+    .reveal { left: 50%; top: 56%; height: 64vh; }
+    .after { top: 15vh; transform: none; max-width: none; right: var(--gut); }
+    .hero__under p { display: none; }
+  }
+</style>
+</head>
+<body>
+<header class="nav"><a class="nav__wm" href="index.html">PHOLIO</a><nav class="nav__links"><a href="#">Talent</a><a href="#">Agencies</a><a href="#">Studio+</a><a class="nav__cta" href="#">Apply free</a></nav></header>
+
+<div class="stage" id="stage">
+  <div class="reel" id="reel">
+    <video id="vid" src="media/industry.mp4" autoplay muted loop playsinline preload="auto"></video>
+  </div>
+
+  <div class="hero" id="hero">
+    <h1><span class="l"><span>A better</span></span><span class="l"><span><em>introduction.</em></span></span></h1>
+    <div class="hero__under">
+      <p>For models applying to agencies: your work, made right for each one, and the truth about where you stand.</p>
+      <a class="hero__cta" href="#">Apply free</a>
+    </div>
+  </div>
+
+  <div class="reveal" id="reveal"><canvas id="pol" width="720" height="1366"></canvas></div>
+  <div class="after" id="after">
+    <h2><span class="l"><span>Arrive as</span></span><span class="l"><span><em>yourself.</em></span></span></h2>
+  </div>
+</div>
+<div class="grain"></div>
+<div class="track"></div>
+<section class="next"><p>The chapters continue here</p></section>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const seg = (v, a, b) => clamp((v - a) / (b - a));
+  const io = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const out = (t) => 1 - Math.pow(1 - t, 4);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // the polaroid: 128 frames, the digital held over her face, then lowered
+  const N = 128;
+  const frames = Array.from({ length: N }, (_, i) => {
+    const im = new Image();
+    im.src = `media/polaroid/${String(i + 1).padStart(3, "0")}.jpg`;
+    return im;
+  });
+  const pol = $("#pol").getContext("2d");
+  let lastF = -1;
+  const draw = (f) => {
+    let k = Math.round(f);
+    while (k > 0 && !(frames[k].complete && frames[k].naturalWidth)) k--;
+    if (k === lastF || !frames[k].complete) return;
+    pol.drawImage(frames[k], 0, 0, 720, 1366);
+    lastF = k;
+  };
+
+  const vid = $("#vid");
+  if (reduce) vid.removeAttribute("autoplay"), vid.pause();
+  requestAnimationFrame(() => setTimeout(() => document.body.classList.add("is-in"), 200));
+
+  let S = 0;
+  const reel = $("#reel"), hero = $("#hero"), reveal = $("#reveal"), after = $("#after"), nav = document.querySelector(".nav");
+  const narrow = () => innerWidth < 760;
+  const tick = () => {
+    requestAnimationFrame(tick);
+    const target = scrollY / innerHeight;
+    S = reduce ? target : S + (target - S) * 0.12;
+
+    // the type leaves first, up and out
+    const t0 = io(seg(S, 0, 0.45));
+    hero.style.transform = `translateY(${-t0 * 30}vh)`;
+    hero.style.opacity = 1 - seg(S, 0.1, 0.4);
+
+    // the world steps back into a frame, to the left
+    const t1 = io(seg(S, 0.25, 1.05));
+    const sc = narrow() ? 1 - t1 * 0.78 : 1 - t1 * 0.62;
+    reel.style.transform = narrow() ? `translate(0, ${-t1 * 34}vh) scale(${sc})` : `scale(${sc})`;
+    reel.style.filter = `brightness(${1 - t1 * 0.55})`;
+    vid.playbackRate = 1 - t1 * 0.6;
+
+    // one person in front of you, rising into the frame
+    const t2 = out(seg(S, 0.55, 1.25));
+    reveal.style.transform = `translate(-50%, calc(-50% + ${(1 - t2) * 110}vh))`;
+    draw(seg(S, 1.15, 2.45) * (N - 1));
+
+    // the line, as she lowers it
+    const lines = after.querySelectorAll(".l > span");
+    lines.forEach((el, i) => {
+      const t = out(seg(S, 1.9 + i * 0.12, 2.45 + i * 0.12));
+      el.style.transform = `translateY(${(1 - t) * 105}%)`;
+    });
+    nav.style.opacity = 1 - seg(S, 0.2, 0.5) + seg(S, 2.3, 2.6);
+  };
+  draw(0);
+  frames[0].onload = () => draw(0);
+  tick();
+})();
+</script>
+</body>
+</html>

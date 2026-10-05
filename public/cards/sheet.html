@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp Card Sheet — Pholio</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+Display:ital,wght@0,300;0,400;1,300;1,400&display=block" rel="stylesheet">
+<link rel="stylesheet" href="cards.css">
+<style>
+  /* Every card flat, front beside back, for reading at size. */
+  html, body { background: #050505; }
+  .sheet { display: grid; grid-template-columns: repeat(2, auto); gap: 64px 28px; justify-content: center; padding: 64px 24px 120px; }
+  .pair { display: flex; gap: 18px; }
+  .flat { position: relative; width: calc(1000px * var(--k)); height: calc(1545px * var(--k)); }
+  .flat .inner { position: absolute; left: 0; top: 0; width: 1000px; height: 1545px; transform: scale(var(--k)); transform-origin: 0 0; }
+  .flat .face { transform: none; }
+  .flat .face.planes .layer { transform: none; }
+  .cap { grid-column: span 1; font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: .26em; text-transform: uppercase; color: rgba(250,247,242,.55); margin-top: 12px; }
+  .cap b { color: #c9a55a; font-weight: 400; margin-right: 1em; }
+</style>
+</head>
+<body style="--k:.36">
+  <div class="sheet" id="sheet"></div>
+  <script src="designs.js"></script>
+  <script>
+    const sheet = document.getElementById("sheet");
+    CARDS.list.forEach((c, i) => {
+      const fig = document.createElement("figure");
+      fig.style.margin = "0";
+      fig.innerHTML = `<div class="pair">
+        <div class="flat"><div class="inner"><div class="face front${c.id === "cover" ? " planes" : ""}" style="background:${c.fbg}">${c.front()}<div class="grain"></div></div></div></div>
+        <div class="flat"><div class="inner"><div class="face back" style="background:${c.bbg}">${c.back()}<div class="grain"></div></div></div></div>
+      </div><figcaption class="cap"><b>${String(i + 1).padStart(2, "0")}</b>${c.name} — ${c.sub}</figcaption>`;
+      sheet.appendChild(fig);
+    });
+  </script>
+</body>
+</html>

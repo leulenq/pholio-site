@@ -12,6 +12,7 @@ import Image from "next/image";
 
 import Intelligence from "@/components/intelligence";
 import SceneCompCard, { CompCardLayers } from "@/components/comp-card";
+import { T as CARD_T, TIMELINE_SPRING as CARD_SPRING } from "@/components/comp-card/motion";
 import { StaticStudioSite, StudioSiteLayers } from "@/components/studio-site";
 import {
   ApplicationPrints,
@@ -44,7 +45,6 @@ import {
   FIGURE_RISE,
   FIGURE_SCALE,
   FIGURE_STOPS,
-  FIGURE_HANDOVER,
   APPLY_END_FRACTION,
   APPLY_FRACTION,
   CARD_FRACTION,
@@ -205,25 +205,17 @@ export default function Hero({
     { clamp: true },
   );
 
-  // The comp-card timeline starts a little into its own scroll, so the stage
-  // is clear of her before the first plate is readable. The overlap that
-  // remains is deliberate: one scene leaving as the next arrives.
-  const cardTimeline = useTransform(cardProgress, [0.1, 1], [0, 1], {
-    clamp: true,
-  });
+  // The comp-card chapter reads one smoothed timeline, and so does the one
+  // thing here that answers to it: her release.
+  const cardTimeline = useSpring(cardProgress, CARD_SPRING);
 
-  // The handover: she keeps travelling up out of frame while the first plates
-  // travel in. Same direction, same curve as everything else on the stage.
-  //
-  // Kept as a number so the figure can add it to its own rise, with a vh
-  // string derived for anything that consumes it alone: framer reads a bare
-  // number as pixels, which silently made this a 150px nudge instead of a
-  // 150vh exit.
-  const handoverY = useTransform(
-    cardProgress,
-    [0, 0.13],
-    [0, isMobile ? FIGURE_HANDOVER.mobile : FIGURE_HANDOVER.desktop],
-    { ease: leave },
+  // The handover: she does not leave. Her library is thrown onto the stage
+  // over her until it is all there is, and only once she is entirely under
+  // it is she released, which nobody can see (`lessons.md` §26.1). The
+  // value reads the same smoothed timeline the photographs land on, so the
+  // release can never run ahead of the cover.
+  const figureShown = useTransform(cardTimeline, (t) =>
+    t >= CARD_T.covered ? "hidden" : "visible",
   );
 
   // The copy goes first, and faster. Type dying on top of an arriving
@@ -286,9 +278,7 @@ export default function Hero({
     [...FIGURE_STOPS],
     isMobile ? [...FIGURE_RISE.mobile] : [...FIGURE_RISE.desktop],
   );
-  const figureY = useTransform(
-    () => `${figureRise.get() + handoverY.get()}vh`,
-  );
+  const figureY = useTransform(figureRise, (v) => `${v}vh`);
 
   // ── The room ─────────────────────────────────────────────────────────────
   //
@@ -528,7 +518,12 @@ export default function Hero({
             willChange: "transform",
           }}
         >
-          <CompCardLayers progress={cardTimeline} assetsArmed={cardAssetsArmed} />
+          <CompCardLayers
+            progress={cardTimeline}
+            assetsArmed={cardAssetsArmed}
+            w={frame.w}
+            h={frame.h}
+          />
         </motion.div>
 
         {/* ── The application beat. Same pinned stage, fourth timeline. Its
@@ -577,6 +572,7 @@ export default function Hero({
             x: figureX,
             y: figureY,
             scale: figureScale,
+            visibility: figureShown,
             willChange: "transform",
           }}
         >

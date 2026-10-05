@@ -1,0 +1,1010 @@
+diff --git a/components/comp-card/CompCardBack.tsx b/components/comp-card/CompCardBack.tsx
+index 1a5f44b..4fcdfac 100644
+--- a/components/comp-card/CompCardBack.tsx
++++ b/components/comp-card/CompCardBack.tsx
+@@ -1,24 +1,22 @@
+ import { useDeferredCardAsset } from "./assets";
+ 
+-const BACK_OUTPUT =
+-  "/generated/comp-card/ola-editorial-masthead-back-composed.png";
++const BACK_OUTPUT = "/generated/comp-card/ola/back.jpg";
+ 
+ /**
+- * Page two of the card the home scene flips, composed by hand rather than by
+- * the engine: four photographs in a flat 2x2 grid of portrait cells, each one
+- * framed against a landmark in the frame instead of centre-cropped, over a
+- * quiet stats band at the foot. Same talent record and same photographs as the
+- * front; the front stays the composed engine's `editorial-masthead` output, so
+- * both sides carry one display voice.
++ * Page two of the card the home scene flips, composed by hand: four
++ * photographs doing four jobs (beauty, editorial half length, full length,
++ * commercial) in a flat 2x2 grid, each framed against a landmark rather than
++ * centre-cropped, over the stats line, the mark and her address. Four
++ * sittings, none of them the front's photograph.
+  *
+- * Regenerate with `node scripts/comp-card-back/render.cjs`.
++ * Regenerate with `node scripts/comp-cards-ola/render.cjs back`.
+  *
+  * The stats are the fields the talent record actually carries, in the agency
+  * order (height, bust, waist, hips, dress, shoes, hair, eyes). The record's
+  * measurements are the ones she and her agency publish, cited in
+  * `scripts/ola-talent.cjs`; a field with no published source is null and is
+  * simply not printed. Nothing is invented and no placeholder stands in for a
+- * missing measurement. No name: the front's masthead carries it.
++ * missing measurement. No name: the front carries it.
+  */
+ export default function CompCardBack({
+   loading = "eager",
+diff --git a/components/comp-card/CompCardFront.tsx b/components/comp-card/CompCardFront.tsx
+index 0e9edba..3184348 100644
+--- a/components/comp-card/CompCardFront.tsx
++++ b/components/comp-card/CompCardFront.tsx
+@@ -1,29 +1,56 @@
++import type { MotionValue } from "framer-motion";
++import { motion, useMotionValue, useTransform } from "framer-motion";
++
+ import { useDeferredCardAsset } from "./assets";
+ 
+-const FRONT_OUTPUT = "/generated/comp-card/ola-editorial-masthead-front.png";
++const LAYERS = {
++  photo: "/generated/comp-card/ola/cover-photo.jpg",
++  name: "/generated/comp-card/ola/cover-name.webp",
++  figure: "/generated/comp-card/ola/cover-figure.webp",
++} as const;
+ 
+ /**
+- * Page one of the real two-sided card emitted by pholio-app's composed
+- * comp-card engine, edition `editorial-masthead` (The Masthead).
+- * Regenerate with `node scripts/render-comp-cards.cjs`.
++ * The lead card's front: The Cover Story, composed by hand
++ * (`scripts/comp-cards-ola/render.cjs`), as three registered layers.
++ *
++ * The photograph is the page and the surname is set behind her, so the card
++ * is built the way it reads: the photograph, then the name, then her figure
++ * cut from the same photograph in front of it. That is what lets the stage
++ * make the card in front of you: the name is set into the photograph and
++ * slides in behind her as the print becomes the card (`nameIn`, 0 to 1).
++ * At rest the three layers are the flat render pixel for pixel.
+  */
+ export default function CompCardFront({
+   loading = "eager",
++  nameIn,
+ }: {
+-  /** The scene defers these through `assets.tsx`; only the static
+-      composition below the fold wants the browser to lazy-load them. */
+   loading?: "eager" | "lazy";
++  /** 0: the photograph alone. 1: the finished front. Omit for finished. */
++  nameIn?: MotionValue<number>;
+ } = {}) {
+-  const src = useDeferredCardAsset(FRONT_OUTPUT);
++  const photo = useDeferredCardAsset(LAYERS.photo);
++  const name = useDeferredCardAsset(LAYERS.name);
++  const figure = useDeferredCardAsset(LAYERS.figure);
++  const fallback = useTransformOrOne(nameIn);
++  // Typeset from the right edge: the line travels in along its own baseline.
++  const x = useTransform(fallback, (v: number) => `${(1 - v) * 104}%`);
++
++  const layer = "absolute inset-0 block h-full w-full object-cover";
+   return (
+-    // eslint-disable-next-line @next/next/no-img-element
+-    <img
+-      src={src}
+-      loading={loading}
+-      decoding="async"
+-      alt="Comp card, front"
+-      className="block h-full w-full object-cover"
+-      draggable={false}
+-    />
++    <div className="relative h-full w-full overflow-hidden" role="img" aria-label="Comp card, front">
++      {/* eslint-disable-next-line @next/next/no-img-element */}
++      <img src={photo} loading={loading} decoding="async" alt="" draggable={false} className={layer} />
++      <motion.div className="absolute inset-0" style={{ x }}>
++        {/* eslint-disable-next-line @next/next/no-img-element */}
++        <img src={name} loading={loading} decoding="async" alt="" draggable={false} className={layer} />
++      </motion.div>
++      {/* eslint-disable-next-line @next/next/no-img-element */}
++      <img src={figure} loading={loading} decoding="async" alt="" draggable={false} className={layer} />
++    </div>
+   );
+ }
++
++function useTransformOrOne(v?: MotionValue<number>) {
++  const one = useMotionValue(1);
++  return v ?? one;
++}
+diff --git a/components/comp-card/GeneratedCard.tsx b/components/comp-card/GeneratedCard.tsx
+index d3c2245..7e64cf6 100644
+--- a/components/comp-card/GeneratedCard.tsx
++++ b/components/comp-card/GeneratedCard.tsx
+@@ -1,7 +1,7 @@
+ "use client";
+ 
+ import type { MotionValue } from "framer-motion";
+-import { motion, useMotionTemplate, useTransform } from "framer-motion";
++import { motion, useTransform } from "framer-motion";
+ import CompCardBack from "./CompCardBack";
+ import CompCardFront from "./CompCardFront";
+ import { useDeferredCardAsset } from "./assets";
+@@ -10,7 +10,6 @@ import {
+   CARD_EDGE,
+   CARD_PERSPECTIVE,
+   CARD_THICKNESS,
+-  MASTHEAD_BAND,
+   SHADOW_MARGIN,
+   TURN_SHADE,
+ } from "./motion";
+@@ -57,12 +56,10 @@ type DoubleSidedCardProps = {
+   /** The tip back through the turn. See FLIP_TILT. */
+   rotateX?: MotionValue<number> | number;
+   /**
+-   * How much of the front is still hidden behind its own photograph:
+-   * 1 shows only the photo band, 0 shows the whole card. The clip's edge is
+-   * the photograph's top edge, so the card stock reads as rising out from
+-   * behind the print rather than the name being revealed by a mask of its own.
++   * How far the name has been set into the front's photograph, 0 to 1.
++   * At 0 the card is the print it arrived as; see `CompCardFront`.
+    */
+-  stockHidden?: MotionValue<number> | number;
++  nameIn?: MotionValue<number>;
+   className?: string;
+ };
+ 
+@@ -79,7 +76,7 @@ type DoubleSidedCardProps = {
+ export function DoubleSidedCard({
+   rotateY,
+   rotateX = 0,
+-  stockHidden = 0,
++  nameIn,
+   className = "",
+ }: DoubleSidedCardProps) {
+   // The face catches less light as it turns away: nothing at 0 or 180,
+@@ -98,14 +95,6 @@ export function DoubleSidedCard({
+   const edgeOpacity = useTransform(rotateY, (deg: number) =>
+     Math.pow(Math.abs(Math.sin((deg * Math.PI) / 180)), 12),
+   );
+-  // The clip box is the card box grown by SHADOW_MARGIN on every side, so
+-  // the shadow survives the clip. Its top edge travels from the photograph's
+-  // top (stockHidden 1) to just above the card's top (0), where the 1px ring
+-  // in CARD_SHADOW still fits; the shadow above that is black on black.
+-  const clipPath = useMotionTemplate`inset(calc(${SHADOW_MARGIN - 2}px + ((100% - ${
+-    SHADOW_MARGIN * 2
+-  }px) * ${MASTHEAD_BAND} + 2px) * ${stockHidden}) 0px 0px 0px round 0.55rem)`;
+-
+   return (
+     <div
+       className={`relative ${className}`}
+@@ -139,7 +128,6 @@ export function DoubleSidedCard({
+           className="absolute"
+           style={{
+             inset: -SHADOW_MARGIN,
+-            clipPath,
+             transform: `translateZ(${CARD_THICKNESS / 2}px)`,
+             ...BACKFACE,
+           }}
+@@ -148,7 +136,7 @@ export function DoubleSidedCard({
+             className="absolute overflow-hidden rounded-[0.55rem]"
+             style={{ inset: SHADOW_MARGIN, boxShadow: CARD_SHADOW, ...BACKFACE }}
+           >
+-            <CompCardFront />
++            <CompCardFront nameIn={nameIn} />
+             <motion.div
+               aria-hidden
+               className="absolute inset-0 bg-black"
+diff --git a/components/comp-card/data.ts b/components/comp-card/data.ts
+index 135b65f..5789cd8 100644
+--- a/components/comp-card/data.ts
++++ b/components/comp-card/data.ts
+@@ -27,73 +27,39 @@ export type CardVariant = {
+  * way in would misrepresent what the product emits. See `lessons.md` §19.
+  */
+ export const SOURCE_FRAMES: SourceFrame[] = [
+-  // The lead. Also the card's locked hero, so the plate and the card it turns
+-  // into are the same photograph at the same crop.
++  // The lead: the Cover Story's own photograph, so the print that arrives and
++  // the card it becomes are one object (`lessons.md` §26.2).
+   {
+-    src: "/generated/comp-card/source/ola-editorial-standing.jpg",
+-    objectPosition: "50% 38%",
++    src: "/generated/comp-card/ola/cover-photo.jpg",
++    objectPosition: "50% 50%",
+   },
+-  // The studio close-up, monochrome as shot (`lessons.md` §19): with the
+-  // three-quarter and the full length it is the triad a booker reads a card
+-  // by, face, figure, length. It is also the one frame that visibly does
+-  // not lead: a front is a body shot with the name set into it, and the
+-  // headshot's place is on the back. The night-street frame it replaces
+-  // wore the hero sequence's wardrobe and read as the hero again.
+   {
+-    src: "/generated/comp-card/source/ola-studio-closeup-bw.jpg",
+-    objectPosition: "50% 30%",
++    src: "/generated/comp-card/ola/source/face-studio-bw.jpg",
++    objectPosition: "50% 26%",
+   },
+   {
+-    src: "/generated/comp-card/source/ola-full-length.jpg",
+-    objectPosition: "50% 46%",
++    src: "/generated/comp-card/ola/source/half-pearls.jpg",
++    objectPosition: "50% 20%",
+   },
+ ];
+ 
+ /**
+- * Four directions from the comp-card catalog's nine.
+- *
+- * Editions are the engine's top-level creative unit: named art directions
+- * that own composition, image hierarchy, typography, palette, ornament and
+- * back program. They are what actually varies between cards. Markets do not:
+- * a city is an *intel* concept (`intel/market-resolve.js`, where attention is
+- * resolved to New York, Paris, Milan) and has nothing to do with how a card
+- * is composed. Labelling cards with cities was the error this replaced.
+- *
+- * The lead is the engine's own `editorial-masthead` output
+- * (`scripts/render-comp-cards.cjs`). The other three are composed by hand
+- * (`scripts/comp-card-fronts/render.cjs`) to the catalog's directions, each
+- * from a different photograph, on its own field, in its own typographic
+- * voice: the engine's fronts for this talent all resolved to the same frame
+- * with the name moved around it, which is one direction three times. See
+- * `lessons.md` §25. Labels are the shipped catalog's (`editions.js`).
++ * Four directions, composed by hand from four different sittings of Ola
++ * (`scripts/comp-cards-ola/render.cjs`, her own Unsplash uploads). Each
++ * differs from its neighbours in structure, field, photograph and voice at
++ * row size (`lessons.md` §25). Labels are the shipped catalog's
++ * (`pholio-app` `composition/editions.js`), naming the edition each card is
++ * a design target for.
+  */
+ export const CARD_VARIANTS: CardVariant[] = [
+-  // The lead. This one is also the two-sided card the flip beat turns over
+-  // (`CompCardFront` / `CompCardBack`), so its front must stay index 0.
+-  {
+-    src: "/generated/comp-card/ola-editorial-masthead-front.png",
+-    edition: "The Masthead",
+-  },
+-  // The magazine-cover interlock: the photograph is the whole page and the
+-  // name, in display grotesque at trim-to-trim scale, is set behind the
+-  // figure. Nothing else is on the front.
+-  {
+-    src: "/generated/comp-card/ola-cover-story-composed.png",
+-    edition: "The Cover Story",
+-  },
+-  // Dark paper, reversed type: the photograph as a plate on a lifted warm
+-  // black, the name once beneath it in a hairline serif. The row's one
+-  // dark card.
+-  {
+-    src: "/generated/comp-card/ola-night-edition-composed.png",
+-    edition: "The Night Edition",
+-  },
+-  // Two frames on a hinge: the studio beauty in black and white beside the
+-  // full length in colour, an editorial serif name centred beneath.
+-  {
+-    src: "/generated/comp-card/ola-diptych-composed.png",
+-    edition: "The Diptych",
+-  },
++  // The lead, and the two-sided card the flip turns over. Must stay index 0.
++  { src: "/generated/comp-card/ola/cover.jpg", edition: "The Cover Story" },
++  // The figure lifted onto a flat plane, the name in her negative space.
++  { src: "/generated/comp-card/ola/cutout.jpg", edition: "The Cutout" },
++  // A plate on warm black, the name once beneath it. The row's dark card.
++  { src: "/generated/comp-card/ola/night.jpg", edition: "The Night Edition" },
++  // The working commercial card: hero over a three-frame strip.
++  { src: "/generated/comp-card/ola/strip.jpg", edition: "The Strip" },
+ ];
+ 
+ /** How many named directions the catalog actually ships. */
+diff --git a/components/comp-card/index.tsx b/components/comp-card/index.tsx
+index bed8a4d..87a8360 100644
+--- a/components/comp-card/index.tsx
++++ b/components/comp-card/index.tsx
+@@ -194,90 +194,6 @@ function ScrollCaption({
+ 
+ // ── The frames ────────────────────────────────────────────────────────────
+ 
+-/**
+- * One of the two frames that is not chosen. It arrives beside the lead,
+- * then tucks in behind it, smaller, and is covered. The lead is in front and
+- * larger, so by the end of the selection it is simply not visible; it is
+- * switched off only after that, while nothing of it can be seen.
+- */
+-function SupportFrame({
+-  frame,
+-  index,
+-  progress,
+-  stage,
+-}: {
+-  frame: SourceFrame;
+-  /** 1 or 2: the lead is index 0 and is the card itself. */
+-  index: 1 | 2;
+-  progress: MotionValue<number>;
+-  stage: StageKind;
+-}) {
+-  const arriveVh = useTransform(
+-    progress,
+-    [T.arriveStart, T.arriveEnd],
+-    [ARRIVAL_FROM_VH[index], 0],
+-    { ease: arrive },
+-  );
+-  const settlePx = useTransform(
+-    progress,
+-    [T.selectStart, T.selectEnd],
+-    [index === 1 ? 0 : 8, -6],
+-    { ease: glide },
+-  );
+-  const y = useMotionTemplate`calc(${arriveVh}vh + ${settlePx}px)`;
+-  const x = useTransform(
+-    progress,
+-    [T.selectStart, T.selectEnd],
+-    [ARRIVAL_X[stage][index], "0vw"],
+-    { ease: glide },
+-  );
+-  const rotateZ = useTransform(
+-    progress,
+-    [T.selectStart, T.selectEnd],
+-    [ARRIVAL_ROTATE[stage][index], 0],
+-    { ease: glide },
+-  );
+-  const scale = useTransform(
+-    progress,
+-    [T.selectStart, T.selectEnd],
+-    index === 1 ? [1, 0.75] : [0.94, 0.72],
+-    { ease: glide },
+-  );
+-  const opacity = useTransform(
+-    progress,
+-    [T.supportReleaseStart, T.supportReleaseEnd],
+-    [1, 0],
+-  );
+-  const sizeClass =
+-    index === 1
+-      ? "w-[10.5rem] sm:w-[12.25rem] md:w-[14rem] lg:w-[15.75rem]"
+-      : "w-[10.25rem] sm:w-[11.5rem] md:w-[13rem] lg:w-[14.5rem]";
+-  const deferredSrc = useDeferredCardAsset(frame.src);
+-
+-  return (
+-    <motion.figure
+-      aria-hidden
+-      className={`pointer-events-none absolute left-1/2 top-1/2 z-10 m-0 -translate-x-1/2 -translate-y-1/2 ${sizeClass}`}
+-      style={{ x, y, rotateZ, scale, opacity, willChange: "transform" }}
+-    >
+-      <div
+-        className="overflow-hidden rounded-[0.35rem]"
+-        style={{ aspectRatio: CARD_ASPECT, boxShadow: CARD_SHADOW }}
+-      >
+-        {/* eslint-disable-next-line @next/next/no-img-element */}
+-        <img
+-          src={deferredSrc}
+-          alt=""
+-          draggable={false}
+-          decoding="async"
+-          className="h-full w-full object-cover"
+-          style={{ objectPosition: frame.objectPosition, filter: frame.filter }}
+-        />
+-      </div>
+-    </motion.figure>
+-  );
+-}
+-
+ /**
+  * One of the three dealt directions. It exists only behind the lead: it is
+  * switched on while the lead covers it, slides out from under it into the
+@@ -454,14 +370,15 @@ function LeadCard({ progress, stage }: { progress: MotionValue<number>; stage: S
+     [0, FLIP_TILT, 0, 0, TURN_BACK_TILT, 0, 0, READY_TILT.rotateX],
+     { ease: glide },
+   );
+-  const stockHidden = useTransform(
+-    progress,
+-    [T.stockStart, T.stockEnd],
+-    [1, 0],
+-    { ease: glide },
+-  );
++  const nameIn = useTransform(progress, [T.stockStart, T.stockEnd], [0, 1], {
++    ease: glide,
++  });
+   const labelOpacity = useTransform(progress, [...LABEL_RANGE], [0, 1, 1, 0]);
+   const labelScale = useTransform(scale, (v: number) => 1 / v);
++  // Until the hero frame from her library has arrived at its rest, the card
++  // is that frame (components/hero/Library.tsx); it takes over at the same
++  // rect, a hair before the frame is released, so nothing is ever missing.
++  const shown = useTransform(progress, (v: number) => (v < T.selectEnd ? "hidden" : "visible"));
+ 
+   return (
+     <motion.div
+@@ -470,12 +387,12 @@ function LeadCard({ progress, stage }: { progress: MotionValue<number>; stage: S
+       // element (`lessons.md` §16.3).
+       data-lead-card
+       className="pointer-events-none absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2"
+-      style={{ x, y, scale, willChange: "transform" }}
++      style={{ x, y, scale, visibility: shown, willChange: "transform" }}
+     >
+       <DoubleSidedCard
+         rotateY={rotateY}
+         rotateX={rotateX}
+-        stockHidden={stockHidden}
++        nameIn={nameIn}
+         className={CARD_WIDTH}
+       />
+       <motion.span className={LABEL_CLASS} style={{ opacity: labelOpacity, scale: labelScale }}>
+@@ -590,16 +507,6 @@ export function CompCardLayers({
+ 
+   return (
+     <CompCardAssetsProvider value={assetsArmed}>
+-      {([1, 2] as const).map((index) => (
+-        <SupportFrame
+-          key={SOURCE_FRAMES[index].src}
+-          frame={SOURCE_FRAMES[index]}
+-          index={index}
+-          progress={smooth}
+-          stage={stage}
+-        />
+-      ))}
+-
+       {CARD_VARIANTS.slice(1).map((variant, index) => (
+         <EditionVariant
+           key={variant.edition}
+diff --git a/components/comp-card/motion.ts b/components/comp-card/motion.ts
+index 26b4768..1289211 100644
+--- a/components/comp-card/motion.ts
++++ b/components/comp-card/motion.ts
+@@ -166,7 +166,7 @@ export const ARRIVAL_FROM_VH: [number, number, number] = [100, 92, 96];
+ 
+ /** The row of four: lead, then the three dealt directions. */
+ export const ROW_X: Stage<[string, string, string, string]> = {
+-  wide: ["-31vw", "-11vw", "11vw", "31vw"],
++  wide: ["-33vw", "-11vw", "11vw", "33vw"],
+   compact: ["-22vw", "22vw", "-22vw", "22vw"],
+ };
+ 
+@@ -179,7 +179,7 @@ export const ROW_Y: Stage<[number, number, number, number]> = {
+   compact: [-104, -104, 170, 170],
+ };
+ 
+-export const ROW_SCALE: Stage<number> = { wide: 0.62, compact: 0.46 };
++export const ROW_SCALE: Stage<number> = { wide: 0.66, compact: 0.46 };
+ 
+ /**
+  * How each dealt card trails the one before it, in timeline units. The
+@@ -264,8 +264,10 @@ export const CAPTIONS: readonly Caption[] = [
+   {
+     key: "selection",
+     head: ["The frame that ", "leads", "."],
+-    place: { wide: "bottom", compact: "bottom" },
+-    travel: { wide: "down", compact: "down" },
++    // Top: the foot of the frame is her library's piles as the hero rises
++    // out of them.
++    place: { wide: "top", compact: "top" },
++    travel: { wide: "up", compact: "up" },
+     // After the frames have arrived: they travel up through the caption's
+     // place on their way in.
+     range: [0.11, 0.16, 0.24, 0.28],
+diff --git a/components/hero/index.tsx b/components/hero/index.tsx
+index 9a75b36..a0d1ad8 100644
+--- a/components/hero/index.tsx
++++ b/components/hero/index.tsx
+@@ -1,6 +1,6 @@
+ "use client";
+ 
+-import { useRef, useEffect, useState } from "react";
++import { useRef, useEffect, useMemo, useState } from "react";
+ import {
+   motion,
+   useScroll,
+@@ -31,10 +31,11 @@ import {
+   paperAt,
+ } from "@/components/studio-site/motion";
+ import { leave } from "@/components/intelligence/ease";
+-import Ribbon from "@/components/intelligence/Ribbon";
+ import HeroChrome from "./HeroChrome";
+ import { useFrameSequence } from "./useFrameSequence";
+ import { useMediaQuery } from "./useMediaQuery";
++import { useKeyLight } from "./useKeyLight";
++import Library from "./Library";
+ import {
+   FRAMES,
+   FRAME_HEIGHT,
+@@ -52,7 +53,6 @@ import {
+   HERO_OPENING_VH,
+   HOME_STAGE_VH,
+   STATIC_FIGURE_SCALE,
+-  WHEEL_EXIT,
+   WORDMARK,
+   WORDMARK_EXIT,
+   frameIndexAtProgress,
+@@ -76,13 +76,6 @@ import {
+  * that timing lives in `motion.ts`, authored in frame numbers.
+  */
+ 
+-/* One photograph, three jobs: the kit a serious aspirant already knows
+-   they will need. Not a product inventory. */
+-const HERO_WORDS = ["your digitals", "your book", "your comp card"];
+-const WORD_INTERVAL = 2400;
+-const N = HERO_WORDS.length;
+-const ROW_H = 46; // px
+-
+ /** A frame from the settled standing stretch, for the reduced-motion still. */
+ const STILL_FRAME = 97;
+ 
+@@ -104,7 +97,6 @@ export default function Hero({
+   onReady?: () => void;
+ }) {
+   const containerRef = useRef<HTMLElement>(null);
+-  const [wordIndex, setWordIndex] = useState(0);
+ 
+   // Below 1024 the figure has no gutter to stand in beside the intelligence
+   // copy, so it takes the narrow treatment. See `motion.ts` FIGURE_SCALE.
+@@ -119,7 +111,7 @@ export default function Hero({
+   // mobile profile against 17ms for the beat next to it. See
+   // ./useFrameSequence for the measurements and why decode, not drawImage, is
+   // the cost. The timing model is unchanged; only how densely it is sampled.
+-  const { canvasRef, draw, posterReady, openingReady } = useFrameSequence(
++  const { canvasRef, draw, relight, drawnIndex, posterReady, openingReady } = useFrameSequence(
+     FRAMES,
+     frameSrc,
+     narrow ? FRAME_STRIDE.narrow : FRAME_STRIDE.wide,
+@@ -152,14 +144,6 @@ export default function Hero({
+     return () => window.clearTimeout(id);
+   }, [openingReady, prefersReducedMotion, cardAssetsArmed]);
+ 
+-  useEffect(() => {
+-    if (prefersReducedMotion || !ready) return;
+-    const timer = setInterval(() => {
+-      setWordIndex((i) => (i + 1) % N);
+-    }, WORD_INTERVAL);
+-    return () => clearInterval(timer);
+-  }, [prefersReducedMotion, ready]);
+-
+   // One scroll container for the whole home stage, split into two timelines.
+   // The hero keeps exactly the scroll distance it always had, so none of its
+   // frame cues move; the comp-card beat runs on the remainder. Because both
+@@ -260,13 +244,6 @@ export default function Hero({
+     [0.85, 0.32, 0],
+   );
+ 
+-  // Clears earlier than the wordmark so the opening does not leave as a block.
+-  const wheelOpacity = useTransform(
+-    scrollYProgress,
+-    [WHEEL_EXIT.start, WHEEL_EXIT.end],
+-    [1, 0],
+-  );
+-
+   const figureX = useTransform(
+     scrollYProgress,
+     [...FIGURE_STOPS],
+@@ -327,14 +304,21 @@ export default function Hero({
+   );
+   const cardShown = useTransform(siteSmooth, (p) => (p >= SITE_T.leave[1] ? "hidden" : "visible"));
+ 
+-  // The gold radial gradient fades out as soon as she starts to move (FIGURE_STOPS[1]),
+-  // leaving the solid black base.
+-  const sceneryOpacity = useTransform(
+-    scrollYProgress, 
+-    [0, FIGURE_STOPS[1], FIGURE_STOPS[2]], 
+-    [1, 1, 0]
++  // ── The key light. See ./useKeyLight. ────────────────────────────────────
++  const stageRef = useRef<HTMLDivElement>(null);
++  const markLightRef = useRef<HTMLSpanElement>(null);
++  const lightRefs = useMemo(
++    () => ({ stage: stageRef, canvas: canvasRef, mark: markLightRef }),
++    [canvasRef],
+   );
+-  const ambientScale = useTransform(scrollYProgress, [0, 0.6, 1], [1, 1.025, 1.08]);
++  useKeyLight({
++    refs: lightRefs,
++    progress: scrollYProgress,
++    relight,
++    drawnIndex,
++    ready: ready && posterReady,
++    enabled: !prefersReducedMotion,
++  });
+ 
+   const grain = (
+     <div
+@@ -383,6 +367,28 @@ export default function Hero({
+     </h1>
+   );
+ 
++  /* The same mark in gold, shown only where the key light falls on it: the
++     letters catch the light rather than change colour. Masked by a radial
++     the light's own loop positions (`--lx`, `--ly`, `--la`). */
++  const markMask =
++    "radial-gradient(circle at var(--lx, -999px) var(--ly, -999px), rgba(0,0,0,var(--la, 0)) 0, rgba(0,0,0,calc(var(--la, 0) * 0.55)) 9vw, transparent 26vw)";
++  const litWordmark = (
++    <span
++      ref={markLightRef}
++      aria-hidden
++      className="pointer-events-none absolute inset-0 block whitespace-nowrap text-center font-editorial leading-none"
++      style={{
++        fontSize: narrow ? WORDMARK.size.narrow : WORDMARK.size.wide,
++        color: "#D9B66A",
++        WebkitTextStroke: "1px rgba(240, 214, 160, 0.9)",
++        WebkitMaskImage: markMask,
++        maskImage: markMask,
++      }}
++    >
++      PHOLIO
++    </span>
++  );
++
+   // ── Reduced motion: a second composition, not a shorter scrub ────────────
+   // Both beats are shown as finished stills, in flow, with nothing withheld.
+   if (prefersReducedMotion) {
+@@ -476,7 +482,10 @@ export default function Hero({
+         />
+       ) : null}
+ 
+-      <div className="sticky top-0 flex h-[100dvh] w-full items-center justify-center overflow-hidden">
++      <div
++        ref={stageRef}
++        className="sticky top-0 flex h-[100dvh] w-full items-center justify-center overflow-hidden"
++      >
+         <HeroChrome progress={scrollYProgress} />
+         {/* Velvet field. Opaque, so the header's polarity sampler can read it. */}
+         <motion.div className="absolute inset-0 z-0" style={{ backgroundColor: bgColor }} />
+@@ -486,18 +495,15 @@ export default function Hero({
+               opacity loop was running here for the whole stage, which is the
+               looping animation banned-ui 8.2 rules out and, on a phone, a
+               compositor layer repainting behind every other scene. ── */}
+-        <motion.div
+-          className="absolute inset-0 z-[14] pointer-events-none"
+-          style={{ opacity: sceneryOpacity }}
+-        >
+-          <motion.div
+-            className="absolute inset-0 opacity-[0.1]"
+-            style={{
+-              background: "radial-gradient(ellipse 80% 80% at 50% 50%, rgba(201, 165, 90, 0.4) 0%, transparent 70%)",
+-              scale: ambientScale,
+-            }}
+-          />
+-        </motion.div>
++        <div
++          aria-hidden
++          className="pointer-events-none absolute inset-0 z-[5]"
++          style={{
++            background:
++              "radial-gradient(ellipse 46vw 58vh at var(--sx, 30%) var(--sy, 30%), rgba(201,165,90,0.16) 0%, rgba(201,165,90,0.05) 45%, transparent 75%)",
++            opacity: "var(--sa, 0)",
++          }}
++        />
+ 
+         {scrubGrain}
+ 
+@@ -509,7 +515,6 @@ export default function Hero({
+           className="pointer-events-none absolute inset-0 z-[15]"
+           style={{ y: copyHandoverVh, willChange: "transform" }}
+         >
+-          <Ribbon progress={scrollYProgress} compact={isMobile} />
+           <Intelligence progress={scrollYProgress} isMobile={isMobile} />
+         </motion.div>
+ 
+@@ -557,6 +562,22 @@ export default function Hero({
+           <StudioSiteLayers progress={siteProgress} armed={cardAssetsArmed} />
+         </div>
+ 
++        {/* ── Her library: it arrives, is understood, and the card is
++              reasoned out of it (lessons §49). Behind her and the type on a
++              wide stage, in front at the foot of a phone's frame, where she
++              would otherwise cover it. Under the card layer, which the hero
++              frame hands over to. See ./Library. ── */}
++        <div
++          className={`pointer-events-none absolute inset-0 ${narrow ? "z-[22]" : "z-[14]"}`}
++        >
++          <Library
++            hero={scrollYProgress}
++            card={cardTimeline}
++            narrow={narrow}
++            armed={openingReady}
++          />
++        </div>
++
+         {/* ── BEAT 1 — the wordmark, set behind her ── */}
+         <motion.div
+           className="pointer-events-none absolute inset-0 z-10 flex items-start justify-center px-6"
+@@ -567,7 +588,10 @@ export default function Hero({
+             willChange: "transform, opacity",
+           }}
+         >
+-          {wordmark}
++          <div className="relative">
++            {wordmark}
++            {litWordmark}
++          </div>
+         </motion.div>
+ 
+         {/* ── BEAT 2 — the figure, scrubbed from the extracted frames ── */}
+@@ -601,97 +625,6 @@ export default function Hero({
+           />
+         </motion.div>
+ 
+-        {/* ── BEAT 1 — word wheel, clears before the wordmark ── */}
+-        <motion.div
+-          className="pointer-events-none absolute inset-0 z-30"
+-          style={{ opacity: wheelOpacity, willChange: "opacity" }}
+-        >
+-          <div className="relative mx-auto h-full w-full max-w-[1440px] px-6 md:px-12">
+-            <div
+-              data-hero-word-wheel
+-              className="absolute bottom-10 right-6 hidden md:bottom-14 md:right-12 md:block"
+-              style={{
+-                height: ROW_H * 3,
+-                width: 300,
+-                overflow: "hidden",
+-                WebkitMaskImage:
+-                  "linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)",
+-                maskImage:
+-                  "linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)",
+-              }}
+-            >
+-              {HERO_WORDS.map((word, i) => {
+-                let dist = (((i - wordIndex) % N) + N) % N;
+-                if (dist > Math.floor(N / 2)) dist -= N;
+-
+-                const absD = Math.abs(dist);
+-                const isActive = dist === 0;
+-                const yPos = ROW_H + dist * ROW_H;
+-
+-                return (
+-                  <motion.div
+-                    key={word}
+-                    initial={false}
+-                    animate={{
+-                      y: yPos,
+-                      opacity: isActive ? 1 : absD === 1 ? 0.22 : 0,
+-                      x: isActive ? -12 : 0,
+-                    }}
+-                    transition={{
+-                      type: "spring",
+-                      stiffness: 55,
+-                      damping: 16,
+-                      mass: 1.2,
+-                    }}
+-                    style={{
+-                      position: "absolute",
+-                      right: 0,
+-                      top: 0,
+-                      height: ROW_H,
+-                      display: "flex",
+-                      alignItems: "center",
+-                      justifyContent: "flex-end",
+-                      gap: "14px",
+-                    }}
+-                  >
+-                    <motion.span
+-                      initial={false}
+-                      animate={{
+-                        color: isActive ? "#C9A55A" : "rgba(250,247,242,0.55)",
+-                        fontSize: isActive ? "1.5rem" : "1.25rem",
+-                        scale: isActive ? 1 : 0.92,
+-                      }}
+-                      style={{
+-                        fontFamily: "var(--font-serif)",
+-                        fontWeight: 300,
+-                        letterSpacing: "0.02em",
+-                        whiteSpace: "nowrap",
+-                        lineHeight: 1,
+-                      }}
+-                    >
+-                      {word}
+-                    </motion.span>
+-                    {isActive && (
+-                      <motion.div
+-                        layoutId="active-rule"
+-                        className="h-[1px] w-6"
+-                        style={{ backgroundColor: "#C9A55A" }}
+-                        initial={false}
+-                        animate={{ scaleX: 1 }}
+-                        transition={{
+-                          duration: 0.5,
+-                          ease: [0.22, 1, 0.36, 1],
+-                        }}
+-                      />
+-                    )}
+-                  </motion.div>
+-                );
+-              })}
+-            </div>
+-          </div>
+-        </motion.div>
+-
+-
+       </div>
+     </section>
+   );
+diff --git a/components/hero/useFrameSequence.ts b/components/hero/useFrameSequence.ts
+index b76b8dc..dcac233 100644
+--- a/components/hero/useFrameSequence.ts
++++ b/components/hero/useFrameSequence.ts
+@@ -33,6 +33,53 @@ import { useCallback, useEffect, useRef, useState } from "react";
+ 
+ const CONCURRENCY = 6;
+ 
++/**
++ * The key light, in the canvas's own pixels. `strength` 0 paints the frame
++ * exactly as shot; nothing below runs.
++ */
++export type Light = { x: number; y: number; r: number; strength: number };
++
++/**
++ * Relights one frame: the side away from the light falls toward shadow, the
++ * side toward it warms, and the silhouette's own alpha is restored last so the
++ * light never spills past her edge onto the velvet. Three composite passes,
++ * no filters (Safari does not run `ctx.filter`).
++ */
++function paintLit(
++  context: CanvasRenderingContext2D,
++  image: HTMLImageElement,
++  w: number,
++  h: number,
++  light: Light | null,
++) {
++  context.globalCompositeOperation = "source-over";
++  context.clearRect(0, 0, w, h);
++  context.drawImage(image, 0, 0, w, h);
++  if (!light || light.strength <= 0.001) return;
++
++  const k = light.strength;
++  const shade = context.createRadialGradient(light.x, light.y, 0, light.x, light.y, light.r * 1.7);
++  const floor = Math.round(255 * (1 - 0.62 * k));
++  shade.addColorStop(0, "rgb(255,255,255)");
++  shade.addColorStop(0.3, "rgb(255,251,246)");
++  shade.addColorStop(1, `rgb(${floor},${floor - 4},${floor - 10})`);
++  context.globalCompositeOperation = "multiply";
++  context.fillStyle = shade;
++  context.fillRect(0, 0, w, h);
++
++  const warm = context.createRadialGradient(light.x, light.y, 0, light.x, light.y, light.r);
++  warm.addColorStop(0, `rgba(255,224,180,${0.95 * k})`);
++  warm.addColorStop(0.5, `rgba(236,198,140,${0.4 * k})`);
++  warm.addColorStop(1, "rgba(201,165,90,0)");
++  context.globalCompositeOperation = "soft-light";
++  context.fillStyle = warm;
++  context.fillRect(0, 0, w, h);
++
++  context.globalCompositeOperation = "destination-in";
++  context.drawImage(image, 0, 0, w, h);
++  context.globalCompositeOperation = "source-over";
++}
++
+ /**
+  * How many leading frames must arrive before the opening is honestly ready.
+  *
+@@ -53,6 +100,7 @@ export function useFrameSequence(
+   const imagesRef = useRef<HTMLImageElement[]>([]);
+   const loadedRef = useRef<boolean[]>([]);
+   const lastDrawnRef = useRef(-1);
++  const lightRef = useRef<Light | null>(null);
+   const [posterReady, setPosterReady] = useState(false);
+   const [openingReady, setOpeningReady] = useState(false);
+ 
+@@ -154,12 +202,25 @@ export function useFrameSequence(
+ 
+       const context = canvas.getContext("2d");
+       if (!context) return;
+-      context.clearRect(0, 0, canvas.width, canvas.height);
+-      context.drawImage(images[index], 0, 0, canvas.width, canvas.height);
++      paintLit(context, images[index], canvas.width, canvas.height, lightRef.current);
+       lastDrawnRef.current = index;
+     },
+     [frames.length],
+   );
+ 
+-  return { canvasRef, draw, posterReady, openingReady };
++  /** Moves the light and repaints whatever frame is on the canvas now. */
++  const relight = useCallback((light: Light | null) => {
++    lightRef.current = light;
++    const canvas = canvasRef.current;
++    const index = lastDrawnRef.current;
++    if (!canvas || index < 0) return;
++    const context = canvas.getContext("2d");
++    if (!context) return;
++    paintLit(context, imagesRef.current[index], canvas.width, canvas.height, light);
++  }, []);
++
++  /** The frame index currently painted, or -1. */
++  const drawnIndex = useCallback(() => lastDrawnRef.current, []);
++
++  return { canvasRef, draw, relight, drawnIndex, posterReady, openingReady };
+ }
+diff --git a/components/intelligence/motion.ts b/components/intelligence/motion.ts
+index 9cb764a..f699329 100644
+--- a/components/intelligence/motion.ts
++++ b/components/intelligence/motion.ts
+@@ -98,7 +98,7 @@ export type Beat = {
+ export const BEATS: Beat[] = [
+   {
+     key: "frame",
+-    frames: [30, 90, 102, 122],
++    frames: [30, 90, 150, 172],
+     lockups: [
+       {
+         id: "frame-line",
+@@ -122,93 +122,6 @@ export const BEATS: Beat[] = [
+       },
+     ],
+   },
+-  {
+-    key: "set",
+-    frames: [114, 136, 152, 168],
+-    lockups: [
+-      {
+-        id: "set-small",
+-        delay: 0,
+-        // Narrow: the quiet half sits low and left on the band's own baseline,
+-        // so the two halves read as one line with a size jump rather than as
+-        // two fragments at opposite corners of an empty frame (§14.2).
+-        pos: ["left-6 top-[20.5%]", "left-6 top-[38%] md:left-12"],
+-        enter: [104, 76],
+-        exit: [34, 48],
+-        pieces: [
+-          {
+-            words: [{ t: "Every agency, its own" }],
+-            small: true,
+-            type: [
+-              "text-[clamp(1.05rem,4.6vw,1.6rem)] tracking-[-0.015em]",
+-              "text-[clamp(1.6rem,3vw,3.4rem)] tracking-[-0.015em]",
+-            ],
+-          },
+-        ],
+-      },
+-      {
+-        id: "set-verdict",
+-        delay: 0.26,
+-        pos: [
+-          "right-6 top-[14%] text-right",
+-          "right-6 top-[47%] text-right md:right-12",
+-        ],
+-        enter: [100, 64],
+-        exit: [40, 72],
+-        pieces: [
+-          {
+-            words: [{ t: "set.", verdict: true }],
+-            type: [
+-              "text-[clamp(3rem,20vw,5rem)]",
+-              "text-[clamp(3.6rem,9vw,10.8rem)]",
+-            ],
+-          },
+-        ],
+-      },
+-    ],
+-  },
+-  {
+-    key: "wait",
+-    frames: [160, 184, 193, null],
+-    lockups: [
+-      {
+-        id: "wait-large",
+-        delay: 0,
+-        pos: ["left-6 top-[15%]", "left-6 top-[46%] md:left-12"],
+-        enter: [104, 64],
+-        exit: null,
+-        pieces: [
+-          {
+-            words: [{ t: "The wait" }],
+-            type: [
+-              "text-[clamp(2.2rem,13.5vw,3.6rem)] tracking-[-0.045em]",
+-              "text-[clamp(3rem,6.8vw,8rem)] tracking-[-0.045em]",
+-            ],
+-          },
+-        ],
+-      },
+-      {
+-        id: "wait-small",
+-        delay: 0.3,
+-        // Narrow: hangs directly off the large line's baseline, indented. At
+-        // 17% it was a third of a viewport lower, which on a phone is her hair
+-        // and shoulder: the closing verdict was rendering behind her.
+-        pos: ["left-[24%] top-[24.5%]", "left-[21%] top-[62%]"],
+-        enter: [96, 46],
+-        exit: null,
+-        pieces: [
+-          {
+-            words: [{ t: "has a " }, { t: "date.", verdict: true }],
+-            small: true,
+-            type: [
+-              "text-[clamp(1.05rem,4.4vw,1.5rem)] tracking-[-0.015em]",
+-              "text-[clamp(1.2rem,2.1vw,2.4rem)] tracking-[-0.015em]",
+-            ],
+-          },
+-        ],
+-      },
+-    ],
+-  },
+ ];
+ 
+ /**

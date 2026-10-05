@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pholio — Three directions</title>
+<meta name="theme-color" content="#050505">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+Display:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="v.css">
+</head>
+<body data-v="press">
+
+<!-- Plates as inks: each filter keeps one channel and leaves the other two at
+     full paper, so the three multiplied together give back the photograph. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="ink-c" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter>
+  <filter id="ink-m" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 1 0 0 0  0 0 0 0 1  0 0 0 1 0"/></filter>
+  <filter id="ink-y" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 1 0 0  0 0 0 1 0"/></filter>
+</svg>
+
+<!-- ── Direction switcher ───────────────────────────────────────────── -->
+<nav class="sw" aria-label="Directions">
+  <a class="sw__wm" href="#press">PHOLIO</a>
+  <div class="sw__tabs" role="tablist">
+    <a role="tab" href="#press" data-tab="press"><i>I</i>The Press</a>
+    <a role="tab" href="#sides" data-tab="sides"><i>II</i>Both Sides</a>
+    <a role="tab" href="#issue" data-tab="issue"><i>III</i>The Issue</a>
+  </div>
+  <a class="sw__cta" href="https://app.pholio.studio/onboarding">Start free</a>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     I · THE PRESS
+     The site as a print atelier. A card printed in three inks that register
+     as you scroll; nine editions on the rack; a proofreader's loupe for the
+     machine; Studio+ as hot foil; pricing as job tickets; the carbon copy of
+     every application; the agency's light table.
+     ══════════════════════════════════════════════════════════════════════ -->
+<main class="v vp" data-variant="press" id="press">
+
+  <section class="p-hero" data-p-hero>
+    <div class="p-hero__pin">
+      <p class="p-job" data-p-job><span>Job 0001</span><span>Comp card</span><span>5.5 × 8.5 in</span><span data-p-plates>Cyan · Magenta · Yellow</span></p>
+      <h1 class="p-h1"><span class="p-h1__a" data-p-a>A better</span><span class="p-h1__b" data-p-b>introduction.</span></h1>
+
+      <div class="p-card" data-p-card>
+        <div class="p-card__paper"></div>
+        <div class="p-plate p-plate--c" data-plate="c"><img src="img/p089.jpg" alt=""></div>
+        <div class="p-plate p-plate--m" data-plate="m"><img src="img/p089.jpg" alt=""></div>
+        <div class="p-plate p-plate--y" data-plate="y"><img src="img/p089.jpg" alt="Amara Lowe, headshot"></div>
+        <div class="p-key" data-p-key>
+          <p class="p-key__name" data-p-name>AMARA LOWE</p>
+          <p class="p-key__stats">Height 175 · Bust 81 · Waist 61 · Hips 89 · Shoes 39</p>
+        </div>
+        <i class="p-mark p-mark--t"></i><i class="p-mark p-mark--b"></i><i class="p-mark p-mark--l"></i><i class="p-mark p-mark--r"></i>
+        <div class="p-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+
+      <div class="p-hero__foot" data-p-foot>
+        <p>Digitals, comp card and every application, set right for each agency.</p>
+        <a class="btn" href="https://app.pholio.studio/onboarding">Start free</a>
+      </div>
+      <p class="p-cue" data-p-cue>Scroll to register the plates</p>
+    </div>
+  </section>
+
+  <section class="p-rack" data-p-rack>
+    <div class="p-rack__pin">
+      <header class="p-rack__head">
+        <h2 class="p-h2">Nine editions.<br><em>One set of photographs.</em></h2>
+        <p class="p-lede">Each card is composed from your own frames: where your face falls decides where your name goes. Change the edition and the whole card sets itself again.</p>
+      </header>
+      <div class="p-deck" data-p-deck></div>
+      <p class="p-rack__cap" data-p-cap aria-live="polite"><b></b><span></span></p>
+      <p class="p-rack__n" data-p-n>01 / 09</p>
+    </div>
+  </section>
+
+  <section class="p-proof" data-p-proof>
+    <div class="p-proof__img" data-loupe>
+      <img class="p-proof__base" src="img/p031.jpg" alt="A close-up portrait on a dark background">
+      <div class="p-lens" data-lens>
+        <img class="p-lens__img" src="img/p031.jpg" alt="">
+        <svg class="p-lens__read" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true">
+          <g class="thirds"><line x1="33.3" y1="0" x2="33.3" y2="150"/><line x1="66.6" y1="0" x2="66.6" y2="150"/><line x1="0" y1="50" x2="100" y2="50"/><line x1="0" y1="100" x2="100" y2="100"/></g>
+          <rect class="crop" x="14" y="10" width="72" height="90"/>
+          <g class="focus"><circle cx="49" cy="52" r="3.2"/><line x1="49" y1="44" x2="49" y2="48"/><line x1="49" y1="56" x2="49" y2="60"/><line x1="41" y1="52" x2="45" y2="52"/><line x1="53" y1="52" x2="57" y2="52"/></g>
+        </svg>
+        <div class="p-lens__tags">
+          <span style="left:16%;top:8.6%">Crop · close-up · 4:5</span>
+          <span style="left:58%;top:31%">Light · soft, frontal</span>
+          <span style="left:8%;top:44%">Focus · sharp</span>
+          <span style="left:56%;top:56%">Face · not measured</span>
+          <span style="left:10%;top:74%">Background · plain</span>
+          <span style="left:54%;top:86%">Exposure · within range</span>
+        </div>
+      </div>
+      <p class="p-proof__hint">Move the loupe</p>
+    </div>
+    <div class="p-proof__copy">
+      <h2 class="p-h2">It reads the photograph.<br><em>Never the face.</em></h2>
+      <ol class="p-notes">
+        <li><span class="p-mk">‸</span><h3>Reads your old card.</h3><p>Drop in the comp card you already have. Pholio reads the text printed on it, your name, measurements and agency, and fills in your profile.</p></li>
+        <li><span class="p-mk">¶</span><h3>Writes from what you’ve told it.</h3><p>Your bio, the note to an agency, the message you’re unsure about: drafted from your own facts, never invented ones.</p></li>
+        <li><span class="p-mk">✓</span><h3>Checks every frame.</h3><p>Shot type, focus, light and background, against what each agency publishes. Before you send, not after.</p></li>
+        <li><span class="p-mk">#</span><h3>Counts what’s real.</h3><p>Who opened your book, which frames, when a card was pulled. Counts and dates, never a guess about what anyone thought.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="p-foil" data-p-foil>
+    <div class="p-foil__copy">
+      <h2 class="p-h2 p-h2--on">Studio+ is for<br><em>what you keep.</em></h2>
+      <ul class="p-foil__list">
+        <li><b>Every edition,</b> and every one of them adjustable.</li>
+        <li><b>A site of your own,</b> built from your book.</li>
+        <li><b>Ninety days</b> of your own numbers, exportable.</li>
+      </ul>
+      <p class="p-foil__price"><b>$9.99</b> a month, or $95.88 a year. Fourteen days free.</p>
+    </div>
+    <div class="p-foil__stage" data-foil-stage>
+      <div class="p-die" data-die></div>
+      <div class="p-stock" data-stock>
+        <p class="p-stock__mark">PHOLIO</p>
+        <p class="p-stock__foil" data-foil>Studio<span>+</span></p>
+        <p class="p-stock__fine">Nothing an agency sees or receives changes with it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="p-price" data-p-price>
+    <header class="p-price__head">
+      <h2 class="p-h2">The job ticket.</h2>
+      <div class="p-lever" role="radiogroup" aria-label="Billing">
+        <button type="button" role="radio" aria-checked="true" data-bill="m">Monthly</button>
+        <button type="button" role="radio" aria-checked="false" data-bill="y">Yearly</button>
+        <i></i>
+      </div>
+    </header>
+    <div class="p-tickets">
+      <article class="tk">
+        <p class="tk__no">Ticket No. 01</p>
+        <h3 class="tk__t">Free</h3>
+        <p class="tk__p"><b>$0</b></p>
+        <ul class="tk__l">
+          <li>Digitals and book, checked against each agency’s requirements</li>
+          <li>The Standard comp card, front and back</li>
+          <li>Applications on Pholio or through an agency’s own process</li>
+          <li>A record of every application you send</li>
+        </ul>
+        <a class="tk__stub" href="https://app.pholio.studio/onboarding">Start free</a>
+      </article>
+      <article class="tk tk--gold">
+        <p class="tk__no">Ticket No. 02</p>
+        <h3 class="tk__t">Studio+</h3>
+        <p class="tk__p"><b data-price>$9.99</b><span data-per>a month</span></p>
+        <ul class="tk__l">
+          <li>Everything in Free</li>
+          <li>Every comp-card edition, adjustable</li>
+          <li>A site of your own</li>
+          <li>90-day analytics, exportable</li>
+        </ul>
+        <span class="stamp stamp--year" data-stamp>Billed yearly<br>$7.99 a month</span>
+        <a class="tk__stub" href="https://app.pholio.studio/onboarding">Try 14 days free</a>
+      </article>
+      <article class="tk tk--ink">
+        <p class="tk__no">Ticket No. 03</p>
+        <h3 class="tk__t">Agencies</h3>
+        <p class="tk__p"><b>$0</b><span>always</span></p>
+        <ul class="tk__l">
+          <li>Your official application link</li>
+          <li>Applicants that meet your requirements, organised</li>
+          <li>Exports to the tools you already use</li>
+          <li>Every request reviewed by a person</li>
+        </ul>
+        <span class="stamp stamp--never">Never<br>charged</span>
+        <a class="tk__stub" href="https://app.pholio.studio">Request access</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="p-carbon" data-p-carbon>
+    <div class="p-carbon__pin">
+      <div class="p-carbon__copy" data-carbon-copy>
+        <h2 class="p-h2">You keep<br><em>the carbon.</em></h2>
+        <p class="p-lede">The moment you send an application it’s frozen: the frames, the measurements, the note, the date. What they received is exactly what you can see.</p>
+      </div>
+      <div class="p-sheets">
+        <div class="sheet sheet--copy" data-sheet-copy>
+          <p class="sheet__tag">Your copy</p>
+          <div class="sheet__body" aria-hidden="true">
+            <p class="sheet__h">Application</p>
+            <dl><div><dt>To</dt><dd>Open call · Women’s board</dd></div><div><dt>Sent</dt><dd data-sent-stamp></dd></div><div><dt>From</dt><dd>Amara Lowe · 175 cm · New York</dd></div></dl>
+            <div class="sheet__frames"><i style="background-image:url(img/p089.jpg)"></i><i style="background-image:url(img/p093.jpg)"></i><i style="background-image:url(img/p095.jpg)"></i><i style="background-image:url(img/p099.jpg)"></i></div>
+            <p class="sheet__note">“Hi, I’m Amara, based in New York and working toward editorial. These digitals are from this week. Thank you for looking.”</p>
+          </div>
+        </div>
+        <div class="sheet sheet--top" data-sheet-top>
+          <p class="sheet__tag">Sent</p>
+          <div class="sheet__body">
+            <p class="sheet__h">Application</p>
+            <dl><div><dt>To</dt><dd>Open call · Women’s board</dd></div><div><dt>Sent</dt><dd data-sent-stamp></dd></div><div><dt>From</dt><dd>Amara Lowe · 175 cm · New York</dd></div></dl>
+            <div class="sheet__frames"><i style="background-image:url(img/p089.jpg)"></i><i style="background-image:url(img/p093.jpg)"></i><i style="background-image:url(img/p095.jpg)"></i><i style="background-image:url(img/p099.jpg)"></i></div>
+            <p class="sheet__note">“Hi, I’m Amara, based in New York and working toward editorial. These digitals are from this week. Thank you for looking.”</p>
+          </div>
+          <div class="sheet__perf"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="p-table" data-p-table>
+    <div class="p-table__copy">
+      <h2 class="p-h2 p-h2--on">For agencies,<br><em>the light table is free.</em></h2>
+      <ul class="p-table__list">
+        <li>Your own open-call link</li>
+        <li>Every applicant in the same frames and crops</li>
+        <li>Side by side, the way cards sit on a table</li>
+        <li>Shortlists anyone can open, no account needed</li>
+        <li>Exports to the system you already use</li>
+        <li>A review window, so silence ends on a date</li>
+      </ul>
+      <a class="btn btn--ghost" href="https://app.pholio.studio">Request agency access</a>
+    </div>
+    <div class="p-lightbox" data-lightbox aria-label="Applicant slides; drag to move them"></div>
+  </section>
+
+  <footer class="p-end">
+    <p class="wm p-end__wm">PHOLIO</p>
+    <div class="p-end__row"><p>A better introduction.</p><a class="btn" href="https://app.pholio.studio/onboarding">Start free</a></div>
+  </footer>
+</main>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     II · BOTH SIDES
+     One seam down the middle of the screen. Left is you, right is the
+     agency. Every feature is shown on both sides at once, and you can drag
+     the seam. Studio+ changes only your side.
+     ══════════════════════════════════════════════════════════════════════ -->
+<main class="v vs" data-variant="sides" id="sides">
+  <div class="s-seam" data-seam aria-hidden="true"><button class="s-seam__h" type="button" data-seam-h tabindex="-1">⟷</button></div>
+  <p class="s-side s-side--l">You</p><p class="s-side s-side--r">The agency</p>
+
+  <section class="s s-hero" data-s>
+    <div class="s-l">
+      <h1 class="s-h1 s-h1--l"><span>A better</span></h1>
+      <div class="s-face s-face--l"><img src="img/p089.jpg" alt="Amara Lowe">
+        <i class="cm cm1"></i><i class="cm cm2"></i><i class="cm cm3"></i><i class="cm cm4"></i>
+        <p class="s-tool"><span>Frame</span><b>Headshot</b><span>4:5</span><span>Dated today</span></p>
+      </div>
+      <div class="s-foot s-foot--l"><p>You build it once: digitals, book, comp card.</p><a class="btn" href="https://app.pholio.studio/onboarding">Start free</a></div>
+    </div>
+    <div class="s-r">
+      <h1 class="s-h1 s-h1--r" aria-hidden="true"><span>introduction.</span></h1>
+      <div class="s-face s-face--r"><img src="img/p089.jpg" alt="">
+        <div class="s-row"><b>Amara Lowe</b><span>175 cm · New York</span><span>Digitals current</span><span>Meets your requirements</span></div>
+      </div>
+      <div class="s-foot s-foot--r"><p>They receive it the way they asked for it.</p><a class="btn btn--ghost" href="https://app.pholio.studio">Agency access</a></div>
+    </div>
+  </section>
+
+  <section class="s s-card" data-s>
+    <div class="s-l">
+      <div class="s-copy s-copy--l"><h2 class="s-h2">You set the card.</h2><p>Front and back, from your own frames. Pick an edition, type your name.</p>
+        <div class="s-eds" role="radiogroup" aria-label="Edition" data-s-eds>
+          <button type="button" role="radio" aria-checked="true" data-ed="standard">The Standard</button>
+          <button type="button" role="radio" aria-checked="false" data-ed="cover">The Cover Story</button>
+          <button type="button" role="radio" aria-checked="false" data-ed="night">The Night Edition</button>
+          <button type="button" role="radio" aria-checked="false" data-ed="diptych">The Diptych</button>
+        </div>
+        <label class="s-name"><span>Name</span><input data-s-name type="text" maxlength="20" placeholder="Amara Lowe" autocomplete="off" spellcheck="false"></label>
+      </div>
+      <div class="s-card__make" data-s-make></div>
+    </div>
+    <div class="s-r">
+      <div class="s-copy s-copy--r"><h2 class="s-h2">It lands exactly so.</h2><p>No watermark, no tier, no difference. The card on their desk is the card you made.</p></div>
+      <div class="s-desk" data-s-desk></div>
+    </div>
+  </section>
+
+  <section class="s s-ai" data-s-ai>
+    <div class="s-ai__pin">
+      <div class="s-l">
+        <div class="s-copy s-copy--l"><h2 class="s-h2">It writes from<br>what you’ve said.</h2></div>
+        <div class="s-facts" data-s-facts>
+          <span>175 cm</span><span>New York</span><span>Editorial · Runway</span><span data-thread-a>“most myself in soft daylight”</span><span>Digitals from this week</span>
+        </div>
+        <div class="s-note"><p class="s-note__lab">Note to the agency · drafted</p><p class="s-note__txt" data-s-note></p><p class="s-note__foot">Written from your facts. Change anything.</p></div>
+      </div>
+      <div class="s-r">
+        <div class="s-copy s-copy--r"><h2 class="s-h2">They search<br>in plain words.</h2></div>
+        <div class="s-brief"><span class="s-brief__mark">✦</span><p data-s-brief></p></div>
+        <div class="s-reqs" data-s-reqs><span>5′9″ and up</span><span>New York</span><span>Editorial</span><span class="is-look">clean, daylight beauty</span></div>
+        <div class="s-results" data-s-results>
+          <figure class="is-top" data-thread-b><img src="img/p089.jpg" alt=""><figcaption><b>Amara Lowe</b><span>Why: “soft daylight”, her own words</span></figcaption></figure>
+          <figure><img src="img/p041.jpg" alt=""><figcaption><b>Lena Varga</b><span>Why: daylight beauty in her book</span></figcaption></figure>
+          <figure><img src="img/p278.jpg" alt=""><figcaption><b>Mei Tanaka</b><span>Why: “clean, minimal”</span></figcaption></figure>
+          <figure><img src="img/p173.jpg" alt=""><figcaption><b>Adaeze Nwosu</b><span>Why: editorial portraits</span></figcaption></figure>
+        </div>
+        <p class="s-fine">Matched on what talent wrote and on plain descriptions of their photographs, only with their consent. No face is measured or compared.</p>
+      </div>
+      <svg class="s-thread" data-s-thread aria-hidden="true"><path/></svg>
+    </div>
+  </section>
+
+  <section class="s s-plus" data-s>
+    <div class="s-l s-l--gold">
+      <div class="s-copy s-copy--l"><h2 class="s-h2">Studio+ changes<br><em>your side.</em></h2><p>$9.99 a month or $95.88 a year, fourteen days free.</p></div>
+      <div class="s-kit">
+        <div class="s-site"><div class="s-site__bar"><i></i><i></i><i></i><span>amaralowe · your site</span></div><div class="s-site__hero" style="background-image:url(img/p099.jpg)"><b>Amara Lowe</b></div><div class="s-site__row"><i style="background-image:url(img/p093.jpg)"></i><i style="background-image:url(img/p088.jpg)"></i><i style="background-image:url(img/p097.jpg)"></i></div></div>
+        <div class="s-chart" aria-label="Ninety days of your own analytics"><p>Book opens · last 90 days</p><div class="s-chart__bars" data-s-bars></div></div>
+        <div class="s-swatches"><p>Every edition</p><div data-s-swatches></div></div>
+      </div>
+    </div>
+    <div class="s-r">
+      <div class="s-copy s-copy--r"><h2 class="s-h2">Not this one.</h2><p>Nothing an agency sees or receives changes with Studio+.</p></div>
+      <div class="s-same"><div class="s-same__card" data-s-same></div><p class="s-same__lab">Unchanged</p></div>
+    </div>
+  </section>
+
+  <section class="s s-rec" data-s>
+    <div class="s-l">
+      <div class="s-copy s-copy--l"><h2 class="s-h2">Kept exactly as sent.</h2></div>
+      <div class="pkg" data-pkg="l"></div>
+    </div>
+    <div class="s-r">
+      <div class="s-copy s-copy--r"><h2 class="s-h2">Received exactly as sent.</h2></div>
+      <div class="pkg" data-pkg="r"></div>
+    </div>
+  </section>
+
+  <section class="s s-price" data-s>
+    <div class="s-l">
+      <div class="s-copy s-copy--l"><h2 class="s-h2">What it costs you.</h2></div>
+      <div class="s-plans">
+        <div class="s-plan"><p class="s-plan__t">Free</p><p class="s-plan__p">$0</p><p>Digitals and book checked against each agency, the Standard comp card, applications, a record of every one.</p></div>
+        <div class="s-plan s-plan--gold"><p class="s-plan__t">Studio+</p><p class="s-plan__p"><span data-s-price>$9.99</span><small data-s-per>/month</small></p><p>Every edition, adjustable. A site of your own. Ninety days of your own analytics.</p>
+          <div class="s-bill" role="radiogroup" aria-label="Billing"><button type="button" role="radio" aria-checked="true" data-s-bill="m">Monthly</button><button type="button" role="radio" aria-checked="false" data-s-bill="y">Yearly</button></div></div>
+      </div>
+    </div>
+    <div class="s-r">
+      <div class="s-copy s-copy--r"><h2 class="s-h2">What it costs them.</h2></div>
+      <p class="s-zero">$0</p>
+      <p class="s-zero__s">Always. Agencies are never charged, and nobody pays to be seen.</p>
+    </div>
+  </section>
+
+  <section class="s-ag" data-s-ag>
+    <div class="s-ag__pin">
+      <div class="s-ag__l"></div>
+      <div class="s-ag__r">
+        <div class="s-ag__copy">
+          <h2 class="s-h2">The agency side, <em>whole.</em></h2>
+          <ol class="s-ag__list">
+            <li><b>Your link.</b> An open call under your name, on your own channels.</li>
+            <li><b>Same frames.</b> Every applicant in the crops you asked for.</li>
+            <li><b>Side by side.</b> Compare two, or twenty.</li>
+            <li><b>Shortlists.</b> A link anyone can open, no login.</li>
+            <li><b>Your system.</b> Export to whatever you already use.</li>
+            <li><b>A window.</b> Unanswered applications close on a date, so nobody waits forever.</li>
+          </ol>
+          <a class="btn" href="https://app.pholio.studio">Request agency access</a>
+        </div>
+        <div class="s-inbox" data-s-inbox></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s s-end" data-s>
+    <div class="s-l"><p class="s-end__wm s-end__wm--l wm" aria-hidden="true">PHOLIO</p><a class="btn" href="https://app.pholio.studio/onboarding">Start free</a></div>
+    <div class="s-r"><p class="s-end__wm s-end__wm--r wm">PHOLIO</p><a class="btn btn--ghost" href="https://app.pholio.studio">Request agency access</a></div>
+  </section>
+</main>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     III · THE ISSUE
+     The site as a fashion magazine. Scroll turns the pages; the
+     subscription card falls out at the end, and that is the pricing.
+     ══════════════════════════════════════════════════════════════════════ -->
+<main class="v vi" data-variant="issue" id="issue">
+  <section class="i-stage" data-i-stage>
+    <div class="i-stage__pin">
+      <p class="i-hint" data-i-hint>Scroll to turn the page</p>
+      <div class="i-book" data-i-book>
+
+        <div class="leaf" data-leaf>
+          <div class="pg pg--front i-cover">
+            <img class="i-cover__img" src="img/p177.jpg" alt="Cover: a portrait with eyes closed, warm dark background">
+            <p class="i-cover__mast wm">PHOLIO</p>
+            <p class="i-cover__issue"><span>Issue 01</span><span>October 2026</span><span>Free</span></p>
+            <ul class="i-cover__lines">
+              <li><b>Nine ways to wear your name</b>The card, p. 4</li>
+              <li><b>The machine that won’t read your face</b>Intelligence, p. 6</li>
+              <li><b>The premium issue</b>Studio+, p. 8</li>
+              <li><b>Kept exactly as sent</b>The record, p. 10</li>
+              <li><b>Inside the agency</b>p. 12</li>
+            </ul>
+            <p class="i-cover__tag">A better<br><em>introduction.</em></p>
+            <svg class="i-cover__bar" viewBox="0 0 60 26" aria-hidden="true"><g fill="#1a1815"><rect x="0" width="1.5" height="22"/><rect x="3" width="1" height="22"/><rect x="5" width="2.5" height="22"/><rect x="9" width="1" height="22"/><rect x="11.5" width="1.5" height="22"/><rect x="14.5" width="3" height="22"/><rect x="19" width="1" height="22"/><rect x="21" width="2" height="22"/><rect x="24.5" width="1" height="22"/><rect x="27" width="2.5" height="22"/><rect x="31" width="1" height="22"/><rect x="33" width="1.5" height="22"/><rect x="36" width="3" height="22"/><rect x="40.5" width="1" height="22"/><rect x="43" width="2" height="22"/><rect x="46.5" width="1" height="22"/><rect x="49" width="2.5" height="22"/><rect x="53" width="1" height="22"/><rect x="55.5" width="1.5" height="22"/><rect x="58.5" width="1.5" height="22"/></g></svg>
+          </div>
+          <div class="pg pg--back i-contents">
+            <p class="i-folio">2</p>
+            <h2 class="i-big">Contents</h2>
+            <ol class="i-toc">
+              <li><b>04</b><span>The card</span><em>Nine ways to wear your name</em></li>
+              <li><b>06</b><span>Intelligence</span><em>An interview with the machine</em></li>
+              <li><b>08</b><span>Studio+</span><em>The premium issue</em></li>
+              <li><b>10</b><span>The record</span><em>Kept exactly as sent</em></li>
+              <li><b>12</b><span>Agencies</span><em>The back pages</em></li>
+              <li><b>14</b><span>Subscribe</span><em>Falls out at the end</em></li>
+            </ol>
+            <p class="i-ed"><b>From the editor.</b> Before an agency meets you, they meet what you sent. This issue is about making that first look the right one: the digitals they ask for, a card worth pulling, and an honest answer when nobody writes back.</p>
+          </div>
+        </div>
+
+        <div class="leaf" data-leaf>
+          <div class="pg pg--front i-full">
+            <img src="img/p203.jpg" alt="A model in a vivid orange gown on a runway">
+            <p class="i-cap">Before the runway, there is the submission.</p>
+            <p class="i-folio i-folio--r">3</p>
+          </div>
+          <div class="pg pg--back i-feat">
+            <p class="i-folio">4</p>
+            <p class="i-kick">The card</p>
+            <h2 class="i-big">Nine ways to wear <em>your name.</em></h2>
+            <p class="i-drop">A comp card has two sides and one job: to be pulled from a pile and kept. Pholio composes yours from your own photographs. It finds where your face falls in each frame and sets your name in the space that’s left, so no two cards come out quite alike, even in the same edition.</p>
+            <p class="i-pull">“Where your face falls decides where your name goes.”</p>
+            <p class="i-body">Front and back, five and a half by eight and a half inches, print-ready or sent as a file. The Standard is free. The other eight editions come with Studio+.</p>
+          </div>
+        </div>
+
+        <div class="leaf" data-leaf>
+          <div class="pg pg--front i-eds">
+            <p class="i-folio i-folio--r">5</p>
+            <div class="i-eds__grid" data-i-eds></div>
+          </div>
+          <div class="pg pg--back i-qa">
+            <p class="i-folio">6</p>
+            <p class="i-kick">Intelligence</p>
+            <h2 class="i-big">In conversation <em>with the machine.</em></h2>
+            <dl class="i-qa__dl">
+              <dt>What do you look at?</dt><dd>The photograph. Shot type, focus, light, background. Whether it’s the close-up an agency asked for. Never the face itself.</dd>
+              <dt>Will you write for me?</dt><dd>A bio, a note to an agency, a message you’re unsure of. Only from what you’ve told me. I don’t invent a credit or a measurement.</dd>
+              <dt>What about my old card?</dt><dd>Send it. I’ll read the words printed on it, name, measurements, agency, and fill in your profile. The words, not the pictures.</dd>
+              <dt>And when nobody replies?</dt><dd>I’ll count what really happened: opens, card pulls, dates. Then I’ll tell you plainly when a submission is past its usual read.</dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="leaf" data-leaf>
+          <div class="pg pg--front i-full i-full--quote">
+            <img src="img/p031.jpg" alt="A close-up portrait">
+            <p class="i-quote">“I read the photograph. <em>Never the face.”</em></p>
+            <p class="i-folio i-folio--r">7</p>
+          </div>
+          <div class="pg pg--back i-plus">
+            <p class="i-folio">8</p>
+            <p class="i-kick">Studio+</p>
+            <h2 class="i-big">The premium <em>issue.</em></h2>
+            <ul class="i-plus__l">
+              <li><b>Every edition</b><span>All nine, and every one adjustable.</span></li>
+              <li><b>A site of your own</b><span>Your book as a website, no Pholio chrome.</span></li>
+              <li><b>Your numbers, longer</b><span>Ninety days of analytics, exportable.</span></li>
+            </ul>
+            <p class="i-plus__price"><b>$9.99</b> a month · $95.88 a year<br>Fourteen days free</p>
+            <p class="i-plus__fine">Nothing an agency sees or receives changes with Studio+.</p>
+          </div>
+        </div>
+
+        <div class="leaf" data-leaf>
+          <div class="pg pg--front i-site">
+            <p class="i-folio i-folio--r">9</p>
+            <div class="i-site__frame">
+              <div class="i-site__bar"><i></i><i></i><i></i></div>
+              <div class="i-site__hero" style="background-image:url(img/p150.jpg)"><b>Sora Lin</b></div>
+              <div class="i-site__row"><i style="background-image:url(img/p164.jpg)"></i><i style="background-image:url(img/p156.jpg)"></i><i style="background-image:url(img/p152.jpg)"></i></div>
+            </div>
+            <p class="i-cap i-cap--ink">A site of your own, built from your book.</p>
+          </div>
+          <div class="pg pg--back i-rec">
+            <p class="i-folio">10</p>
+            <p class="i-kick">The record</p>
+            <h2 class="i-big">Kept exactly <em>as sent.</em></h2>
+            <p class="i-body">Every application is frozen the moment it leaves: the frames, the measurements, the note, the date. Months later you can open it and see precisely what they received.</p>
+            <div class="i-fact">
+              <p class="i-fact__h">Application · frozen</p>
+              <dl><div><dt>To</dt><dd>Open call, women’s board</dd></div><div><dt>Sent</dt><dd data-sent-stamp></dd></div><div><dt>Frames</dt><dd>Close-up, profile, three-quarter, full length</dd></div><div><dt>Note</dt><dd>58 words, drafted from your facts</dd></div></dl>
+            </div>
+          </div>
+        </div>
+
+        <div class="leaf" data-leaf>
+          <div class="pg pg--front i-full">
+            <img src="img/p027.jpg" alt="A model crouching against a teal backdrop">
+            <p class="i-cap">Sent 1 October, 14:32. Kept.</p>
+            <p class="i-folio i-folio--r">11</p>
+          </div>
+          <div class="pg pg--back i-dir">
+            <p class="i-folio">12</p>
+            <p class="i-kick">Agencies</p>
+            <h2 class="i-big">The back <em>pages.</em></h2>
+            <div class="i-dir__grid" data-i-dir></div>
+          </div>
+        </div>
+
+        <div class="leaf" data-leaf>
+          <div class="pg pg--front i-agency">
+            <p class="i-folio i-folio--r">13</p>
+            <h2 class="i-big">For agencies, <em>all of it is free.</em></h2>
+            <ol class="i-ag__l">
+              <li><b>Your link</b>An open call under your own name.</li>
+              <li><b>Same frames</b>Every applicant in the crops you asked for.</li>
+              <li><b>Side by side</b>Compare like cards on a table.</li>
+              <li><b>Shortlists</b>A link anyone can open, no login.</li>
+              <li><b>Your system</b>Export to what you already use.</li>
+              <li><b>A window</b>Silence closes on a date.</li>
+            </ol>
+            <a class="btn btn--ink" href="https://app.pholio.studio">Request agency access</a>
+          </div>
+          <div class="pg pg--back i-back">
+            <p class="wm i-back__wm">PHOLIO</p>
+            <p class="i-back__t">A better <em>introduction.</em></p>
+            <p class="i-back__s">Free to apply. Agencies are never charged.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- The subscription card that falls out -->
+      <div class="i-insert" data-i-insert>
+        <div class="i-insert__card">
+          <p class="i-insert__h">Subscribe</p>
+          <p class="i-insert__s">Tick one. Both open the same door.</p>
+          <label class="i-opt"><input type="radio" name="i-plan" checked><span><b>Free</b><em>$0. Digitals, the Standard card, applications, every receipt.</em></span></label>
+          <label class="i-opt"><input type="radio" name="i-plan"><span><b>Studio+</b><em>$9.99 a month, or $95.88 a year. Fourteen days free. Every edition, your own site, ninety days of numbers.</em></span></label>
+          <a class="btn btn--ink" href="https://app.pholio.studio/onboarding">Start free</a>
+          <p class="i-insert__post">No postage necessary.<br>Agencies are never charged.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<p class="credits">Photography via Unsplash: Alina Bordunova, Anni Peng, Ben Iwara, Bob Seppala, Brian Lawson, Brooke Straiton, Bulbul Ahmed, De’von Wellesley, Divine Effiong, Dmytro Tolokonov, Dustin Chu, Dynamic Wang, Ethan Haddox, Gideon Hezekiah, Godfred Kwakye, Hadis Safari, Hamid Tajik, Igor Rand, Jabari Timothy, Jadon Johnson, John Ekow, Lauro Rodríguez, Malicki M Beser, Maria Lysenko, Olena Bohovyk, Polina Kuzovkova, Rachel McDermott, Rudy Issa, Teslariu Mihai, Valeria Lendel, Vitaly Gariev, Yoad Shejtman, Yogendra Singh, Mojtaba Mosayebzadeh, See Plus, Shahin Khalaji. Names and measurements shown are fictional.</p>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="v.js" defer></script>
+</body>
+</html>

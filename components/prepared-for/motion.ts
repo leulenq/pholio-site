@@ -1,6 +1,6 @@
 import { cubicBezier } from "framer-motion";
 
-import { READY_SCALE, READY_X, READY_Y } from "@/components/comp-card/motion";
+import { cardRest } from "@/components/comp-card/motion";
 import { APPLY_OVERRUN_VH, APPLY_VH } from "@/components/hero/motion";
 
 /**
@@ -340,19 +340,11 @@ export const GEOMETRY: Stage<Geometry> = {
 };
 
 /**
- * The card as the previous chapter left it: its rest, read off the comp-card
- * beat's own constants (`READY_X`, `READY_Y`, `READY_SCALE`, and the card's
- * width classes in `components/comp-card/index.tsx`), so the beat picks it
- * up exactly where it lies.
+ * The card as the previous chapter left it: its rest is the comp-card
+ * chapter's own (`cardRest` in components/comp-card/motion.ts), so the beat
+ * picks it up exactly where it lies.
  */
-export function cardRest(stage: StageKind, w: number, h: number) {
-  const base = w < 640 ? 256 : w < 768 ? 284 : w < 1024 ? 320 : 364;
-  const width = base * READY_SCALE[stage][1];
-  const height = (width * 8.5) / 5.5;
-  const cx = w / 2 + (parseFloat(READY_X[stage]) / 100) * w;
-  const cy = h / 2 + READY_Y[stage];
-  return { cx, cy, width, height };
-}
+export { cardRest };
 
 export interface Placement {
   /** Top-left of the piece's scaled box, in px from the stage's top-left. */

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pholio · The silence, and its date</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=JetBrains+Mono:wght@400&family=Noto+Serif+Display:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="heroes.css">
+<style>
+  /*
+   * 03 · The silence, and its date.
+   *
+   * The moment every model knows: it's sent, and then nothing. Three people
+   * waiting, side by side, in three different cities. The days count up and
+   * their footage runs faster as the time goes. At day thirty the count
+   * stops, turns gold, and becomes a date: the industry's silence, given an
+   * answer. Then the brand.
+   */
+  .stage { position: fixed; inset: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; background: var(--velvet); }
+  .p { position: relative; overflow: hidden; opacity: 0; transform: scale(1.04); transition: opacity 1.6s, transform 3s cubic-bezier(.16,1,.3,1); will-change: transform; }
+  .p video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.55) contrast(1.05) brightness(.78); transition: filter 2s; }
+  .is-in .p { opacity: 1; transform: none; }
+  .is-in .p:nth-child(2) { transition-delay: .25s; }
+  .is-in .p:nth-child(3) { transition-delay: .5s; }
+  .shade { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(5,5,5,.55), rgba(5,5,5,.15) 70%), linear-gradient(180deg, rgba(5,5,5,.5), rgba(5,5,5,0) 25%, rgba(5,5,5,0) 60%, rgba(5,5,5,.85)); transition: opacity 1.5s; }
+  .count { position: fixed; left: 0; right: 0; top: 50%; transform: translateY(-58%); text-align: center; pointer-events: none; }
+  .sent { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: rgba(250,247,242,.72); opacity: 0; transition: opacity .8s; }
+  .day { font-family: var(--serif); font-weight: 300; letter-spacing: -.04em; line-height: .9; font-size: clamp(90px, 17vw, 30vh); font-variant-numeric: tabular-nums; margin-top: 2vh; opacity: 0; transition: color 1.2s, opacity .6s; }
+  .day.is-gold { color: var(--gold); font-style: italic; }
+  .date { margin-top: 2.4vh; font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: rgba(250,247,242,.6); opacity: 0; transition: opacity .6s; font-variant-numeric: tabular-nums; }
+  .end { position: fixed; left: var(--gut); right: var(--gut); bottom: calc(var(--gut) + 2vh); display: flex; align-items: end; justify-content: space-between; gap: 24px; pointer-events: none; }
+  .end h1 { font-family: var(--serif); font-weight: 300; letter-spacing: -.035em; line-height: .9; font-size: clamp(56px, 9vw, 15vh); }
+  .end .l { display: block; overflow: hidden; padding: 0 .08em .12em 0; margin-bottom: -.12em; }
+  .end .l > span { display: block; transform: translateY(105%); transition: transform 1.5s cubic-bezier(.16,1,.3,1); }
+  .end .l:nth-child(2) > span { transition-delay: .12s; }
+  .is-end .end .l > span { transform: none; }
+  .end__r { text-align: right; opacity: 0; transition: opacity 1s .9s; pointer-events: auto; }
+  .is-end .end__r { opacity: 1; }
+  .end__r p { font-size: 13px; line-height: 1.55; color: rgba(250,247,242,.72); max-width: 24em; margin: 0 0 18px auto; }
+  .end__cta { display: inline-block; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--velvet); background: var(--cream); padding: 16px 28px; transition: background .3s; }
+  .end__cta:hover { background: var(--gold); }
+  .is-end .p video { filter: saturate(.35) contrast(1.05) brightness(.5); }
+  .track { height: 180vh; }
+  @media (max-width: 760px) {
+    .stage { grid-template-columns: 1fr; grid-template-rows: repeat(3, 1fr); }
+    .end { flex-direction: column; align-items: start; }
+    .end__r { text-align: left; }
+    .end__r p { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<header class="nav"><a class="nav__wm" href="index.html">PHOLIO</a><nav class="nav__links"><a href="#">Talent</a><a href="#">Agencies</a><a href="#">Studio+</a><a class="nav__cta" href="#">Apply free</a></nav></header>
+
+<div class="stage" id="stage">
+  <div class="p"><video src="media/wait-34916335.mp4" muted loop playsinline preload="auto"></video></div>
+  <div class="p"><video src="media/wait-6381025.mp4" muted loop playsinline preload="auto"></video></div>
+  <div class="p"><video src="media/wait-32952138.mp4" muted loop playsinline preload="auto"></video></div>
+</div>
+<div class="shade"></div>
+
+<div class="count" aria-hidden="true">
+  <p class="sent" id="sent">Application sent</p>
+  <p class="day" id="day">Day 1</p>
+  <p class="date" id="date">&nbsp;</p>
+</div>
+
+<div class="end">
+  <h1><span class="l"><span>A better</span></span><span class="l"><span><em>introduction.</em></span></span></h1>
+  <div class="end__r">
+    <p>Silence is how most agencies say no. Pholio gives it a date, so you always know where you stand.</p>
+    <a class="end__cta" href="#">Apply free</a>
+  </div>
+</div>
+<div class="grain"></div>
+<div class="track"></div>
+<section class="next"><p>The chapters continue here</p></section>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const vids = [...document.querySelectorAll("video")];
+  const sent = $("#sent"), day = $("#day"), date = $("#date");
+  const start = new Date(Date.UTC(2026, 9, 1));
+  const fmt = (d) => d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).replace(",", "");
+  const at = (n) => { const d = new Date(start); d.setUTCDate(d.getUTCDate() + n); return d; };
+
+  const finish = () => {
+    day.textContent = "Day 30";
+    day.classList.add("is-gold");
+    const reapply = new Date(start); reapply.setUTCMonth(reapply.getUTCMonth() + 6);
+    date.textContent = `No reply · treat it as a pass · re-apply opens ${reapply.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" })}`;
+    vids.forEach((v) => (v.playbackRate = 0.6));
+    setTimeout(() => document.body.classList.add("is-end"), reduce ? 0 : 1300);
+  };
+
+  vids.forEach((v) => v.play().catch(() => {}));
+  requestAnimationFrame(() => setTimeout(() => document.body.classList.add("is-in"), 150));
+  if (reduce) {
+    [sent, day, date].forEach((e) => (e.style.opacity = 1));
+    vids.forEach((v) => v.pause());
+    finish();
+    return;
+  }
+
+  // The act, then the wait. Days count slowly, then fast, then slowly to 30.
+  const T0 = 1400, COUNT = 7600;
+  setTimeout(() => (sent.style.opacity = 1), T0 - 600);
+  const t0 = performance.now();
+  let done = false;
+  const tick = (now) => {
+    if (done) return;
+    requestAnimationFrame(tick);
+    const t = now - t0 - T0;
+    if (t < 0) return;
+    day.style.opacity = 1; date.style.opacity = 1;
+    const k = clamp(t / COUNT);
+    const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+    const n = 1 + Math.floor(e * 29);
+    day.textContent = `Day ${n}`;
+    date.textContent = fmt(at(n - 1));
+    const speed = 1 + 2.2 * Math.sin(k * Math.PI);
+    vids.forEach((v) => (v.playbackRate = speed));
+    if (k >= 1) { done = true; finish(); }
+  };
+  requestAnimationFrame(tick);
+
+  // scroll: the room lets the brand through and dims behind it
+  const stage = $("#stage");
+  addEventListener("scroll", () => {
+    const s = clamp(scrollY / innerHeight);
+    stage.style.transform = `scale(${1 - s * 0.06})`;
+    stage.style.opacity = 1 - s * 0.6;
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>

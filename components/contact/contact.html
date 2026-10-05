@@ -1,0 +1,259 @@
+<!--
+ /contact — how to reach Pholio.
+ Plain HTML, mounted between the global header and footer by
+ components/contact/index.tsx. Styles: contact.css. Behaviour: motion.ts.
+
+ Pholio has no office, no phone line and no form (the site has no email
+ sender, and its one write path is the agency request). So the page does
+ what the product does for an application: it addresses the letter for
+ you. Choose what it is about and the right letter is on the desk, with
+ the right address, the subject the inbox sorts by, and the details to
+ fill in; one button opens it in your own mail app. What Pholio cannot do
+ comes back stamped, with where to go instead.
+
+ The topic switch is pure CSS (radio + :has), so it works before
+ hydration; motion.ts only builds the mailto bodies, copies addresses and,
+ on a phone, brings the letter into view.
+
+ Addresses used: hello@ legal@ privacy@ dmca@ (lib/legal-constants.ts),
+ careers@ (/careers), press@ (/press; must exist before launch).
+ The two-working-day reply time is a commitment the owner has to confirm.
+ The TAKE IT DOWN letter mirrors components/legal/TakeItDownContent.tsx;
+ change both together.
+-->
+<div class="ct" data-contact>
+  <div class="ct-desk">
+
+    <!-- The list. -->
+    <div class="ct-pick">
+      <header class="ct-head">
+        <h1 class="ct-title">
+          <span>Write to</span>
+          <span><em>a person.</em></span>
+        </h1>
+        <p class="ct-lede">Pholio has no office and no phone line. Choose what it is about, and the letter is already addressed.</p>
+      </header>
+
+      <fieldset class="ct-topics">
+        <legend class="ct-sr">What is it about?</legend>
+
+        <p class="ct-group" aria-hidden="true">Using Pholio</p>
+        <label class="ct-topic"><input type="radio" name="topic" id="t-account" value="account" checked /><span>Something isn’t working</span></label>
+        <label class="ct-topic"><input type="radio" name="topic" id="t-agency" value="agency" /><span>I’m from an agency</span></label>
+        <label class="ct-topic"><input type="radio" name="topic" id="t-guardian" value="guardian" /><span>I’m a guardian</span></label>
+
+        <p class="ct-group" aria-hidden="true">Something is wrong</p>
+        <label class="ct-topic"><input type="radio" name="topic" id="t-impersonation" value="impersonation" /><span>Someone says they are Pholio</span></label>
+        <label class="ct-topic"><input type="radio" name="topic" id="t-takedown" value="takedown" /><span>An intimate image of me is on Pholio</span></label>
+        <label class="ct-topic"><input type="radio" name="topic" id="t-copyright" value="copyright" /><span>My photographs are used without permission</span></label>
+        <label class="ct-topic"><input type="radio" name="topic" id="t-privacy" value="privacy" /><span>My data</span></label>
+
+        <p class="ct-group" aria-hidden="true">Everything else</p>
+        <label class="ct-topic"><input type="radio" name="topic" id="t-press" value="press" /><span>I’m writing a story</span></label>
+        <label class="ct-topic"><input type="radio" name="topic" id="t-careers" value="careers" /><span>I’d like to work here</span></label>
+        <label class="ct-topic"><input type="radio" name="topic" id="t-hello" value="hello" /><span>Anything else</span></label>
+
+        <p class="ct-group" aria-hidden="true">Not something we do</p>
+        <label class="ct-topic"><input type="radio" name="topic" id="t-represent" value="represent" /><span>I want to be signed</span></label>
+        <label class="ct-topic"><input type="radio" name="topic" id="t-book" value="book" /><span>I want to book a model</span></label>
+      </fieldset>
+    </div>
+
+    <!-- The desk. One letter shows at a time (contact.css, :has). -->
+    <div class="ct-table" id="letter" aria-live="polite" data-table>
+      <div class="ct-table__inner">
+
+        <article class="ct-letter" data-topic="account" data-to="hello@pholio.studio" data-subject="Help with my account">
+          <div class="ct-sheet">
+            <dl class="ct-env"><div><dt>To</dt><dd>hello@pholio.studio</dd></div><div><dt>Subject</dt><dd>Help with my account</dd></div></dl>
+            <div class="ct-body" data-body>
+              <p>Hello,</p>
+              <p>I sign in with <b>[your sign-in email]</b>.</p>
+              <p>What I was doing: <b>[the steps, in order]</b>. What I saw: <b>[the message, word for word]</b>.</p>
+              <p>It happened on <b>[date and rough time]</b>, using <b>[phone or computer, and browser]</b>.</p>
+              <p><b>[Your name]</b></p>
+            </div>
+            <p class="ct-pnote">Never send your password. Nobody at Pholio will ask for it.</p>
+          </div>
+          <div class="ct-acts"><a class="ct-send" data-send href="mailto:hello@pholio.studio">Write this email</a><button type="button" class="ct-copy" data-copy="hello@pholio.studio">Copy address</button></div>
+        </article>
+
+        <article class="ct-letter" data-topic="agency" data-to="hello@pholio.studio" data-subject="Agency: [agency name]">
+          <div class="ct-sheet">
+            <dl class="ct-env"><div><dt>To</dt><dd>hello@pholio.studio</dd></div><div><dt>Subject</dt><dd>Agency: <b>[agency name]</b></dd></div></dl>
+            <div class="ct-body" data-body>
+              <p>Hello,</p>
+              <p>I work at <b>[agency]</b> in <b>[city]</b>, as <b>[your role]</b>.</p>
+              <p>My question: <b>[what you would like to know]</b></p>
+              <p><b>[Your name]</b></p>
+            </div>
+            <p class="ct-pnote">To open an account, use the request form instead: every request is checked by a person before an account is opened. Pholio never charges agencies.</p>
+          </div>
+          <div class="ct-acts"><a class="ct-send" data-send href="mailto:hello@pholio.studio">Write this email</a><a class="ct-copy" href="/agency/request-access">Request access</a></div>
+        </article>
+
+        <article class="ct-letter" data-topic="guardian" data-to="hello@pholio.studio" data-subject="Guardian question">
+          <div class="ct-sheet">
+            <dl class="ct-env"><div><dt>To</dt><dd>hello@pholio.studio</dd></div><div><dt>Subject</dt><dd>Guardian question</dd></div></dl>
+            <div class="ct-body" data-body>
+              <p>Hello,</p>
+              <p>I am the guardian of <b>[their first name]</b>, who is <b>[age]</b>.</p>
+              <p>My question: <b>[what you would like to know]</b></p>
+              <p><b>[Your name]</b></p>
+            </div>
+            <p class="ct-pnote">Pholio opens to adults only. Please don’t send a young person’s photographs or measurements by email.</p>
+          </div>
+          <div class="ct-acts"><a class="ct-send" data-send href="mailto:hello@pholio.studio">Write this email</a><button type="button" class="ct-copy" data-copy="hello@pholio.studio">Copy address</button></div>
+        </article>
+
+        <article class="ct-letter" data-topic="impersonation" data-to="hello@pholio.studio" data-subject="Impersonation report">
+          <div class="ct-sheet">
+            <dl class="ct-env"><div><dt>To</dt><dd>hello@pholio.studio</dd></div><div><dt>Subject</dt><dd>Impersonation report</dd></div></dl>
+            <div class="ct-body" data-body>
+              <p>Hello,</p>
+              <p>On <b>[date]</b> I was contacted by <b>[name, account or address]</b> through <b>[email, Instagram, WhatsApp, other]</b>, saying they were from Pholio.</p>
+              <p>They asked me for <b>[money, photographs, a password, a meeting]</b>.</p>
+              <p>I have <b>[or have not]</b> paid or sent anything.</p>
+              <p><b>[Your name]</b></p>
+            </div>
+            <p class="ct-pnote">Forward their message rather than a screenshot if you can. Don’t pay, and don’t send photographs while we check.</p>
+          </div>
+          <div class="ct-acts"><a class="ct-send" data-send href="mailto:hello@pholio.studio">Write this email</a><button type="button" class="ct-copy" data-copy="hello@pholio.studio">Copy address</button></div>
+        </article>
+
+        <article class="ct-letter ct-letter--urgent" data-topic="takedown" data-to="legal@pholio.studio" data-subject="TAKE IT DOWN Request">
+          <div class="ct-sheet">
+            <dl class="ct-env"><div><dt>To</dt><dd>legal@pholio.studio</dd></div><div><dt>Subject</dt><dd>TAKE IT DOWN Request</dd></div></dl>
+            <div class="ct-body" data-body>
+              <p>Where it is: <b>[the link, profile or message, not the image]</b></p>
+              <p>Me: <b>[your name, and how to reach you]</b></p>
+              <p>Who is shown: <b>[their name, and if it isn’t you, your relationship and authority to act]</b></p>
+              <p>Description: <b>[a few words to tell it apart, without the image]</b></p>
+              <p>I believe in good faith that this is an intimate image of the person named, published without their consent. The information here is accurate, and I am that person or authorized to act for them.</p>
+              <p>Signed: <b>[your full name]</b></p>
+            </div>
+            <p class="ct-pnote">Don’t attach, download or forward the image. A valid request is acted on within 48 hours, as the law requires. If anyone is in immediate danger, call emergency services first.</p>
+          </div>
+          <div class="ct-acts"><a class="ct-send" data-send href="mailto:legal@pholio.studio">Write this email</a><a class="ct-copy" href="/take-it-down">The full process</a></div>
+        </article>
+
+        <article class="ct-letter" data-topic="copyright" data-to="dmca@pholio.studio" data-subject="Copyright notice">
+          <div class="ct-sheet">
+            <dl class="ct-env"><div><dt>To</dt><dd>dmca@pholio.studio</dd></div><div><dt>Subject</dt><dd>Copyright notice</dd></div></dl>
+            <div class="ct-body" data-body>
+              <p>The work: <b>[the photograph, and who took it]</b></p>
+              <p>Where it appears on Pholio: <b>[the link]</b></p>
+              <p>I am <b>[the copyright owner, or authorized to act for them]</b>.</p>
+              <p>Reach me at: <b>[name, address, phone, email]</b></p>
+              <p><b>[Your signature]</b></p>
+            </div>
+            <p class="ct-pnote">If you are in the photograph rather than the person who owns it, choose “My data” instead.</p>
+          </div>
+          <div class="ct-acts"><a class="ct-send" data-send href="mailto:dmca@pholio.studio">Write this email</a><a class="ct-copy" href="/dmca">Copyright policy</a></div>
+        </article>
+
+        <article class="ct-letter" data-topic="privacy" data-to="privacy@pholio.studio" data-subject="Privacy request: [access, correction or deletion]">
+          <div class="ct-sheet">
+            <dl class="ct-env"><div><dt>To</dt><dd>privacy@pholio.studio</dd></div><div><dt>Subject</dt><dd>Privacy request: <b>[access, correction or deletion]</b></dd></div></dl>
+            <div class="ct-body" data-body>
+              <p>Hello,</p>
+              <p>I would like <b>[a copy of / a correction to / the deletion of]</b> the information Pholio holds about me.</p>
+              <p>My account email is <b>[address]</b>, or I don’t have an account.</p>
+              <p><b>[Your name]</b></p>
+            </div>
+            <p class="ct-pnote">Write from the address on your account if you have one. It is how we know the request is yours.</p>
+          </div>
+          <div class="ct-acts"><a class="ct-send" data-send href="mailto:privacy@pholio.studio">Write this email</a><a class="ct-copy" href="/privacy">Privacy policy</a></div>
+        </article>
+
+        <article class="ct-letter" data-topic="press" data-to="press@pholio.studio" data-subject="Press: [publication], deadline [date]">
+          <div class="ct-sheet">
+            <dl class="ct-env"><div><dt>To</dt><dd>press@pholio.studio</dd></div><div><dt>Subject</dt><dd>Press: <b>[publication]</b>, deadline <b>[date]</b></dd></div></dl>
+            <div class="ct-body" data-body>
+              <p>Hello,</p>
+              <p>I’m writing about <b>[the story]</b> for <b>[publication]</b>.</p>
+              <p>My deadline is <b>[date, time and your time zone]</b>.</p>
+              <p><b>[Your name]</b></p>
+            </div>
+            <p class="ct-pnote">Facts, the wordmark and portraits are in the press kit, ready to use.</p>
+          </div>
+          <div class="ct-acts"><a class="ct-send" data-send href="mailto:press@pholio.studio">Write this email</a><a class="ct-copy" href="/press">Press kit</a></div>
+        </article>
+
+        <article class="ct-letter" data-topic="careers" data-to="careers@pholio.studio" data-subject="[the role]">
+          <div class="ct-sheet">
+            <dl class="ct-env"><div><dt>To</dt><dd>careers@pholio.studio</dd></div><div><dt>Subject</dt><dd><b>[the role]</b></dd></div></dl>
+            <div class="ct-body" data-body>
+              <p>Hello,</p>
+              <p><b>[What you have made, and a link to it]</b></p>
+              <p><b>[Your name]</b></p>
+            </div>
+            <p class="ct-pnote">Open roles, and what to send, are on the careers page.</p>
+          </div>
+          <div class="ct-acts"><a class="ct-send" data-send href="mailto:careers@pholio.studio">Write this email</a><a class="ct-copy" href="/careers">Careers</a></div>
+        </article>
+
+        <article class="ct-letter" data-topic="hello" data-to="hello@pholio.studio" data-subject="Hello">
+          <div class="ct-sheet">
+            <dl class="ct-env"><div><dt>To</dt><dd>hello@pholio.studio</dd></div><div><dt>Subject</dt><dd><b>[a few words]</b></dd></div></dl>
+            <div class="ct-body" data-body>
+              <p>Hello,</p>
+              <p><b>[Anything at all]</b></p>
+              <p><b>[Your name]</b></p>
+            </div>
+          </div>
+          <div class="ct-acts"><a class="ct-send" data-send href="mailto:hello@pholio.studio">Write this email</a><button type="button" class="ct-copy" data-copy="hello@pholio.studio">Copy address</button></div>
+        </article>
+
+        <article class="ct-letter ct-letter--returned" data-topic="represent">
+          <div class="ct-sheet">
+            <dl class="ct-env"><div><dt>To</dt><dd>Pholio</dd></div><div><dt>Subject</dt><dd>Please sign me</dd></div></dl>
+            <div class="ct-body">
+              <p>Pholio isn’t an agency. It can’t sign you, pass your photographs to an agency, or tell you who will.</p>
+              <p>It can help you apply to agencies yourself, with materials in the form each one asks for, and show you what you sent where.</p>
+            </div>
+            <p class="ct-stamp" aria-hidden="true"><span>Return to sender</span><span>Not an agency</span></p>
+          </div>
+          <div class="ct-acts"><a class="ct-send" href="/talent">How Pholio helps you apply</a></div>
+        </article>
+
+        <article class="ct-letter ct-letter--returned" data-topic="book">
+          <div class="ct-sheet">
+            <dl class="ct-env"><div><dt>To</dt><dd>Pholio</dd></div><div><dt>Subject</dt><dd>Booking request</dd></div></dl>
+            <div class="ct-body">
+              <p>Pholio doesn’t book talent, quote rates or handle fees.</p>
+              <p>Contact the model’s agency, or the model if they are independent. Their profile shows who represents them.</p>
+            </div>
+            <p class="ct-stamp" aria-hidden="true"><span>Return to sender</span><span>Not an agency</span></p>
+          </div>
+          <div class="ct-acts"><a class="ct-send" href="/about">What Pholio is</a></div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- The scam check. -->
+  <section class="ct-real" aria-labelledby="ct-real-h">
+    <div class="ct-real__inner">
+      <h2 class="ct-real__h" id="ct-real-h">Is it <em>really</em> us?</h2>
+      <ol class="ct-real__list">
+        <li data-in>Pholio never asks you to pay to apply, or to be seen.</li>
+        <li data-in>Pholio never offers work, castings or representation.</li>
+        <li data-in>Pholio never asks for your password.</li>
+        <li data-in>Pholio staff never ask for photographs by message.</li>
+        <li data-in>Pholio only writes from addresses ending <span class="ct-mono-inline">@pholio.studio</span></li>
+      </ol>
+      <p class="ct-real__then" data-in>If someone did any of this, it wasn’t us. Don’t pay and don’t send anything. <a href="#letter" data-pick="impersonation">Report it</a>, and we will check.</p>
+    </div>
+  </section>
+
+  <!-- The close. -->
+  <section class="ct-close">
+    <p class="ct-close__line" data-in>
+      <span>No office to visit.</span>
+      <span>No phone line.</span>
+      <span>Every address here reaches one of the people who make Pholio, usually within two working days.</span>
+    </p>
+  </section>
+</div>

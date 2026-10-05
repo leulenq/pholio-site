@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pholio · A thousand doors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&family=Noto+Serif+Display:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="heroes.css">
+<style>
+  /*
+   * 02 · A thousand doors.
+   *
+   * Every agency asks for something different, in its own words, and most
+   * of it is hidden in a form. Those words are the room: real requirement
+   * fragments in every voice, hanging in the dark at every depth, drifting
+   * toward you. Far away, one person.
+   *
+   * Scroll and she walks toward you. The noise parts around her. When she
+   * reaches you and lifts her eyes, everything that was asked of her has
+   * gone quiet, and one line is left.
+   */
+  canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .open { position: fixed; left: var(--gut); top: 24vh; font-family: var(--serif); font-weight: 300; letter-spacing: -.02em; font-size: clamp(26px, 2.8vw, 46px); line-height: 1.08; will-change: transform, opacity; }
+  .open small { display: block; margin-top: 2vh; font-family: var(--sans); font-size: 13px; letter-spacing: 0; color: rgba(250,247,242,.6); max-width: 22em; line-height: 1.55; }
+  .close { position: fixed; left: 0; right: 0; bottom: calc(var(--gut) + 2vh); text-align: center; pointer-events: none; }
+  .close h1 { font-family: var(--serif); font-weight: 300; letter-spacing: -.035em; line-height: .92; font-size: clamp(56px, 9.5vw, 16vh); }
+  .close .l { display: block; overflow: hidden; padding: 0 .06em .12em; margin-bottom: -.12em; }
+  .close .l > span { display: inline-block; will-change: transform; transform: translateY(105%); }
+  .close__cta { display: inline-block; margin-top: 3.4vh; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--velvet); background: var(--cream); padding: 16px 28px; pointer-events: auto; opacity: 0; transition: background .3s; }
+  .close__cta:hover { background: var(--gold); }
+  .track { height: 360vh; }
+  @media (max-width: 760px) { .open { top: 14vh; right: var(--gut); } }
+</style>
+</head>
+<body>
+<header class="nav"><a class="nav__wm" href="index.html">PHOLIO</a><nav class="nav__links"><a href="#">Talent</a><a href="#">Agencies</a><a href="#">Studio+</a><a class="nav__cta" href="#">Apply free</a></nav></header>
+<canvas id="c" aria-hidden="true"></canvas>
+<p class="open" id="open">Every agency asks differently.<small>Different shots, different sizes, different rules. Most of them never written where you would look.</small></p>
+<div class="close" id="close">
+  <h1 class="sr">Pholio. A better introduction.</h1>
+  <div aria-hidden="true" style="font-family:var(--serif);font-weight:300;letter-spacing:-.035em;line-height:.92;font-size:clamp(56px,9.5vw,16vh)">
+    <span class="l"><span>A better</span></span><span class="l"><span><em>introduction.</em></span></span>
+  </div>
+  <a class="close__cta" id="cta" href="#">Apply free</a>
+</div>
+<div class="grain"></div>
+<div class="track"></div>
+<section class="next"><p>The chapters continue here</p></section>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const seg = (v, a, b) => clamp((v - a) / (b - a));
+  const io = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const out = (t) => 1 - Math.pow(1 - t, 4);
+  const rnd = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const cv = $("#c"), ctx = cv.getContext("2d");
+  let W, H, DPR;
+  const size = () => { W = innerWidth; H = innerHeight; DPR = Math.min(2, devicePixelRatio || 1); cv.width = W * DPR; cv.height = H * DPR; };
+  size(); addEventListener("resize", size);
+
+  // the walk: 160 frames, from the far dark to her eyes on yours
+  const N = 160;
+  const frames = Array.from({ length: N }, (_, i) => { const im = new Image(); im.src = `media/walk/${String(i + 1).padStart(3, "0")}.jpg`; return im; });
+
+  // What agencies ask, in their own words. Real kinds of requirement,
+  // collected without naming anyone: shots, files, rules, channels, silences.
+  const WORDS = [
+    "Headshot", "Full length", "Profile, left side", "Close-up profile", "Personality shot", "Waist up", "Back view", "Smiling",
+    "No makeup", "Hair pulled back", "Hair down, natural", "Plain white wall", "Natural light only", "No filters", "Fitted black clothing",
+    "Swimwear", "JPG only", "No HEIC", "Under 1 MB each", "Max 5 MB", "6 photos", "4 photos", "3 photos", "Email only",
+    "Apply through our website", "Walk-in: Thursdays, 3 to 4pm", "Open call: Tuesdays", "Height · bust · waist · hips",
+    "5'8\" and above", "Shoe size", "Instagram handle", "Date of birth", "Parent or guardian must attend", "Under 16: do not apply",
+    "Upload Head Shot", "We cannot respond to everyone", "If you don't hear back, we're not interested", "Taken within 3 months",
+    "Unretouched", "Polaroids", "Digitals", "Snapshots, not professional photos", "Do not send a portfolio", "City you live in",
+    "Agency representation, if any", "No group photos", "No sunglasses", "Face the camera", "Arms by your side", "Barefoot",
+  ];
+  const FACES = ['300 {s}px "Noto Serif Display", serif', 'italic 300 {s}px "Noto Serif Display", serif', '400 {s}px Inter, sans-serif', '400 {s}px "JetBrains Mono", monospace', '500 {s}px Inter, sans-serif'];
+  const items = [];
+  for (let k = 0; k < 2; k++) WORDS.forEach((w, i) => {
+    const n = i + k * 100;
+    items.push({
+      w, face: FACES[Math.floor(rnd(n * 3) * FACES.length)],
+      x: (rnd(n * 5 + 1) - 0.5) * 2.6, y: (rnd(n * 7 + 2) - 0.5) * 1.9, z: rnd(n * 11 + 3),
+      size: 16 + rnd(n * 13 + 4) * 30, gold: rnd(n * 17 + 5) > 0.93, upper: rnd(n * 19 + 6) > 0.8,
+    });
+  });
+
+  const pointer = { x: 0, y: 0 }, cam = { x: 0, y: 0 };
+  addEventListener("pointermove", (e) => { pointer.x = e.clientX / W - 0.5; pointer.y = e.clientY / H - 0.5; }, { passive: true });
+
+  const open = $("#open"), close = $("#close"), cta = $("#cta");
+  const lines = close.querySelectorAll(".l > span");
+  let S = 0, t0 = performance.now(), last = t0;
+  const F = 900, L = 4200;
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    const time = reduce ? 0 : (now - t0) / 1000;
+    const target = scrollY / H;
+    S = reduce ? target : S + (target - S) * (1 - Math.exp(-dt / 0.12));
+    cam.x += (pointer.x * 120 - cam.x) * (1 - Math.exp(-dt / 0.7));
+    cam.y += (pointer.y * 80 - cam.y) * (1 - Math.exp(-dt / 0.7));
+
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.fillStyle = "#050505"; ctx.fillRect(0, 0, W, H);
+
+    // her: scrubbed by scroll, cover-fit, the frame's own black is the room
+    const walk = seg(S, 0.15, 2.5);
+    let fi = Math.round(walk * (N - 1));
+    while (fi > 0 && !(frames[fi].complete && frames[fi].naturalWidth)) fi--;
+    const im = frames[fi];
+    if (im.complete && im.naturalWidth) {
+      const sc = Math.max(W / im.naturalWidth, H / im.naturalHeight) * 1.02;
+      const iw = im.naturalWidth * sc, ih = im.naturalHeight * sc;
+      ctx.drawImage(im, (W - iw) / 2 - cam.x * 0.15, (H - ih) / 2 - cam.y * 0.15, iw, ih);
+    }
+
+    // the words: drifting toward you, parting around her as she comes
+    const quiet = io(seg(S, 1.7, 2.55));
+    const part = io(seg(S, 0.3, 2.3));
+    const drift = time * 70 + S * 900;
+    const draws = [];
+    for (const it of items) {
+      const zr = (((it.z * L + drift) % L) + L) % L;
+      const z = -L + 300 + zr;
+      const s = F / (F - z);
+      let x = it.x * W * 0.6, y = it.y * H * 0.6;
+      // she clears a corridor: words near the centre are pushed out to the sides
+      const nx = x / (W * 0.6), dir = nx >= 0 ? 1 : -1;
+      // (corridor)
+      x += dir * part * W * 0.35 * Math.max(0, 1 - Math.abs(nx));
+      const sx = W / 2 + (x - cam.x) * s, sy = H / 2 + (y - cam.y) * s;
+      const fog = seg(z, -L + 300, -L + 1400) * (1 - seg(z, 120, 330));
+      let a = fog * (1 - quiet) * (0.18 + 0.5 * seg(z, -2600, 0));
+      // keep the opening line's corner clear while it is on screen
+      const inOpen = sx < W * 0.42 && sy > H * 0.16 && sy < H * 0.48;
+      if (inOpen) a *= 0.15 + 0.85 * seg(S, 0.2, 0.6);
+      if (a < 0.01) continue;
+      draws.push({ it, sx, sy, s, a, z });
+    }
+    draws.sort((p, q) => p.z - q.z);
+    ctx.textBaseline = "middle"; ctx.textAlign = "center";
+    for (const d of draws) {
+      const px = d.it.size * d.s;
+      if (px < 5) continue;
+      ctx.font = d.it.face.replace("{s}", px.toFixed(1));
+      ctx.fillStyle = d.it.gold ? `rgba(201,165,90,${d.a})` : `rgba(250,247,242,${d.a})`;
+      ctx.fillText(d.it.upper ? d.it.w.toUpperCase() : d.it.w, d.sx, d.sy);
+    }
+
+    // the opening line leaves as she starts toward you
+    const o = io(seg(S, 0.1, 0.6));
+    open.style.opacity = (1 - o) * Math.min(1, (now - t0) / 1200);
+    open.style.transform = `translateY(${-o * 12}vh)`;
+    // and when she is with you, one line
+    lines.forEach((el, i) => { const t = out(seg(S, 2.25 + i * 0.1, 2.75 + i * 0.1)); el.style.transform = `translateY(${(1 - t) * 105}%)`; });
+    cta.style.opacity = seg(S, 2.7, 3.0);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

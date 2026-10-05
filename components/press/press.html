@@ -1,0 +1,346 @@
+<!--
+ /press — Pholio's press kit.
+ Plain HTML, mounted between the global header and footer by
+ components/press/index.tsx. Styles: press.css. Motion: motion.ts.
+
+ The page is the kit. It opens on velvet with a release sheet lying on the
+ table; scrolling lifts that sheet until its paper is the page, and the kit
+ is read on it: the paragraph to paste, the corrections to make, the facts,
+ the releases, the people, what they will and will not talk about, the
+ files, and the address.
+
+ Every fact here must be true today. The quotes are drafts and need each
+ person's sign-off before the page goes live. press@pholio.studio must
+ exist before launch (it is set once, here and in the kit's text files).
+ Revision date: change it in the slug, the index and the kit's text files
+ together whenever anything below changes.
+-->
+<div class="pr" data-press>
+
+  <!-- I. The table. A release sheet on velvet; scroll lifts it into the page. -->
+  <section class="pr-hero" data-hero aria-labelledby="pr-title">
+    <div class="pr-hero__stage" data-stage>
+      <div class="pr-hero__copy" data-hero-copy>
+        <p class="pr-slug">
+          <span>Press kit</span><span>Revised 4 October 2026</span><span>Pre-launch</span>
+        </p>
+        <h1 class="pr-hero__title" id="pr-title">
+          <span class="pr-line"><span>Pholio,</span></span>
+          <span class="pr-line"><span><em>unretouched.</em></span></span>
+        </h1>
+        <p class="pr-hero__lede">
+          A small company before launch. What it is, what it is not, and who
+          to write to.
+        </p>
+        <dl class="pr-stats" aria-label="Pholio in figures">
+          <div><dt>Began</dt><dd>2025</dd></div>
+          <div><dt>People</dt><dd>3</dd></div>
+          <div><dt>Offices</dt><dd>0</dd></div>
+          <div><dt>Commission</dt><dd>0%</dd></div>
+          <div><dt>Agencies pay</dt><dd>$0</dd></div>
+          <div><dt>Status</dt><dd>Pre-launch</dd></div>
+        </dl>
+      </div>
+
+      <div class="pr-table" aria-hidden="true">
+        <div class="pr-under pr-under--2" data-under></div>
+        <div class="pr-under pr-under--1" data-under></div>
+        <div class="pr-sheet" data-sheet>
+          <div class="pr-sheet__ink" data-sheet-ink>
+            <div class="pr-sheet__head">
+              <span class="pr-sheet__mark">PHOLIO</span>
+              <span class="pr-sheet__kind">Press release</span>
+            </div>
+            <p class="pr-sheet__dateline">Remote · 15 September 2026</p>
+            <p class="pr-sheet__h">Pholio publishes the rules it will launch with, before it launches</p>
+            <p class="pr-sheet__p">Pholio<span class="pr-sheet__ins"><i>‸</i>, a platform for models and the agencies they apply to,</span> today published its terms and policies in draft, weeks before anyone can sign up. The eight documents cover the terms of use, privacy, cookies, copyright, AI, community guidelines, the submission programme and take-down requests.</p>
+            <p class="pr-sheet__p">“Models are asked to agree to a lot of things they never get to read first,” said Leul Enquanhone, co-founder. “We would rather be read early, and corrected.”</p>
+            <p class="pr-sheet__p pr-sheet__p--dim">The drafts carry one version, 2026-09-15. Any change before launch will be listed against it.</p>
+            <p class="pr-sheet__end">###</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- II. The kit, read on the sheet's paper. -->
+  <div class="pr-paper">
+    <div class="pr-body">
+
+      <nav class="pr-index" aria-label="Press kit contents" data-index>
+        <ol>
+          <li><a href="#paragraph" data-index-link>In one paragraph</a></li>
+          <li><a href="#corrections" data-index-link>Getting it right</a></li>
+          <li><a href="#facts" data-index-link>The facts</a></li>
+          <li><a href="#releases" data-index-link>Releases</a></li>
+          <li><a href="#people" data-index-link>People</a></li>
+          <li><a href="#record" data-index-link>On the record</a></li>
+          <li><a href="#assets" data-index-link>Assets</a></li>
+          <li><a href="#contact" data-index-link>Contact</a></li>
+        </ol>
+        <a class="pr-index__kit" href="/press/pholio-press-kit.zip" download>
+          <span>Download the kit</span>
+          <span class="pr-mono">ZIP · 660 KB</span>
+        </a>
+        <p class="pr-index__rev pr-mono">Revised 04.10.2026</p>
+      </nav>
+
+      <div class="pr-main">
+
+        <!-- In one paragraph: the boilerplate is the display text. -->
+        <section class="pr-sec pr-para" id="paragraph" data-section>
+          <h2 class="pr-h2" data-in>In one paragraph</h2>
+          <div class="pr-para__tabs" role="tablist" aria-label="Length" data-tabs>
+            <button type="button" role="tab" id="pr-tab-line" aria-controls="pr-v-line" aria-selected="false" data-tab="line">One line</button>
+            <button type="button" role="tab" id="pr-tab-short" aria-controls="pr-v-short" aria-selected="true" data-tab="short">About 50 words</button>
+            <button type="button" role="tab" id="pr-tab-long" aria-controls="pr-v-long" aria-selected="false" data-tab="long">About 100 words</button>
+          </div>
+          <div class="pr-para__panes" data-in>
+            <div class="pr-para__pane" role="tabpanel" id="pr-v-line" aria-labelledby="pr-tab-line" data-pane="line" hidden>
+              <p>Pholio is a platform for models and the agencies they apply to. It is not an agency, and it represents no one.</p>
+            </div>
+            <div class="pr-para__pane" role="tabpanel" id="pr-v-short" aria-labelledby="pr-tab-short" data-pane="short">
+              <p>Pholio is a platform for models and the agencies they apply to. Talent keep their photographs, measurements and comp cards in one place, send them in the form each agency asks for, and see what they sent and when. Agencies receive applications through Pholio for free. Pholio is not an agency, and it represents no one.</p>
+            </div>
+            <div class="pr-para__pane" role="tabpanel" id="pr-v-long" aria-labelledby="pr-tab-long" data-pane="long" hidden>
+              <p>Pholio is a platform for models and the agencies they apply to. Talent keep their photographs, measurements and comp cards in one place, send them in the form each agency asks for, and see what they sent and when. Agencies receive applications through Pholio for free. Pholio is not an agency, and it represents no one.</p>
+              <p>Pholio began in 2025 and is preparing to launch. It is made by two founders and an advisor, working remotely. Its only revenue is Studio+, an optional subscription for talent; nothing an agency sees changes with it. Pholio charges no agency and takes no commission.</p>
+            </div>
+          </div>
+          <div class="pr-para__foot">
+            <button type="button" class="pr-act" data-copy-pane>
+              <span data-copy-label>Copy this version</span>
+            </button>
+            <span class="pr-mono pr-para__count" data-count aria-live="polite"></span>
+          </div>
+        </section>
+
+        <!-- Getting it right: the corrections a copy editor would make. -->
+        <section class="pr-sec pr-fixes" id="corrections" data-section>
+          <h2 class="pr-h2" data-in>Getting it right</h2>
+          <p class="pr-sec__note" data-in>The five things most likely to be written wrong about us, marked up the way your desk would.</p>
+          <ol class="pr-fixes__list">
+            <li class="pr-fix" data-in>
+              <p class="pr-fix__line">Pholio is a <del>modeling agency</del> <ins><i aria-hidden="true">‸</i>platform</ins>.</p>
+              <p class="pr-fix__why">It represents no one, books no work and takes no commission. Representation is an agency’s job, and stays with agencies.</p>
+            </li>
+            <li class="pr-fix" data-in>
+              <p class="pr-fix__line">Pholio <del>has launched</del> <ins><i aria-hidden="true">‸</i>is preparing to launch</ins>.</p>
+              <p class="pr-fix__why">When it opens, the date will be at the top of this page.</p>
+            </li>
+            <li class="pr-fix" data-in>
+              <p class="pr-fix__line">Its software <del>picks models</del> <ins><i aria-hidden="true">‸</i>sorts photographs</ins>.</p>
+              <p class="pr-fix__why">With permission, and off by default, it can tell a close-up from a full length. It never scores a face or a body. People decide who is signed.</p>
+            </li>
+            <li class="pr-fix" data-in>
+              <p class="pr-fix__line">Models <del>pay to be seen</del> <ins><i aria-hidden="true">‸</i>apply free</ins>.</p>
+              <p class="pr-fix__why">Agencies never pay either. Studio+, at $9.99 a month, adds design tools and analytics. Nothing an agency sees or receives changes with it.</p>
+            </li>
+            <li class="pr-fix" data-in>
+              <p class="pr-fix__line">Spelled <del>Folio</del> <del>PHOLIO</del> <ins><i aria-hidden="true">‸</i>Pholio</ins>.</p>
+              <p class="pr-fix__why">One word, capital P, said like folio. The capitals belong to the logo.</p>
+            </li>
+          </ol>
+        </section>
+
+        <!-- The facts: a stats block, set the way a card prints them. -->
+        <section class="pr-sec pr-facts" id="facts" data-section>
+          <h2 class="pr-h2" data-in>The facts</h2>
+          <dl class="pr-facts__list" data-in>
+            <div><dt>Name</dt><dd>Pholio</dd></div>
+            <div><dt>What it is</dt><dd>A platform for models and the agencies they apply to. Talent prepare, send and track their applications; agencies receive them.</dd></div>
+            <div><dt>What it is not</dt><dd>A modeling agency, a marketplace or a casting service.</dd></div>
+            <div><dt>Stage</dt><dd>Preparing to launch</dd></div>
+            <div><dt>Began</dt><dd class="pr-num">2025</dd></div>
+            <div><dt>People</dt><dd>Two co-founders and an advisor</dd></div>
+            <div><dt>Where</dt><dd>Remote. No office and no city.</dd></div>
+            <div><dt>Who pays</dt><dd>Talent, if they choose Studio+: <span class="pr-num">$9.99</span> a month or <span class="pr-num">$95.88</span> a year. Agencies never pay.</dd></div>
+            <div><dt>Age</dt><dd><span class="pr-num">18</span> and over at launch</dd></div>
+            <div><dt>AI</dt><dd>Off by default, switched on one purpose at a time. Explained in full in the <a href="/ai-notice">AI notice</a>.</dd></div>
+            <div><dt>Funding</dt><dd>None to announce</dd></div>
+          </dl>
+          <p class="pr-facts__dl" data-in>
+            <a class="pr-act" href="/press/kit/FACTS.txt" download>Fact sheet as text</a>
+          </p>
+        </section>
+
+        <!-- Releases. Each one is set as a release: dateline, body, end mark. -->
+        <section class="pr-sec pr-rel" id="releases" data-section>
+          <h2 class="pr-h2" data-in>Releases</h2>
+          <div class="pr-rel__list">
+            <details class="pr-release" open data-in>
+              <summary>
+                <time class="pr-mono" datetime="2026-09-15">15.09.2026</time>
+                <span class="pr-release__title">Pholio publishes the rules it will launch with, before it launches</span>
+                <span class="pr-release__toggle" aria-hidden="true"></span>
+              </summary>
+              <div class="pr-release__body">
+                <p><span class="pr-dateline">Remote, 15 September 2026.</span> Pholio, a platform for models and the agencies they apply to, today published its terms and policies in draft, weeks before anyone can sign up. The eight documents cover the terms of use, privacy, cookies, copyright, AI, community guidelines, the submission programme and take-down requests.</p>
+                <p>“Models are asked to agree to a lot of things they never get to read first,” said Leul Enquanhone, co-founder. “We would rather be read early, and corrected.”</p>
+                <p>The drafts carry one version, 2026-09-15. Any change before launch will be listed against it. Comments go to <a href="mailto:legal@pholio.studio">legal@pholio.studio</a>.</p>
+                <p class="pr-release__end">###</p>
+              </div>
+            </details>
+            <details class="pr-release" data-in>
+              <summary>
+                <time class="pr-mono" datetime="2026-09-14">14.09.2026</time>
+                <span class="pr-release__title">Agencies can request access to Pholio, free</span>
+                <span class="pr-release__toggle" aria-hidden="true"></span>
+              </summary>
+              <div class="pr-release__body">
+                <p><span class="pr-dateline">Remote, 14 September 2026.</span> Modeling agencies can now request access to Pholio ahead of its launch. Agencies use Pholio to publish what they ask applicants for, receive applications that already meet it, and export them to the tools they already use.</p>
+                <p>Every request is checked by a person against public records before an account is opened. Pholio does not charge agencies, and has no plan to.</p>
+                <p>“An open call is usually a form and an inbox,” said Natan Getahun, co-founder. “Both sides deserve better than that, and neither should have to pay for it.”</p>
+                <p>Requests: <a href="/agency/request-access">pholio.studio/agency/request-access</a></p>
+                <p class="pr-release__end">###</p>
+              </div>
+            </details>
+            <details class="pr-release" data-in>
+              <summary>
+                <time class="pr-mono" datetime="2026-08-26">26.08.2026</time>
+                <span class="pr-release__title">Statement: what Pholio’s software does with a photograph</span>
+                <span class="pr-release__toggle" aria-hidden="true"></span>
+              </summary>
+              <div class="pr-release__body">
+                <p><span class="pr-dateline">Remote, 26 August 2026.</span> Pholio’s image features are off by default and are switched on by the talent, one purpose at a time. When they are on, they describe a photograph: a close-up, a full length, a profile. They do not score a face or a body, guess a person’s age or background, or rank one person against another.</p>
+                <p>The licence talent give Pholio does not cover training general-purpose AI models on their photographs. The full account is published as the <a href="/ai-notice">AI notice</a>.</p>
+                <p class="pr-release__end">###</p>
+              </div>
+            </details>
+          </div>
+
+          <div class="pr-coverage" data-in>
+            <h3 class="pr-h3">Coverage</h3>
+            <p class="pr-coverage__none">None yet.</p>
+            <p class="pr-sec__note">When something runs, it will be listed here with its date and a link, whether or not we like it.</p>
+          </div>
+        </section>
+
+        <!-- People. -->
+        <section class="pr-sec pr-people" id="people" data-section>
+          <h2 class="pr-h2" data-in>People</h2>
+          <ul class="pr-people__list">
+            <li class="pr-person" data-in>
+              <figure class="pr-person__photo"><img src="/press/kit/portraits/leul-enquanhone.jpg" alt="Leul Enquanhone" loading="lazy" width="1000" height="1000" /></figure>
+              <div class="pr-person__text">
+                <p class="pr-person__name">Leul <em>Enquanhone</em></p>
+                <p class="pr-person__role">Co-founder. Designs and builds Pholio.</p>
+                <blockquote class="pr-quote">“Most of what goes wrong for a new model happens before anyone looks at the photographs: the wrong format, last year’s digitals, a reply that never comes. That part, software can fix.”</blockquote>
+                <a class="pr-act pr-act--small" href="/press/kit/portraits/leul-enquanhone.jpg" download>Portrait · JPG</a>
+              </div>
+            </li>
+            <li class="pr-person" data-in>
+              <figure class="pr-person__photo"><img src="/press/kit/portraits/natan-getahun.jpg" alt="Natan Getahun" loading="lazy" width="800" height="800" /></figure>
+              <div class="pr-person__text">
+                <p class="pr-person__name">Natan <em>Getahun</em></p>
+                <p class="pr-person__role">Co-founder. Brings Pholio to the industry. Answers press.</p>
+                <blockquote class="pr-quote">“We will never tell anyone they are going to be signed. We can tell them exactly what an agency asked for, and whether they sent it.”</blockquote>
+                <a class="pr-act pr-act--small" href="/press/kit/portraits/natan-getahun.jpg" download>Portrait · JPG</a>
+              </div>
+            </li>
+            <li class="pr-person" data-in>
+              <figure class="pr-person__photo"><img src="/press/kit/portraits/alexander-rieder.jpg" alt="Alexander Rieder" loading="lazy" width="800" height="800" /></figure>
+              <div class="pr-person__text">
+                <p class="pr-person__name">Alexander <em>Rieder</em></p>
+                <p class="pr-person__role">Advisor. Co-produces Fashion Week Brooklyn.</p>
+                <a class="pr-act pr-act--small" href="/press/kit/portraits/alexander-rieder.jpg" download>Portrait · JPG</a>
+              </div>
+            </li>
+          </ul>
+          <p class="pr-sec__note" data-in>Portraits are each person’s own, cleared for editorial use about Pholio.</p>
+        </section>
+
+        <!-- On the record. -->
+        <section class="pr-sec pr-record" id="record" data-section>
+          <h2 class="pr-h2" data-in>On the record</h2>
+          <div class="pr-record__cols">
+            <div data-in>
+              <h3 class="pr-h3">We can speak to</h3>
+              <ul class="pr-record__list">
+                <li>How an application to a modeling agency actually travels, from the photographs to the reply that does or does not come.</li>
+                <li>Why digitals need a date, and what “current” should mean.</li>
+                <li>The schemes that charge new models for the first step, and how to tell one from a real agency.</li>
+                <li>What software should, and should not, decide about a person’s photographs.</li>
+                <li>Why Pholio opens to adults only.</li>
+              </ul>
+            </div>
+            <div data-in>
+              <h3 class="pr-h3">We will not</h3>
+              <ul class="pr-record__list pr-record__list--no">
+                <li>Discuss any individual model or applicant.</li>
+                <li>Comment on an agency’s decisions.</li>
+                <li>Give numbers we do not have. There is no user count before there are users.</li>
+                <li>Predict anyone’s career.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Assets. -->
+        <section class="pr-sec pr-assets" id="assets" data-section>
+          <h2 class="pr-h2" data-in>Assets</h2>
+
+          <div class="pr-marks" data-in>
+            <figure class="pr-mark pr-mark--ink">
+              <img src="/press/kit/wordmark/pholio-wordmark-gold.svg" alt="PHOLIO wordmark in gold on velvet" />
+              <figcaption>
+                <span>Gold on velvet</span>
+                <span class="pr-mark__dl"><a href="/press/kit/wordmark/pholio-wordmark-gold.svg" download>SVG</a><a href="/press/kit/wordmark/pholio-wordmark-gold.png" download>PNG</a></span>
+              </figcaption>
+            </figure>
+            <figure class="pr-mark pr-mark--paper">
+              <img src="/press/kit/wordmark/pholio-wordmark-dark-gold.svg" alt="PHOLIO wordmark in dark gold on cream" />
+              <figcaption>
+                <span>Dark gold on cream</span>
+                <span class="pr-mark__dl"><a href="/press/kit/wordmark/pholio-wordmark-dark-gold.svg" download>SVG</a><a href="/press/kit/wordmark/pholio-wordmark-dark-gold.png" download>PNG</a></span>
+              </figcaption>
+            </figure>
+          </div>
+          <p class="pr-sec__note" data-in>Velvet and cream versions are in the kit. Please do not recolour, stretch or re-set the wordmark, or pair it with a symbol of your own.</p>
+
+          <ul class="pr-swatches" data-in>
+            <li><button type="button" data-copy="#050505" style="--sw:#050505"><span class="pr-sw"></span><span>Velvet</span><span class="pr-mono">#050505</span></button></li>
+            <li><button type="button" data-copy="#FAF7F2" style="--sw:#faf7f2"><span class="pr-sw"></span><span>Cream</span><span class="pr-mono">#FAF7F2</span></button></li>
+            <li><button type="button" data-copy="#C9A55A" style="--sw:#c9a55a"><span class="pr-sw"></span><span>Gold</span><span class="pr-mono">#C9A55A</span></button></li>
+            <li><button type="button" data-copy="#A8894E" style="--sw:#a8894e"><span class="pr-sw"></span><span>Dark gold</span><span class="pr-mono">#A8894E</span></button></li>
+          </ul>
+
+          <ul class="pr-faces" data-in>
+            <li><span class="pr-face pr-face--serif">Noto Serif Display</span><span class="pr-mono">Display and the wordmark</span></li>
+            <li><span class="pr-face pr-face--sans">Inter</span><span class="pr-mono">Text</span></li>
+            <li><span class="pr-face pr-face--mono">JetBrains Mono</span><span class="pr-mono">Figures and dates</span></li>
+          </ul>
+
+          <div class="pr-product" data-in>
+            <figure class="pr-product__card pr-product__card--front"><img src="/generated/comp-card/ola/cover.jpg" alt="Front of a demonstration comp card" loading="lazy" width="1056" height="1632" /></figure>
+            <figure class="pr-product__card pr-product__card--back"><img src="/generated/comp-card/ola/back.jpg" alt="Back of the same demonstration comp card, with four photographs and measurements" loading="lazy" width="1056" height="1632" /></figure>
+            <div class="pr-product__cap">
+              <p class="pr-h3">What Pholio makes</p>
+              <p>A comp card composed from photographs the model already has: one to open with on the front, the rest with their measurements on the back.</p>
+              <p class="pr-product__rights">A demonstration, not a member. Photographs of Ola Szkolda via Unsplash. Not cleared for publication; write to us for product images that are.</p>
+            </div>
+          </div>
+
+          <a class="pr-kit" href="/press/pholio-press-kit.zip" download data-in>
+            <span class="pr-kit__label">Download the press kit</span>
+            <span class="pr-mono">Wordmarks, portraits, facts and boilerplate · ZIP · 660 KB</span>
+          </a>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- Contact: the page closes on the address. -->
+    <section class="pr-contact" id="contact" data-section>
+      <div class="pr-contact__inner">
+        <h2 class="pr-contact__label">Write to</h2>
+        <a class="pr-contact__addr" href="mailto:press@pholio.studio">press@pholio.studio</a>
+        <div class="pr-contact__terms">
+          <p><span>Who answers</span>Natan Getahun, usually within a working day. We are remote and spread across time zones, so give us your deadline in yours.</p>
+          <p><span>Embargoes</span>We keep them, and when we ask you to keep one we will say so plainly at the top.</p>
+          <p><span>Corrections</span>If something here is wrong or out of date, tell us. We fix it and change the revision date.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

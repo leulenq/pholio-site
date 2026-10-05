@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp Cards — Pholio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+Display:ital,wght@0,300;0,400;1,300;1,400&display=block" rel="stylesheet">
+<link rel="stylesheet" href="cards.css">
+</head>
+<body>
+  <div id="scroll"></div>
+
+  <main id="stage" aria-label="Ola Szkolda's comp cards">
+    <!-- The previous chapter's last frame: the camera on her, and its line. -->
+    <div id="prologue">
+      <canvas id="seq" width="970" height="1640"></canvas>
+      <div class="wait">
+        <div class="wait__a">The wait</div>
+        <div class="wait__b">has a <em>date.</em></div>
+      </div>
+    </div>
+
+    <div id="room" aria-hidden="true">
+      <div id="light"></div>
+      <div id="bgname">Ola Szkolda</div>
+    </div>
+
+    <div id="world"></div>
+    <div id="vignette" aria-hidden="true"></div>
+
+    <svg id="leaders" aria-hidden="true"></svg>
+    <div id="notes" aria-hidden="true"></div>
+
+    <div id="finale">
+      <div class="finale__a">One library.</div>
+      <div class="finale__b">Six <em>directions.</em></div>
+    </div>
+
+    <div id="slug" aria-hidden="true"></div>
+    <div id="count" aria-hidden="true"></div>
+    <div id="hint" aria-hidden="true">Scroll</div>
+  </main>
+
+  <script src="designs.js"></script>
+  <script src="cards.js"></script>
+</body>
+</html>

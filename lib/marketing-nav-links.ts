@@ -45,8 +45,8 @@ export const PRIMARY_NAV: readonly NavEntry[] = [
 export const SECONDARY_NAV: readonly NavEntry[] = [
   { label: "About", href: "/about", kind: "door", built: true },
   { label: "Careers", href: "/careers", kind: "door", built: true },
-  { label: "Contact", href: "/contact", kind: "door", built: false },
-  { label: "Press", href: "/press", kind: "door", built: false },
+  { label: "Contact", href: "/contact", kind: "door", built: true },
+  { label: "Press", href: "/press", kind: "door", built: true },
 ] as const;
 
 /**

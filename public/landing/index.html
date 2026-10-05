@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pholio · A better introduction</title>
+<meta name="description" content="Bring everything you've shot. Pholio reads every frame, then composes your card.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+Display:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="landing.css">
+</head>
+<body>
+
+<div class="ld" id="ld" aria-hidden="true">
+  <span class="ld__wm">PHOLIO</span>
+  <span class="ld__n" id="ldn">000</span>
+</div>
+
+<canvas class="stage" id="stage" aria-hidden="true"></canvas>
+
+<!-- the hero: her book, opened -->
+<div class="book" id="book" aria-hidden="true">
+  <div class="book__in" id="bookIn">
+    <div class="pg pg--l"><img alt=""><i class="pg__shade"></i></div>
+    <div class="pg pg--r"><img alt=""><i class="pg__shade"></i></div>
+    <div class="leaf" id="leaf">
+      <div class="leaf__f"><img alt=""><i class="pg__shade"></i></div>
+      <div class="leaf__b"><img alt=""><i class="pg__shade"></i></div>
+    </div>
+    <i class="gutter"></i>
+    <i class="scrim"></i>
+  </div>
+  <div class="book__type" id="bookType">
+    <div class="book__mark">PHOLIO</div>
+    <p class="book__line">A better <em>introduction.</em></p>
+  </div>
+</div>
+
+<!-- the comp cards: real DOM so they turn in 3D and stay crisp -->
+<div class="cards" id="cards" aria-hidden="true">
+  <div class="card" id="lead">
+    <div class="card__in" id="leadIn">
+      <div class="face face--front">
+        <img src="../generated/comp-card/ola/cover-photo.jpg" alt="">
+        <div class="face__name" id="leadName"><img src="../generated/comp-card/ola/cover-name.webp" alt=""></div>
+        <img src="../generated/comp-card/ola/cover-figure.webp" alt="">
+        <div class="face__shade"></div>
+      </div>
+      <div class="face face--back">
+        <img src="../generated/comp-card/ola/back.jpg" alt="">
+        <div class="face__shade"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card ed" data-ed="cutout"><div class="card__in"><div class="face face--front"><img data-photo alt=""><div class="face__shade"></div></div><div class="face face--back"><img src="../generated/comp-card/ola/cutout.jpg" alt=""><div class="face__shade"></div></div></div><span class="ed__l">The Cutout</span></div>
+  <div class="card ed" data-ed="night"><div class="card__in"><div class="face face--front"><img data-photo alt=""><div class="face__shade"></div></div><div class="face face--back"><img src="../generated/comp-card/ola/night.jpg" alt=""><div class="face__shade"></div></div></div><span class="ed__l">The Night Edition</span></div>
+  <div class="card ed" data-ed="strip"><div class="card__in"><div class="face face--front"><img data-photo alt=""><div class="face__shade"></div></div><div class="face face--back"><img src="../generated/comp-card/ola/strip.jpg" alt=""><div class="face__shade"></div></div></div><span class="ed__l">The Strip</span></div>
+  <span class="ed__l ed__l--lead" id="leadLabel">The Cover Story</span>
+</div>
+
+<main class="ui" id="ui">
+  <h1 class="sr">Pholio. A better introduction.</h1>
+
+  <header class="nav" id="nav">
+    <nav class="nav__l"><a href="/talent">Talent</a><a href="/agencies">Agencies</a><a href="/studio-plus">Studio+</a></nav>
+    <div class="nav__r"><a href="https://app.pholio.studio/login">Log in</a><a class="nav__cta" href="https://app.pholio.studio/apply">Apply free</a></div>
+  </header>
+
+
+  <h2 class="line line--bring" id="lBring"><span class="m"><span>Bring everything</span></span><span class="m"><span><em>you've shot.</em></span></span></h2>
+
+  <h2 class="line line--read" id="lRead"><span class="m"><span>Pholio reads</span></span><span class="m"><span>every <em>frame.</em></span></span></h2>
+
+  <div class="readout" id="readout" aria-hidden="true"></div>
+
+  <h2 class="line line--compose" id="lCompose"><span class="m"><span>Then it composes</span></span><span class="m"><span><em>your card.</em></span></span></h2>
+
+  <p class="side side--l" id="lFront">A real <em>front.</em></p>
+  <p class="side side--r" id="lBack">A real <em>back.</em></p>
+
+  <h2 class="line line--dir" id="lDir"><span class="m"><span>Same library.</span></span><span class="m"><span>New <em>direction.</em></span></span></h2>
+
+  <div class="end" id="end">
+    <a class="end__cta" href="https://app.pholio.studio/apply">Apply free</a>
+  </div>
+</main>
+
+<div class="track" id="track"></div>
+
+<script src="data.js"></script>
+<script src="landing.js"></script>
+</body>
+</html>

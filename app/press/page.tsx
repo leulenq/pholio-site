@@ -1,17 +1,13 @@
-export const metadata = {
+import type { Metadata } from "next";
+
+import { PressPage } from "@/components/press";
+
+export const metadata: Metadata = {
   title: "Press",
+  description:
+    "Pholio's press kit: what Pholio is and is not, the facts, releases, the people, and the wordmark. Press: press@pholio.studio.",
 };
 
-export default function PressPage() {
-  return (
-    <div className="min-h-mobile-screen bg-[#050505]">
-      <div className="pt-40 px-6">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="font-editorial text-5xl md:text-7xl text-[#FAF7F2] mb-6">
-            Press
-          </h1>
-        </div>
-      </div>
-    </div>
-  );
+export default function Press() {
+  return <PressPage />;
 }

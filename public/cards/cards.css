@@ -1,0 +1,338 @@
+:root {
+  --velvet: #050505;
+  --cream: #faf7f2;
+  --gold: #c9a55a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--velvet);
+  color: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+#scroll { width: 1px; }
+
+#stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--velvet);
+}
+
+/* ── Prologue ─────────────────────────────────────────────────────────── */
+
+#prologue { position: absolute; inset: 0; }
+
+#seq {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: auto;
+  transform-origin: 0 0;
+}
+
+.wait {
+  position: absolute;
+  inset: 0;
+  font-family: "Noto Serif Display", serif;
+  pointer-events: none;
+}
+.wait__a {
+  position: absolute;
+  left: 48px;
+  top: 46%;
+  font-size: clamp(3rem, 6.8vw, 8rem);
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+}
+.wait__b {
+  position: absolute;
+  left: 21%;
+  top: 62%;
+  font-size: clamp(1.2rem, 2.1vw, 2.4rem);
+  letter-spacing: -0.015em;
+}
+.wait em, .finale em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+/* ── The room ───────────────────────────────────────────────────────── */
+
+#room { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+
+#light {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  will-change: transform;
+}
+#light::before {
+  content: "";
+  position: absolute;
+  left: -70vmax;
+  top: -70vmax;
+  width: 140vmax;
+  height: 140vmax;
+  background: radial-gradient(circle at 50% 50%, rgba(201, 165, 90, 0.13) 0%, rgba(201, 165, 90, 0.055) 22%, rgba(250, 247, 242, 0.015) 42%, transparent 62%);
+}
+
+#bgname {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  white-space: nowrap;
+  font-family: "Noto Serif Display", serif;
+  font-weight: 300;
+  font-size: 31vw;
+  line-height: 1.3;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(201, 165, 90, 0.22);
+  transform-origin: 30% 50%;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+#vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 85% 75% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+  z-index: 50;
+}
+
+#slug, #count {
+  position: absolute;
+  bottom: 26px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(250, 247, 242, 0.5);
+  z-index: 60;
+  opacity: 0;
+  white-space: nowrap;
+}
+#slug { left: 32px; }
+#count { right: 32px; }
+#count b { color: var(--gold); font-weight: 400; }
+
+/* The proof sheet around the cover: crop marks, registration, steps. */
+.proof {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.proof.front { transform: translateZ(1.5px); }
+.proof.back { transform: rotateY(180deg) translateZ(1.5px); }
+.proof i { position: absolute; background: rgba(201, 165, 90, 0.85); }
+.proof .reg {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border: 2px solid rgba(201, 165, 90, 0.8);
+  border-radius: 50%;
+}
+.proof .reg::before, .proof .reg::after {
+  content: "";
+  position: absolute;
+  background: rgba(201, 165, 90, 0.8);
+}
+.proof .reg::before { left: 50%; top: -12px; bottom: -12px; width: 2px; margin-left: -1px; }
+.proof .reg::after { top: 50%; left: -12px; right: -12px; height: 2px; margin-top: -1px; }
+.proof .steps { position: absolute; height: 26px; }
+.proof .steps u { position: absolute; top: 0; width: 26px; height: 26px; outline: 1px solid rgba(201, 165, 90, 0.35); }
+.proof .slug {
+  position: absolute;
+  transform: translateX(-100%);
+  white-space: nowrap;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 19px;
+  letter-spacing: 0.18em;
+  color: rgba(201, 165, 90, 0.85);
+}
+
+/* ── Cards ────────────────────────────────────────────────────────────── */
+
+#world { position: absolute; inset: 0; }
+
+.card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1000px;
+  height: 1545px;
+  transform-origin: 0 0;
+  transform-style: preserve-3d;
+  visibility: hidden;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  border-radius: 7px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.face.front { transform: translateZ(1.5px); }
+.face.back { transform: rotateY(180deg) translateZ(1.5px); }
+
+/* The cover's front is built in planes, so it keeps its 3D context and
+   clips its own photographs instead. */
+.face.planes { overflow: visible; transform-style: preserve-3d; }
+.face.planes .layer {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.face.planes .layer[data-z="0"] { border-radius: 7px; overflow: hidden; }
+
+.ph { position: absolute; overflow: hidden; }
+.ph img { position: absolute; display: block; max-width: none; user-select: none; }
+
+.tx { position: absolute; white-space: nowrap; line-height: 1; }
+
+/* Paper: a little tooth, a light that moves, and shade as it turns. */
+.grain, .shade, .sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 7px;
+}
+.grain {
+  opacity: 0.09;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+.shade { background: #000; opacity: 0; }
+.sheen {
+  mix-blend-mode: screen;
+  background: linear-gradient(112deg, transparent 38%, rgba(255, 250, 240, 0.16) 49%, rgba(255, 250, 240, 0.05) 53%, transparent 62%);
+  background-size: 260% 100%;
+}
+
+/* The card's edge: what is left of it when it is seen edge-on. */
+.edge {
+  position: absolute;
+  left: 498px;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255, 246, 232, 0) 0%, rgba(255, 246, 232, 0.95) 12%, #fffaf0 50%, rgba(255, 246, 232, 0.95) 88%, rgba(255, 246, 232, 0) 100%);
+  box-shadow: 0 0 18px 2px rgba(255, 236, 205, 0.45);
+  transform: rotateY(90deg);
+  opacity: 0;
+}
+
+/* A shadow under a card that lies on something. */
+.card .drop {
+  position: absolute;
+  inset: 4% 3% -2% 3%;
+  background: rgba(0, 0, 0, 0.7);
+  filter: blur(40px);
+  transform: translateZ(-40px);
+  opacity: 0;
+}
+
+/* ── Notes ────────────────────────────────────────────────────────────── */
+
+#leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+#leaders line { stroke: rgba(201, 165, 90, 0.55); stroke-width: 1; }
+#leaders circle { fill: var(--gold); }
+
+#notes { position: absolute; inset: 0; pointer-events: none; }
+
+.note {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.note__k {
+  display: block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(250, 247, 242, 0.78);
+}
+.note__k b { color: var(--gold); font-weight: 400; margin-right: 0.9em; }
+.note__s {
+  display: block;
+  margin-top: 7px;
+  font-family: "Noto Serif Display", serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 15px;
+  letter-spacing: 0.005em;
+  color: rgba(250, 247, 242, 0.62);
+}
+.note.right { text-align: right; }
+
+/* ── Finale ───────────────────────────────────────────────────────────── */
+
+#finale {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-family: "Noto Serif Display", serif;
+}
+.finale__a, .finale__b {
+  position: absolute;
+  left: 6vw;
+  font-size: clamp(2.4rem, 5.4vw, 6.4rem);
+  letter-spacing: -0.04em;
+  line-height: 1.3;
+  will-change: transform;
+}
+.finale__a { top: 34%; }
+.finale__b { top: calc(34% + 1.3em); left: calc(6vw + 1.1em); }
+
+#hint {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(250, 247, 242, 0.4);
+  transition: opacity 0.6s;
+}
+
+@media (max-width: 767px) {
+  #slug { left: 18px; right: 70px; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.18em; }
+  #count { right: 18px; }
+  #bgname { font-size: 46vw; }
+  .wait__a { left: 24px; top: 15%; font-size: 13.5vw; }
+  .wait__b { left: 24%; top: 24.5%; font-size: 4.4vw; }
+  .note__s { font-size: 13px; }
+  .finale__a { top: 10%; }
+  .finale__b { top: calc(10% + 1.3em); }
+  .finale__a, .finale__b { font-size: 11vw; }
+}

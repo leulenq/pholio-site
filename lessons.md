@@ -3159,3 +3159,91 @@ are early-stage terms the owner authorized inventing (remote work, early
 equity, stipends, leave, tools), not a filed handbook and not proof the
 company is incorporated. `careers@pholio.studio` still has to exist before
 the page is announced. Do not restore the archive sentences.
+
+## 49. Pholio reads the library she already has. It does not take the pictures.
+
+**Date:** 2026-10-01
+**Surface:** the home stage, hero through the comp-card beat
+(`components/hero/`, `components/intelligence/`, `components/comp-card/`)
+
+**What was built.** Asked to elevate the home page, the first pass made the
+intelligence beat a photoshoot: as she walked and turned in the hero footage,
+a flash fired four times and each frame dropped out as a print on a seamless
+(front, three-quarter, profile, back). The prints lined up, re-sorted into
+"one agency's set, then another's", and were sent.
+
+**What was wrong.**
+
+> "The product story is wrong. Pholio does not take these photos or generate
+> different photos for agencies. Don't frame this as a photoshoot, guided
+> capture experience, or 'every agency needs its own set.'"
+
+> "A talent uploads their existing library of images to Pholio. Imagine a
+> rich collection of Ola's real work: headshots, full-body images, editorial
+> photographs, digitals, different poses, looks, orientations, etc. Pholio
+> then understands that library."
+
+> "When we arrive at the comp card chapter, Pholio isn't asking the talent to
+> manually start from an empty template. It can reason across that image
+> library, choose an appropriate hero/front image, select complementary images
+> for the reverse, and use them to generate a comp card tailored around that
+> talent."
+
+> "I don't want you to literally turn those four steps into four conventional
+> website sections or explain everything with copy. Tell it through design and
+> motion."
+
+**The rules.**
+
+**49.1 The story is four moves, told as one take.** Her existing library
+arrives; Pholio understands what each photograph is (PITS: headshot, full
+length, profile and the rest); that understanding is reasoned across; and a
+card is composed from it, a hero for the front and complementary frames for
+the back. Those are not four sections. They are one set of objects, her real
+photographs, that arrive, sort themselves, are chosen from, and become the
+card, on the one stage.
+
+**49.2 Pholio never makes the pictures.** No flash, no capture, no seamless,
+no camera firing, no "set for an agency" made by the product. Every
+photograph on the stage is one she already had. The product's intelligence is
+shown as sorting, choosing and composing, never as producing images.
+
+**49.3 Understanding is shown by order, not by explanation.** The proof that
+Pholio knows what a photograph is, is that the library re-forms by what each
+photograph is. Product vocabulary appears at display scale one term at a time
+as its group forms (§11.2), and nothing explains it.
+
+**49.4 "Every agency, its own set." is retired from the intelligence beat**
+for the same reason: it framed the product as preparing different pictures
+per agency. The hero's key light (the light finds her, the pointer holds it,
+the letters catch it) is unaffected and stays.
+
+## 50. Display serif leading must clear its own descenders
+
+**Date:** 2026-10-02
+**Surface:** `/about` (`components/about/about.css`)
+
+**What was built.** Mission display type (`.ab-w__say`, `.ab-mis__thesis`,
+`.ab .d`, the close line) set at `line-height: 0.96–0.98` for a tight
+editorial lockup. A follow-up raised leading to `1.4` and still read as
+touching.
+
+**What was wrong.**
+
+> "Texts in the /about page are touching"
+> "g and will are still touching"
+
+The `g` in "gets" sat on "will". Sub-1.0 leading on Noto Serif Display is
+a collision. Raising `line-height` alone is not enough either: this face
+paints descenders outside the line box, so adjacent line boxes can clear
+while the ink still meets. The middle phrase also wrapped inside one span,
+so leading had to fight an accidental fourth line.
+
+**The rule.** Multi-line display serif on this site is stacked as separate
+lines with an explicit flex `gap` (about `0.7em`), not as one wrapped block
+with tight leading. Each line is its own nowrap span. Do not rely on
+`line-height` below `1.4` to separate lowercase Noto Serif Display lines —
+and when a descender still meets the next line after a leading bump, switch
+to gap between line boxes. Before calling a display block done, scroll to
+the frame where it settles and look at every `g`/`y`/`p`/`q` against the
+line below — §14.4's descender check applies to leading and to stacking.

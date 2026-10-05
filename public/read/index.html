@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pholio · Be read right</title>
+<meta name="description" content="Pholio for talent. A concept for the hero and the Intelligence chapter.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+Display:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="read.css">
+</head>
+<body>
+
+<div class="ld" id="ld" aria-hidden="true">
+  <span class="wm">PHOLIO</span>
+  <span class="ld__n" id="ldn">000</span>
+</div>
+
+<div class="glow" id="glow" aria-hidden="true"></div>
+
+<!-- type that sits behind her -->
+<div class="layer layer--back" aria-hidden="true">
+  <span class="h-be" id="hBe">Be</span>
+  <span class="h-read" id="hRead">read</span>
+</div>
+
+<canvas class="stage" id="stage" aria-hidden="true"></canvas>
+
+<!-- type that sits in front of her -->
+<div class="layer layer--front">
+  <h1 class="sr">Be read right.</h1>
+  <span class="h-right" id="hRight" aria-hidden="true">right.</span>
+
+  <h2 class="t t--read" id="tRead">Every frame, read.</h2>
+  <p class="t t--face" id="tFace">The photograph. Never the face.</p>
+
+  <h2 class="t t--book" id="tBook">Same woman.<br>Different job.</h2>
+
+  <div class="clock" id="clock">
+    <h2 class="t t--clock">Digitals are a claim about&nbsp;today.</h2>
+    <div class="clock__row">
+      <span class="clock__day" id="cDay">Day 0</span>
+      <span class="clock__state" id="cState">Current.</span>
+    </div>
+    <div class="clock__dates mono" id="cDates">SHOT 1 OCT 2026</div>
+    <p class="clock__keep" id="cKeep">Pholio keeps the date.</p>
+  </div>
+
+  <div class="coda" id="coda">
+    <div class="coda__sent mono" id="cdSent">SENT · 1 OCT 2026</div>
+    <div class="coda__day" id="cdDay">Day 1</div>
+    <p class="coda__line" id="cdLine">Silence gets a date too.</p>
+  </div>
+</div>
+
+<header class="hud" aria-hidden="true">
+  <span class="wm hud__wm">PHOLIO</span>
+  <span class="mono hud__tr" id="hudTr">OLA SZKOŁDA</span>
+  <span class="mono hud__bl" id="hudBl">FRAME 046</span>
+  <span class="mono hud__br" id="hudBr">MOVE ACROSS HER</span>
+</header>
+
+<main class="track" id="track"></main>
+
+<script src="frames.js"></script>
+<script src="read.js"></script>
+</body>
+</html>

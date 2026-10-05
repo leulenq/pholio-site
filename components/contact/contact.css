@@ -1,0 +1,503 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   /contact — styles for contact.html, scoped under .ct.
+
+   Pholio's own material only: velvet, cream, gold; Noto Serif Display,
+   Inter, JetBrains Mono. A cream page with a velvet desk beside it; the
+   letter on the desk is the one the chosen topic needs.
+
+   The switch is CSS: one radio per topic, and :has() shows its letter.
+   Showing a letter restarts its arrival animation, so a new sheet is
+   laid down each time with no script. Under reduced motion it just swaps.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.ct {
+  --velvet: #050505;
+  --cream: #faf7f2;
+  --cream-warm: #f3ede3;
+  --ink: #0f172a;
+  --ink-2: rgba(15, 23, 42, 0.72);
+  --ink-3: rgba(15, 23, 42, 0.5);
+  --rule: rgba(15, 23, 42, 0.14);
+  --gold: #c9a55a;
+  --gold-dark: #a8894e;
+  --serif: var(--font-noto-serif), "Noto Serif Display", Georgia, serif;
+  --sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace, monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --gut: clamp(20px, 4.4vw, 72px);
+
+  position: relative;
+  overflow-x: clip;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+.ct *,
+.ct *::before,
+.ct *::after {
+  box-sizing: border-box;
+}
+:where(.ct) :where(h1, h2, p, ol, li, dl, dd, fieldset) {
+  margin: 0;
+  padding: 0;
+}
+:where(.ct) ol {
+  list-style: none;
+}
+.ct fieldset {
+  border: 0;
+  min-width: 0;
+}
+.ct a {
+  color: inherit;
+}
+.ct-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ── The desk ──────────────────────────────────────────────────────────── */
+
+.ct-desk {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.ct-pick {
+  padding: clamp(128px, 20vh, 196px) var(--gut) clamp(64px, 12vh, 140px);
+}
+.ct-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.06em;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(54px, 6.6vw, 120px);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+.ct-title span {
+  white-space: nowrap;
+}
+.ct-title em {
+  color: var(--gold-dark);
+}
+.ct-lede {
+  max-width: 34ch;
+  margin-top: clamp(20px, 3vh, 32px);
+  font-size: clamp(16px, 1.2vw, 18px);
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.ct-topics {
+  margin-top: clamp(48px, 9vh, 96px);
+  max-width: 560px;
+}
+.ct-group {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 28px 0 10px;
+}
+.ct-group:first-of-type {
+  padding-top: 0;
+}
+.ct-topic {
+  position: relative;
+  display: block;
+  cursor: pointer;
+  border-top: 1px solid var(--rule);
+}
+.ct-topic input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.ct-topic span {
+  display: block;
+  padding: 13px 0 13px 0;
+  font-family: var(--serif);
+  font-size: clamp(21px, 1.75vw, 27px);
+  line-height: 1.3;
+  color: var(--ink-2);
+  transition:
+    color 0.35s var(--ease),
+    padding 0.5s var(--ease);
+}
+.ct-topic span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: calc(13px + 0.68em);
+  width: 0;
+  height: 1px;
+  background: var(--gold-dark);
+  transition: width 0.5s var(--ease);
+}
+.ct-topic:hover span {
+  color: var(--ink);
+}
+.ct-topic input:checked + span {
+  color: var(--gold-dark);
+  font-style: italic;
+  padding-left: 40px;
+}
+.ct-topic input:checked + span::before {
+  width: 26px;
+}
+.ct-topic input:focus-visible + span {
+  outline: 1px solid var(--gold-dark);
+  outline-offset: 4px;
+}
+
+/* The table: velvet, held beside the list while it scrolls. */
+.ct {
+  --band: 88px; /* the header's height: the desk starts below it */
+}
+/* The desk starts under the header's band rather than behind it. The
+   header samples the cream at the left margin first, so a velvet panel
+   running up behind it would get dark marks on a dark ground. */
+.ct-table {
+  margin-top: var(--band);
+  background: var(--velvet);
+  color: var(--cream);
+  scroll-margin-top: var(--band);
+}
+.ct-table__inner {
+  position: sticky;
+  top: var(--band);
+  height: calc(100svh - var(--band));
+  display: grid;
+  place-items: center;
+  padding: 32px clamp(24px, 4vw, 64px);
+}
+
+.ct-letter {
+  display: none;
+  width: min(100%, 500px);
+}
+.ct:has(#t-account:checked) .ct-letter[data-topic="account"],
+.ct:has(#t-agency:checked) .ct-letter[data-topic="agency"],
+.ct:has(#t-guardian:checked) .ct-letter[data-topic="guardian"],
+.ct:has(#t-impersonation:checked) .ct-letter[data-topic="impersonation"],
+.ct:has(#t-takedown:checked) .ct-letter[data-topic="takedown"],
+.ct:has(#t-copyright:checked) .ct-letter[data-topic="copyright"],
+.ct:has(#t-privacy:checked) .ct-letter[data-topic="privacy"],
+.ct:has(#t-press:checked) .ct-letter[data-topic="press"],
+.ct:has(#t-careers:checked) .ct-letter[data-topic="careers"],
+.ct:has(#t-hello:checked) .ct-letter[data-topic="hello"],
+.ct:has(#t-represent:checked) .ct-letter[data-topic="represent"],
+.ct:has(#t-book:checked) .ct-letter[data-topic="book"] {
+  display: block;
+  animation: ct-lay 0.75s var(--ease) both;
+}
+@keyframes ct-lay {
+  from {
+    opacity: 0;
+    transform: translateY(44px) rotate(2.4deg);
+  }
+}
+
+.ct-sheet {
+  position: relative;
+  background: var(--cream);
+  color: var(--ink);
+  padding: clamp(26px, 3vw, 44px);
+  transform: rotate(-1.2deg);
+  box-shadow:
+    0 2px 3px rgba(0, 0, 0, 0.25),
+    0 40px 80px rgba(0, 0, 0, 0.55);
+}
+.ct-env {
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 14px;
+  margin-bottom: 22px;
+}
+.ct-env > div {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.ct-env dt {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-top: 0.25em;
+}
+.ct-env dd {
+  overflow-wrap: anywhere;
+}
+.ct-body p {
+  font-family: var(--serif);
+  font-size: clamp(16px, 1.25vw, 18.5px);
+  line-height: 1.55;
+}
+.ct-body p + p {
+  margin-top: 0.75em;
+}
+.ct b {
+  font-weight: inherit;
+  font-style: italic;
+  color: var(--gold-dark);
+  font-family: var(--serif);
+}
+.ct-pnote {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.ct-letter--urgent .ct-env dd:last-child {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+}
+
+/* Returned: the sheet greys back and is stamped. */
+.ct-letter--returned .ct-body p {
+  color: var(--ink-2);
+}
+.ct-stamp {
+  position: absolute;
+  right: 9%;
+  bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 18px;
+  border: 2px solid var(--gold-dark);
+  outline: 1px solid var(--gold-dark);
+  outline-offset: 3px;
+  color: var(--gold-dark);
+  font-family: var(--mono);
+  text-transform: uppercase;
+  transform: rotate(-11deg);
+  opacity: 0.92;
+  animation: ct-stamp 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) 0.55s both;
+}
+.ct-stamp span:first-child {
+  font-size: 15px;
+  letter-spacing: 0.14em;
+}
+.ct-stamp span:last-child {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+@keyframes ct-stamp {
+  from {
+    opacity: 0;
+    transform: rotate(-11deg) scale(1.6);
+  }
+}
+.ct-letter--returned .ct-sheet {
+  padding-bottom: clamp(110px, 12vw, 140px);
+}
+
+.ct-acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px 32px;
+  margin-top: 36px;
+  padding-left: 6px;
+}
+.ct-send,
+.ct-copy {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0 0 3px;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.5s var(--ease), color 0.3s var(--ease);
+}
+.ct-send {
+  font-family: var(--serif);
+  font-size: clamp(22px, 1.9vw, 28px);
+  color: var(--gold) !important;
+  background-size: 100% 1px;
+}
+.ct-send::after {
+  content: "\2192";
+  display: inline-block;
+  margin-left: 0.4em;
+  font-family: var(--sans);
+  font-weight: 300;
+  transition: transform 0.5s var(--ease);
+}
+.ct-send:hover::after {
+  transform: translateX(4px);
+}
+.ct-copy {
+  font-size: 14px;
+  color: rgba(250, 247, 242, 0.72) !important;
+  background-size: 0 1px;
+}
+.ct-copy:hover,
+.ct-copy.is-copied {
+  color: var(--cream) !important;
+  background-size: 100% 1px;
+}
+.ct-send:focus-visible,
+.ct-copy:focus-visible,
+.ct a:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 4px;
+}
+
+/* ── Is it really us? ──────────────────────────────────────────────────── */
+
+.ct-real {
+  background: var(--velvet);
+  color: var(--cream);
+  border-top: 1px solid rgba(250, 247, 242, 0.1);
+}
+.ct-real__inner {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: clamp(96px, 18vh, 200px) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 40px clamp(32px, 6vw, 120px);
+  align-items: start;
+}
+.ct-real__h {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(44px, 5.4vw, 96px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  position: sticky;
+  top: 140px;
+}
+.ct-real__h em {
+  color: var(--gold);
+}
+.ct-real__list li {
+  padding: clamp(18px, 2.6vh, 26px) 0;
+  border-top: 1px solid rgba(250, 247, 242, 0.14);
+  font-family: var(--serif);
+  font-size: clamp(22px, 2.2vw, 34px);
+  line-height: 1.3;
+  letter-spacing: -0.008em;
+}
+.ct-mono-inline {
+  font-family: var(--mono);
+  font-size: 0.72em;
+  letter-spacing: 0.02em;
+  color: var(--gold);
+  white-space: nowrap;
+}
+.ct-real__then {
+  grid-column: 2;
+  padding-top: 28px;
+  border-top: 1px solid rgba(250, 247, 242, 0.14);
+  max-width: 46ch;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(250, 247, 242, 0.74);
+}
+.ct-real__then a {
+  color: var(--gold);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+/* ── The close ─────────────────────────────────────────────────────────── */
+
+.ct-close {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: clamp(80px, 14vh, 160px) var(--gut) clamp(40px, 8vh, 96px);
+}
+.ct-close__line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2em 0.5em;
+  max-width: 24em;
+  font-family: var(--serif);
+  font-size: clamp(26px, 2.8vw, 44px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.ct-close__line span:last-child {
+  color: var(--ink-3);
+}
+
+/* Arrival, once. */
+.ct [data-in] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.9s var(--ease),
+    transform 0.9s var(--ease);
+}
+.ct [data-in].is-in,
+.ct.is-still [data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-letter,
+  .ct-stamp {
+    animation: none !important;
+  }
+  .ct-topic span,
+  .ct-topic span::before {
+    transition: none;
+  }
+}
+
+/* ── Narrow ────────────────────────────────────────────────────────────── */
+
+@media (max-width: 899px) {
+  .ct-desk {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ct-pick {
+    padding-top: 112px;
+    padding-bottom: 56px;
+  }
+  .ct-title {
+    font-size: clamp(48px, 13vw, 84px);
+  }
+  .ct-table {
+    margin-top: 0;
+    scroll-margin-top: 72px;
+  }
+  .ct-table__inner {
+    position: relative;
+    height: auto;
+    min-height: 0;
+    padding: 72px var(--gut) 80px;
+  }
+  .ct-real__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ct-real__h {
+    position: static;
+  }
+  .ct-real__then {
+    grid-column: 1;
+  }
+}
