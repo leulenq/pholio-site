@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { PageStructuredData } from "@/components/seo/StructuredData";
 
 import { DmcaContent } from "@/components/legal/DmcaContent";
 
-export const metadata: Metadata = {
-  title: "Copyright",
-  description: "How to report copyright infringement on Pholio and how counter-notices work.",
-};
+export const metadata = pageMetadata("/dmca");
 
 export default function Page() {
-  return <DmcaContent />;
+  return <>
+    <PageStructuredData path="/dmca" />
+    <DmcaContent />
+  </>;
 }

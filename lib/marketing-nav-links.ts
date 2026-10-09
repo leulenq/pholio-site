@@ -25,7 +25,7 @@ export interface NavEntry {
   /**
    * Legal entries only: whether the footer links this document.
    *
-   * Every document in the corpus is published, routed and crawlable whether or
+   * Every built document in the corpus is routed and crawlable whether or
    * not this is true. The flag decides one thing: whether the footer, which
    * appears on every page of the site, carries a standing link to it. A
    * document without one is still reached the way most legal documents are
@@ -37,7 +37,7 @@ export interface NavEntry {
 /** Audience doors and the product tier. The header index's main column. */
 export const PRIMARY_NAV: readonly NavEntry[] = [
   { label: "TALENT", href: "/talent", kind: "door", built: true },
-  { label: "AGENCIES", href: "/agencies", kind: "door", built: false },
+  { label: "AGENCIES", href: "/agencies", kind: "door", built: true },
   { label: "STUDIO+", href: "/studio-plus", kind: "tier", built: true },
 ] as const;
 
@@ -50,7 +50,7 @@ export const SECONDARY_NAV: readonly NavEntry[] = [
 ] as const;
 
 /**
- * Legal documents. Built and live — these are the site's only finished pages.
+ * Legal documents. Built routes can be reviewed; effectiveness is versioned separately.
  *
  * Deliberately absent from the header index: nobody navigates to Terms from a
  * masthead.
@@ -69,7 +69,8 @@ export const SECONDARY_NAV: readonly NavEntry[] = [
  *   Take it down         → linked from Copyright, and from any reporting path
  *
  * Removing a link here does not unpublish anything. Every route below stays
- * live and crawlable.
+ * live and crawlable. Draft documents are noindex and omitted from the sitemap
+ * until the publication status in legal-constants changes.
  */
 export const LEGAL_NAV: readonly NavEntry[] = [
   { label: "Terms", href: "/terms", kind: "door", built: true, inFooter: true },
@@ -107,6 +108,10 @@ export const LEGAL_NAV: readonly NavEntry[] = [
     kind: "door",
     built: true,
   },
+  { label: "Subscription terms", href: "/legal/subscriptions", kind: "door", built: true },
+  { label: "Agency and recipient terms", href: "/legal/agency-terms", kind: "door", built: true },
+  { label: "Verification notice", href: "/legal/verification", kind: "door", built: true },
+  { label: "Guardian notice", href: "/legal/guardians", kind: "door", built: true },
   { label: "Take it down", href: "/take-it-down", kind: "door", built: true },
 ] as const;
 

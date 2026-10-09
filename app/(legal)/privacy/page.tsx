@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { PageStructuredData } from "@/components/seo/StructuredData";
 
 import { PrivacyContent } from "@/components/legal/PrivacyContent";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description: "What Pholio collects, why, who processes it, and the choices you have.",
-};
+export const metadata = pageMetadata("/privacy");
 
 export default function Page() {
-  return <PrivacyContent />;
+  return <>
+    <PageStructuredData path="/privacy" />
+    <PrivacyContent />
+  </>;
 }

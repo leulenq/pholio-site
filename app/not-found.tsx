@@ -3,12 +3,13 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Not found",
+  alternates: { canonical: null },
   robots: { index: false, follow: false },
 };
 
 export default function NotFound() {
   return (
-    <main
+    <div
       className="min-h-mobile-screen flex flex-col items-start justify-center px-6 md:px-12"
       style={{ backgroundColor: "#050505" }}
     >
@@ -51,6 +52,6 @@ export default function NotFound() {
       >
         Back to Pholio
       </Link>
-    </main>
+    </div>
   );
 }

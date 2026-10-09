@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { PageStructuredData } from "@/components/seo/StructuredData";
 
 import { CommunityGuidelinesContent } from "@/components/legal/CommunityGuidelinesContent";
 
-export const metadata: Metadata = {
-  title: "Community Guidelines",
-  description: "What is expected of talent, agencies, and other Recipients on Pholio.",
-};
+export const metadata = pageMetadata("/community-guidelines");
 
 export default function Page() {
-  return <CommunityGuidelinesContent />;
+  return <>
+    <PageStructuredData path="/community-guidelines" />
+    <CommunityGuidelinesContent />
+  </>;
 }

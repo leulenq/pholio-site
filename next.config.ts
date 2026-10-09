@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { INDEXING_ENABLED, DRAFT_LEGAL_PATHS } from "./lib/seo";
 
 /**
  * Pholio public site — build + edge configuration.
@@ -77,6 +78,7 @@ const nextConfig: NextConfig = {
       {
         source: "/:path*",
         headers: [
+          ...(!INDEXING_ENABLED ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] : []),
           { key: "Content-Security-Policy-Report-Only", value: csp },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
@@ -91,6 +93,12 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // These are demonstrations, not talent profiles or alternative landing pages.
+      // They stay crawlable so engines can see noindex. robots.txt is not a removal tool.
+      ...[...DRAFT_LEGAL_PATHS, "/zofia", "/zofia/index.html", "/talent-experience", "/talent-experience/index.html", "/api/:path*", "/press/kit/FACTS.txt", "/press/kit/BOILERPLATE.txt", "/press/kit/README.txt"].map((source) => ({
+        source,
+        headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
+      })),
       /**
        * Zofia's site is framed by the home stage, same origin only. Later
        * rules override earlier ones for the same key, so this narrows the
@@ -106,6 +114,15 @@ const nextConfig: NextConfig = {
         headers: [{ key: "X-Frame-Options", value: "SAMEORIGIN" }],
       },
     ];
+  },
+
+  async redirects() {
+    return [{
+      source: "/:path*",
+      has: [{ type: "host", value: "pholio.studio" }],
+      destination: "https://www.pholio.studio/:path*",
+      permanent: true,
+    }];
   },
 
   async rewrites() {

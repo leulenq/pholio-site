@@ -2,13 +2,16 @@
   "name": "pholio-site",
   "version": "0.1.0",
   "private": true,
-  "description": "Pholio public site — marketing surfaces and legal documents for www.pholio.studio.",
+  "description": "Pholio public site \u2014 marketing surfaces and legal documents for www.pholio.studio.",
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "seo:audit": "node scripts/audit-discoverability.mjs",
+    "seo:images": "node scripts/generate-social-previews.mjs",
+    "seo:check-config": "node scripts/check-indexing-config.cjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
@@ -27,6 +30,7 @@
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.0",
     "eslint-config-next": "^16.3.3",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"
   }

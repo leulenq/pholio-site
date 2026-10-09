@@ -13,6 +13,10 @@ import { scrollPageTo } from "@/components/scroll-inertia";
 
 type Render = (p: number, r: DOMRect) => void;
 
+/** Interactive theme selections reuse the same CDN sizing as the initial HTML. */
+const U = (id: string, w: number) =>
+  `https://images.unsplash.com/photo-${id}?w=${w}&q=80&auto=format&fit=max`;
+
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const seg = (p: number, a: number, b: number) => clamp((p - a) / (b - a));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -21,10 +25,6 @@ const E = {
   out4: (t: number) => 1 - Math.pow(1 - t, 4),
   inOut: (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
 };
-
-/** Unsplash CDN, sized per slot. */
-const U = (id: string, w: number) =>
-  `https://images.unsplash.com/photo-${id}?w=${w}&q=80&auto=format&fit=max`;
 
 const hex = (h: string) => {
   h = h.replace("#", "");
@@ -86,14 +86,8 @@ export function mountStudioPlus(root: HTMLElement): () => void {
     requestAnimationFrame(tick);
   };
 
-  /* ── images ──────────────────────────────────────────────── */
-  $$<HTMLImageElement>("img[data-src]").forEach((img) => {
-    const id = img.dataset.src!, w = Number(img.dataset.w) || 800, h = Math.round(w / 2), d = Math.min(w * 2, 2800);
-    img.srcset = `${U(id, h)} ${h}w, ${U(id, w)} ${w}w, ${U(id, d)} ${d}w`;
-    img.src = U(id, w);
-    img.decoding = "async";
-    if (!img.closest("#overture")) img.loading = "lazy";
-  });
+  // Image URLs are in the server-rendered HTML so crawlers and no-JS readers
+  // receive the same imagery; motion only controls presentation.
 
   /* ── anchors travel on the page's own weight ─────────────── */
   $$<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {

@@ -1,26 +1,16 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { PageStructuredData } from "@/components/seo/StructuredData";
 
-import { PHOLIO_TITLE, PHOLIO_DESCRIPTION } from "@/lib/brand";
 
 import HomePageClient from "@/components/HomePageClient";
+import HomeNoScript from "@/components/seo/HomeNoScript";
 
-export const metadata: Metadata = {
-  title: { absolute: PHOLIO_TITLE },
-  description: PHOLIO_DESCRIPTION,
-  openGraph: {
-    title: PHOLIO_TITLE,
-    description: PHOLIO_DESCRIPTION,
-    siteName: "Pholio",
-    type: "website",
-    url: "/",
-  },
-  twitter: {
-    card: "summary",
-    title: PHOLIO_TITLE,
-    description: PHOLIO_DESCRIPTION,
-  },
-};
+export const metadata = pageMetadata("/");
 
 export default function HomePage() {
-  return <HomePageClient />;
+  return <>
+    <PageStructuredData path="/" />
+    <HomePageClient />
+    <HomeNoScript />
+  </>;
 }

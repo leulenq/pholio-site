@@ -1,14 +1,11 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { AgencyRegisterStructuredData, PageStructuredData } from "@/components/seo/StructuredData";
 import Link from "next/link";
 
 import { ScrollInvitation } from "@/components/ScrollInvitation";
 import { channelPhrase, fetchAgencyRegister } from "@/lib/agency-registry";
 
-export const metadata: Metadata = {
-  title: "Agency application requirements",
-  description:
-    "What each agency actually asks for in an application — shot lists, file limits and eligibility, researched from their own published pages and dated. Pholio is not affiliated with any agency listed.",
-};
+export const metadata = pageMetadata("/agencies");
 
 export const revalidate = 1800;
 
@@ -29,6 +26,9 @@ export default async function AgenciesPage() {
   const agencies = await fetchAgencyRegister();
 
   return (
+    <>
+      <PageStructuredData path="/agencies" />
+      {agencies && agencies.length > 0 && <AgencyRegisterStructuredData agencies={agencies} />}
     <div className="min-h-mobile-screen bg-[#FAF7F2]">
       <div className="px-6 pt-40 pb-32">
         <div className="mx-auto max-w-3xl">
@@ -111,5 +111,6 @@ export default async function AgenciesPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

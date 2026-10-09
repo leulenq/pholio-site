@@ -3,7 +3,8 @@ import { Noto_Serif_Display, Inter, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 
 import "./globals.css";
-import { PHOLIO_TITLE, PHOLIO_DESCRIPTION } from "@/lib/brand";
+import { SITE_ORIGIN, pageMetadata } from "@/lib/seo";
+import { SiteStructuredData } from "@/components/seo/StructuredData";
 import { VIEWPORT_INK, viewportBootScript } from "@/lib/viewport-canvas";
 import SiteFooter from "@/components/footer/SiteFooter";
 import HeaderWrapper from "@/components/HeaderWrapper";
@@ -53,18 +54,14 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.pholio.studio"),
-  title: {
-    default: PHOLIO_TITLE,
-    template: "%s | Pholio",
+  ...pageMetadata("/"),
+  metadataBase: new URL(SITE_ORIGIN),
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION }
+      : undefined,
   },
-  description: PHOLIO_DESCRIPTION,
-  openGraph: {
-    siteName: "Pholio",
-    type: "website",
-    url: "https://www.pholio.studio",
-  },
-  robots: { index: true, follow: true },
 };
 
 import CustomCursor from "@/components/CustomCursor";
@@ -81,6 +78,7 @@ export default function RootLayout({
       className={`${notoSerif.variable} ${inter.variable} ${jetbrainsMono.variable}`}
     >
       <body>
+        <SiteStructuredData />
         <Script id="viewport-canvas-boot" strategy="beforeInteractive">
           {viewportBootScript()}
         </Script>

@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { PageStructuredData } from "@/components/seo/StructuredData";
 
 import { TakeItDownContent } from "@/components/legal/TakeItDownContent";
 
-export const metadata: Metadata = {
-  title: "Take It Down",
-  description: "Report non-consensual intimate imagery for removal within 48 hours.",
-};
+export const metadata = pageMetadata("/take-it-down");
 
 export default function Page() {
-  return <TakeItDownContent />;
+  return <>
+    <PageStructuredData path="/take-it-down" />
+    <TakeItDownContent />
+  </>;
 }

@@ -44,6 +44,7 @@ export default function HomePageClient() {
         onComplete={handlePreloaderComplete}
       />
       <div
+        className="home-experience"
         style={{
           opacity: preloaderDone ? 1 : 0,
           transition: "opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1)",

@@ -17,6 +17,7 @@ import { GOLD_ON_PAPER, INK, CREAM, TIMELINE_SPRING, arrive, clamp01 } from "@/c
 import {
   ANNUAL_TOTAL,
   HEADING,
+  INTRODUCTION,
   INTERVAL_LABELS,
   PLANS,
   STUDIO_PRICES,
@@ -569,6 +570,7 @@ export default function Pricing() {
 
   return (
     <section
+      id="pricing"
       ref={sectionRef}
       aria-labelledby={titleId}
       className="relative z-10 w-full overflow-hidden"
@@ -577,6 +579,9 @@ export default function Pricing() {
       <div className="mx-auto w-full max-w-[1320px] px-4 md:px-10" style={{ paddingBlock: "clamp(6rem, 14vh, 10rem)" }}>
         <motion.div style={{ y: headingY }}>
           <Headline progress={progress} id={titleId} />
+          <p className="mt-8 max-w-[65ch] font-sans text-base leading-relaxed" style={{ color: INK }}>
+            {INTRODUCTION}
+          </p>
         </motion.div>
 
         <div className="mt-14 grid grid-cols-1 md:mt-28 md:grid-cols-[1fr_1.12fr_1fr] md:items-stretch">

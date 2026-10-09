@@ -1,21 +1,13 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { PageStructuredData } from "@/components/seo/StructuredData";
 
 import { TalentPage } from "@/components/talent";
 
-export const metadata: Metadata = {
-  title: "Talent",
-  description:
-    "Pholio keeps your digitals, book and comp card current, and prepares them the way each agency asks. Applying is free, and agencies are never charged.",
-  openGraph: {
-    title: "Talent | Pholio",
-    description:
-      "Shoot your digitals once. Pholio keeps your digitals, book and comp card current, and prepares them the way each agency asks.",
-    url: "https://www.pholio.studio/talent",
-    siteName: "Pholio",
-    type: "website",
-  },
-};
+export const metadata = pageMetadata("/talent");
 
 export default function Talent() {
-  return <TalentPage />;
+  return <>
+    <PageStructuredData path="/talent" />
+    <TalentPage />
+  </>;
 }

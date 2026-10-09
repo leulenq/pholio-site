@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { PageStructuredData } from "@/components/seo/StructuredData";
 
 import { AiNoticeContent } from "@/components/legal/AiNoticeContent";
 
-export const metadata: Metadata = {
-  title: "AI Notice",
-  description: "Where Pholio uses AI, what it is used for, and how talent opt in or out.",
-};
+export const metadata = pageMetadata("/ai-notice");
 
 export default function Page() {
-  return <AiNoticeContent />;
+  return <>
+    <PageStructuredData path="/ai-notice" />
+    <AiNoticeContent />
+  </>;
 }

@@ -32,6 +32,9 @@ export const HEADING = {
   after: ". Add Studio+ when you want more.",
 } as const;
 
+export const INTRODUCTION =
+  "Pholio is a platform for models and the agencies they apply to. Keep your photographs, measurements and comp cards together, prepare your applications, and see what you sent and when. Pholio represents no one and takes no commission.";
+
 export const STUDIO_PRICES: Record<Interval, { price: string; unit: string; billing: string }> = {
   monthly: {
     price: money(STUDIO_PLUS_PRICE_MONTHLY),

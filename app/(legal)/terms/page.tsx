@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { PageStructuredData } from "@/components/seo/StructuredData";
 
 import { TermsContent } from "@/components/legal/TermsContent";
 
-export const metadata: Metadata = {
-  title: "Terms of Service",
-  description: "The agreement between you and Pholio Studio, Inc. covering accounts, talent submissions, Recipients, and Studio+.",
-};
+export const metadata = pageMetadata("/terms");
 
 export default function Page() {
-  return <TermsContent />;
+  return <>
+    <PageStructuredData path="/terms" />
+    <TermsContent />
+  </>;
 }

@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { PageStructuredData } from "@/components/seo/StructuredData";
 
 import { SubmissionProgramNoticeContent } from "@/components/legal/SubmissionProgramNoticeContent";
 
-export const metadata: Metadata = {
-  title: "Talent Submission and Opportunity Notice",
-  description:
-    "How submissions to agencies, casting organizations, event producers, brands, and other Recipients work — including limits, retention, and withdrawal.",
-};
+export const metadata = pageMetadata("/legal/submission-program");
 
 export default function SubmissionProgramNoticePage() {
-  return <SubmissionProgramNoticeContent />;
+  return <>
+    <PageStructuredData path="/legal/submission-program" />
+    <SubmissionProgramNoticeContent />
+  </>;
 }

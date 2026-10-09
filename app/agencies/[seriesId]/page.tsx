@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata, type SeoPage } from "@/lib/seo";
+import { AgencySourcesStructuredData, PageStructuredData } from "@/components/seo/StructuredData";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -27,16 +29,16 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { seriesId } = await params;
   const agency = await fetchAgency(seriesId);
-  if (!agency) return { title: "Agency not found" };
+  if (!agency) return { title: "Agency not found", alternates: { canonical: null }, robots: { index: false, follow: false } };
+  return pageMetadata(`/agencies/${encodeURIComponent(agency.seriesId)}`, agencySeo(agency));
+}
 
+function agencySeo(agency: AgencyDetail): SeoPage {
   const name = agency.organization.name ?? "this agency";
   return {
     title: `How to apply to ${name}`,
-    // The date is in the description on purpose: it is the claim that
-    // distinguishes this result from the scraped ones above and below it.
-    description: `${name}'s published application requirements — what to send, file limits and eligibility${
-      agency.checked.reviewedOn ? `, last checked ${agency.checked.reviewedOn}` : ""
-    }. Researched from their own pages. Pholio is not affiliated with ${name}.`,
+    description: `${name}'s published application requirements: photos, file limits and eligibility${agency.checked.reviewedOn ? `, checked ${agency.checked.reviewedOn}` : ""}. Sources included. Pholio is not affiliated with ${name}.`,
+    image: "agencies",
   };
 }
 
@@ -102,6 +104,9 @@ export default async function AgencyPage({ params }: PageProps) {
   const heic = heicNote(files);
 
   return (
+    <>
+      <PageStructuredData path={`/agencies/${encodeURIComponent(agency.seriesId)}`} page={agencySeo(agency)} parent={{ path: "/agencies", name: "Agency application requirements" }} />
+      <AgencySourcesStructuredData agency={agency} />
     <div className="min-h-mobile-screen bg-[#FAF7F2]">
       <div className="px-6 pt-40 pb-32">
         <div className="mx-auto max-w-3xl">
@@ -272,5 +277,6 @@ export default async function AgencyPage({ params }: PageProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }

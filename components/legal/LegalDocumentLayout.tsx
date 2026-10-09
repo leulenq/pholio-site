@@ -1,7 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
-
 export interface LegalSection {
   title: string;
   id?: string;
@@ -136,10 +132,10 @@ export function LegalDocumentLayout({
   return (
     <article className="bg-[#FAF7F2] text-[#050505] min-h-mobile-screen pt-40 pb-32 px-6 texture-grain">
       <div className="max-w-3xl mx-auto">
-        <motion.header
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+        <header
+
+
+
           className="mb-24 border-b border-[#050505]/10 pb-12"
         >
           <span className="text-[10px] uppercase tracking-[0.3em] text-[#C9A55A] mb-4 block font-semibold">
@@ -157,12 +153,12 @@ export function LegalDocumentLayout({
           <p className="mt-6 text-base text-[#050505]/60 font-sans leading-relaxed font-light max-w-2xl">
             {subtitle}
           </p>
-        </motion.header>
+        </header>
 
-        <motion.nav
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+        <nav
+
+
+
           className="mb-20 p-8 border border-[#050505]/10 rounded-2xl bg-white/40 backdrop-blur-sm"
         >
           <h2 className="font-editorial text-xl mb-5 text-[#050505]/80">
@@ -183,17 +179,17 @@ export function LegalDocumentLayout({
               </li>
             ))}
           </ol>
-        </motion.nav>
+        </nav>
 
         <div className="space-y-20">
           {sections.map((section, i) => (
-            <motion.section
+            <section
               key={section.title}
               id={section.id ?? `section-${i + 1}`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, delay: 0.05 }}
+
+
+
+
               className="group scroll-mt-28"
             >
               <h2 className="font-editorial text-2xl md:text-3xl mb-6 text-[#050505]/90 group-hover:text-[#C9A55A] transition-colors duration-300">
@@ -204,14 +200,14 @@ export function LegalDocumentLayout({
                   renderParagraph(paragraph, j)
                 )}
               </div>
-            </motion.section>
+            </section>
           ))}
         </div>
 
-        <motion.footer
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+        <footer
+
+
+
           className="mt-32 pt-12 border-t border-[#050505]/10"
         >
           <h3 className="font-editorial text-2xl mb-4">{footerTitle}</h3>
@@ -235,7 +231,7 @@ export function LegalDocumentLayout({
             © {new Date().getFullYear()} {companyName}. All rights reserved.
 
           </p>
-        </motion.footer>
+        </footer>
       </div>
     </article>
   );

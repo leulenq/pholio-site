@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { PageStructuredData } from "@/components/seo/StructuredData";
 
 import { AboutPage } from "@/components/about";
 
-export const metadata: Metadata = {
-  title: "About",
-  description:
-    "Pholio is a company for the moment before the meeting. Why it exists, how it decides, who makes it, and the modeling industry it is working toward.",
-};
+export const metadata = pageMetadata("/about");
 
 export default function About() {
-  return <AboutPage />;
+  return <>
+    <PageStructuredData path="/about" />
+    <AboutPage />
+  </>;
 }

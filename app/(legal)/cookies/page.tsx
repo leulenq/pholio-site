@@ -1,17 +1,15 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import { PageStructuredData } from "@/components/seo/StructuredData";
 
 import { CookiesContent } from "@/components/legal/CookiesContent";
 import CookiePreferencesButton from "@/components/CookiePreferencesButton";
 
-export const metadata: Metadata = {
-  title: "Cookie Policy",
-  description:
-    "Which cookies Pholio sets, what they do, and how to change or withdraw your analytics choice.",
-};
+export const metadata = pageMetadata("/cookies");
 
 export default function CookiesPage() {
   return (
     <>
+      <PageStructuredData path="/cookies" />
       <CookiesContent />
 
       {/*
