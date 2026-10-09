@@ -10,6 +10,8 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
+import { FREE_SIGNUP_URL, STUDIO_PLUS_SIGNUP_URL } from "@/lib/marketing-pricing";
+
 import StudioPlusMotion from "./StudioPlusMotion";
 import "./studio-plus.css";
 
@@ -18,7 +20,9 @@ export function StudioPlusPage() {
   const html = readFileSync(
     path.join(process.cwd(), "components/studio-plus/studio-plus.html"),
     "utf8",
-  );
+  )
+    .replaceAll("{{STUDIO_SIGNUP_HREF}}", STUDIO_PLUS_SIGNUP_URL)
+    .replaceAll("{{SIGNUP_HREF}}", FREE_SIGNUP_URL);
   return (
     <>
       <div dangerouslySetInnerHTML={{ __html: html }} />

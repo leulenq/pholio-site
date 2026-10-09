@@ -1,0 +1,290 @@
+/*
+ * The comp-card chapter. Scoped to `.ccx` (the stage layer) and
+ * `.ccx-sheet` (the reduced-motion composition); the engine and the
+ * designs write plain class names inside them.
+ */
+
+.ccx {
+  --gold: #c9a55a;
+  --cream: #faf7f2;
+  color: var(--cream);
+}
+
+/* ── The room ───────────────────────────────────────────────────────── */
+
+.ccx-room { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+
+.ccx-light {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  will-change: transform;
+}
+.ccx-light::before {
+  content: "";
+  position: absolute;
+  left: -70vmax;
+  top: -70vmax;
+  width: 140vmax;
+  height: 140vmax;
+  background: radial-gradient(circle at 50% 50%, rgba(201, 165, 90, 0.13) 0%, rgba(201, 165, 90, 0.055) 22%, rgba(250, 247, 242, 0.015) 42%, transparent 62%);
+}
+
+.ccx-bgname {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  white-space: nowrap;
+  font-family: var(--font-noto-light), serif;
+  font-weight: 300;
+  font-size: 31vw;
+  line-height: 1.3;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(201, 165, 90, 0.22);
+  transform-origin: 30% 50%;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.ccx-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 85% 75% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+  z-index: 50;
+  opacity: 0;
+}
+
+.ccx-slug, .ccx-count {
+  position: absolute;
+  bottom: 26px;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(250, 247, 242, 0.5);
+  z-index: 60;
+  opacity: 0;
+  white-space: nowrap;
+}
+.ccx-slug { left: 32px; }
+.ccx-count { right: 32px; }
+.ccx-count b { color: var(--gold); font-weight: 400; }
+
+/* The proof sheet around the cover: crop marks, registration, steps. */
+.ccx .proof {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.ccx .proof.front { transform: translateZ(1.5px); }
+.ccx .proof.back { transform: rotateY(180deg) translateZ(1.5px); }
+.ccx .proof i { position: absolute; background: rgba(201, 165, 90, 0.85); }
+.ccx .proof .reg {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border: 2px solid rgba(201, 165, 90, 0.8);
+  border-radius: 50%;
+}
+.ccx .proof .reg::before, .ccx .proof .reg::after {
+  content: "";
+  position: absolute;
+  background: rgba(201, 165, 90, 0.8);
+}
+.ccx .proof .reg::before { left: 50%; top: -12px; bottom: -12px; width: 2px; margin-left: -1px; }
+.ccx .proof .reg::after { top: 50%; left: -12px; right: -12px; height: 2px; margin-top: -1px; }
+.ccx .proof .steps { position: absolute; height: 26px; }
+.ccx .proof .steps u { position: absolute; top: 0; width: 26px; height: 26px; outline: 1px solid rgba(201, 165, 90, 0.35); }
+.ccx .proof .slug {
+  position: absolute;
+  transform: translateX(-100%);
+  white-space: nowrap;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 19px;
+  letter-spacing: 0.18em;
+  color: rgba(201, 165, 90, 0.85);
+}
+
+/* ── Cards ────────────────────────────────────────────────────────────── */
+
+.ccx-world { position: absolute; inset: 0; }
+
+.ccx .card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1000px;
+  height: 1545px;
+  transform-origin: 0 0;
+  transform-style: preserve-3d;
+  visibility: hidden;
+}
+
+.ccx .face, .ccx-sheet .face {
+  position: absolute;
+  inset: 0;
+  border-radius: 7px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.ccx .face.front { transform: translateZ(1.5px); }
+.ccx .face.back { transform: rotateY(180deg) translateZ(1.5px); }
+
+/* The cover's front is built in planes, so it keeps its 3D context and
+   clips its own photographs instead. */
+.ccx .face.planes { overflow: visible; transform-style: preserve-3d; }
+.ccx .face.planes .layer, .ccx-sheet .face.planes .layer {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.ccx .face.planes .layer[data-z="0"], .ccx-sheet .face.planes .layer[data-z="0"] { border-radius: 7px; overflow: hidden; }
+
+.ccx .ph, .ccx-sheet .ph { position: absolute; overflow: hidden; }
+.ccx .ph img, .ccx-sheet .ph img { position: absolute; display: block; max-width: none; user-select: none; }
+
+.ccx .tx, .ccx-sheet .tx { position: absolute; white-space: nowrap; line-height: 1; }
+
+/* Paper: a little tooth, a light that moves, and shade as it turns. */
+.ccx .grain, .ccx .shade, .ccx .sheen, .ccx-sheet .grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 7px;
+}
+.ccx .grain, .ccx-sheet .grain {
+  opacity: 0.09;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+.ccx .shade { background: #000; opacity: 0; }
+.ccx .sheen {
+  mix-blend-mode: screen;
+  background: linear-gradient(112deg, transparent 38%, rgba(255, 250, 240, 0.16) 49%, rgba(255, 250, 240, 0.05) 53%, transparent 62%);
+  background-size: 260% 100%;
+}
+.ccx-sheet .shade, .ccx-sheet .sheen { display: none; }
+
+/* The card's edge: what is left of it when it is seen edge-on. */
+.ccx .edge {
+  position: absolute;
+  left: 498px;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255, 246, 232, 0) 0%, rgba(255, 246, 232, 0.95) 12%, #fffaf0 50%, rgba(255, 246, 232, 0.95) 88%, rgba(255, 246, 232, 0) 100%);
+  box-shadow: 0 0 18px 2px rgba(255, 236, 205, 0.45);
+  transform: rotateY(90deg);
+  opacity: 0;
+}
+
+/* A shadow under a card that lies on something. */
+.ccx .card .drop {
+  position: absolute;
+  inset: 4% 3% -2% 3%;
+  background: rgba(0, 0, 0, 0.7);
+  filter: blur(40px);
+  transform: translateZ(-40px);
+  opacity: 0;
+}
+
+/* ── Notes ────────────────────────────────────────────────────────────── */
+
+.ccx-leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+.ccx-leaders line { stroke: rgba(201, 165, 90, 0.55); stroke-width: 1; }
+.ccx-leaders circle { fill: var(--gold); }
+
+.ccx-notes { position: absolute; inset: 0; pointer-events: none; }
+
+.ccx .note {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.ccx .note__k {
+  display: block;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(250, 247, 242, 0.78);
+}
+.ccx .note__k b { color: var(--gold); font-weight: 400; margin-right: 0.9em; }
+.ccx .note__s {
+  display: block;
+  margin-top: 7px;
+  font-family: var(--font-noto-light), serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 15px;
+  letter-spacing: 0.005em;
+  color: rgba(250, 247, 242, 0.62);
+}
+.ccx .note.right { text-align: right; }
+
+/* ── Finale ───────────────────────────────────────────────────────────── */
+
+.ccx-finale {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-family: var(--font-noto-light), serif;
+}
+.ccx-finale em {
+  font-style: italic;
+  color: var(--gold);
+}
+.ccx-finale__a, .ccx-finale__b {
+  position: absolute;
+  left: 6vw;
+  font-size: clamp(2.4rem, 5.4vw, 6.4rem);
+  letter-spacing: -0.04em;
+  line-height: 1.3;
+  visibility: hidden;
+  will-change: transform;
+}
+.ccx-finale__a { top: 34%; }
+.ccx-finale__b { top: calc(34% + 1.3em); left: calc(6vw + 1.1em); }
+
+@media (max-width: 767px) {
+  .ccx-slug { left: 18px; right: 92px; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.18em; }
+  .ccx-count { right: 18px; }
+  .ccx-bgname { font-size: 46vw; }
+  .ccx .note__s { font-size: 13px; }
+  .ccx-finale__a { top: 10%; }
+  .ccx-finale__b { top: calc(10% + 1.3em); }
+  .ccx-finale__a, .ccx-finale__b { font-size: 11vw; }
+}
+
+/* ── The sheet: every card flat, front beside back ───────────────────── */
+
+.ccx-sheet .flat { position: relative; overflow: hidden; border-radius: 4px; }
+.ccx-sheet .flat .inner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1000px;
+  height: 1545px;
+  transform-origin: 0 0;
+}

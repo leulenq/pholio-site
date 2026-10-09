@@ -81,12 +81,12 @@ export const STAGE_VH = SCRUB_VH + 100;
  * them, so the figure can travel out while the plates travel in
  * (`lessons.md` §20).
  */
-// The library thrown in, understood, read and composed into a card, then a
-// filmstrip of six directions, the last folded into one card
-// (components/comp-card/motion.ts). The riffle through sixty photographs
-// and each direction's hold need room to be read rather than flickered.
-// Room is measured in scroll, not in easing (`lessons.md` §27.1).
-export const CARD_VH = 1500;
+// Six of her cards as one camera: the cover from the edge, taken apart,
+// read close and turned; five more directions passed in the dark; all six
+// into a hand, and the cover set down for the next beat
+// (components/comp-card/motion.ts). The chapter is authored in vh of
+// scroll, so this is its length and not a tuning of it.
+export const CARD_VH = 2160;
 
 /**
  * The Studio+ beat's scroll: the dark room the card was shown in is lit, then

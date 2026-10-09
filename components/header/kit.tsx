@@ -58,6 +58,7 @@ import {
 } from "@/lib/marketing-nav-links";
 import { PHOLIO_APP_ORIGIN as APP_URL } from "@/lib/pholio-app-origin";
 import { STUDIO_PLUS_SIGNUP_URL } from "@/lib/marketing-pricing";
+import { talentSignupHref } from "@/lib/talent-launch";
 import { SUPPORT_EMAIL } from "@/lib/legal-constants";
 import { usePholioAuth } from "@/lib/pholio-auth/PholioAuthProvider";
 
@@ -145,7 +146,7 @@ export const NAV = PRIMARY_NAV.map((link, i) => ({
 export const SECONDARY_LINKS = SECONDARY_NAV;
 
 export const LOGIN_HREF = `${APP_URL}/login`;
-export const SIGNUP_HREF = `${APP_URL}/onboarding`;
+export const SIGNUP_HREF = talentSignupHref(`${APP_URL}/onboarding`);
 
 /* ══════════════════════════════════════════════════════════════════════
    STATE

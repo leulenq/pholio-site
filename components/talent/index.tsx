@@ -13,11 +13,12 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import { PHOLIO_APP_ORIGIN } from "@/lib/pholio-app-origin";
+import { talentSignupHref } from "@/lib/talent-launch";
 
 import TalentMotion from "./TalentMotion";
 import "./talent.css";
 
-const SIGNUP_HREF = `${PHOLIO_APP_ORIGIN}/onboarding`;
+const SIGNUP_HREF = talentSignupHref(`${PHOLIO_APP_ORIGIN}/onboarding`);
 
 export function TalentPage() {
   // Read per render: static in production, and live-editable in development.

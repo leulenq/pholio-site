@@ -1,0 +1,79 @@
+/* /opening — velvet, one field. Velvet, cream, gold only. */
+.op {
+  --velvet: #050505;
+  --cream: #faf7f2;
+  --cream-2: rgba(250, 247, 242, 0.68);
+  --rule: rgba(250, 247, 242, 0.28);
+  --gold: #c9a55a;
+  --serif: var(--font-noto-serif), "Noto Serif Display", Georgia, serif;
+  --sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --gut: clamp(16px, 4.4vw, 72px);
+  min-height: 100svh;
+  padding: clamp(128px, 22vh, 220px) var(--gut) clamp(64px, 12vh, 140px);
+  background: var(--velvet);
+  color: var(--cream);
+  font-family: var(--sans);
+}
+.op :where(h1, p) { margin: 0; }
+.op-title {
+  max-width: 14ch;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(44px, 6.6vw, 112px);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+}
+.op-title em { color: var(--gold); }
+.op-lede {
+  max-width: 36ch;
+  margin-top: clamp(20px, 3vh, 32px);
+  font-size: clamp(16px, 1.2vw, 18px);
+  line-height: 1.55;
+  color: var(--cream-2);
+}
+.op-form { max-width: 640px; margin-top: clamp(48px, 9vh, 96px); }
+.op-label {
+  display: block;
+  font-size: 14px;
+  color: var(--cream-2);
+}
+.op-field {
+  display: block;
+  width: 100%;
+  margin: 8px 0 0;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  border-radius: 0;
+  background: transparent;
+  color: var(--cream);
+  caret-color: var(--gold);
+  font-family: var(--serif);
+  font-size: clamp(26px, 3vw, 44px);
+  line-height: 1.2;
+  outline: none;
+  transition: border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.op-field:focus { border-bottom-color: var(--gold); }
+.op-field--set { border-bottom-color: transparent; overflow-wrap: anywhere; }
+.op-msg { min-height: 1.5em; margin-top: 10px; font-size: 14px; color: var(--gold); }
+.op-note { margin: 4px 0 24px; font-size: 16px; color: var(--cream-2); }
+.op-act {
+  display: inline-flex;
+  padding: 15px 44px;
+  border: 0;
+  border-radius: 0;
+  background: var(--cream);
+  color: var(--velvet);
+  font: 600 13px/1 var(--sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.op-act:hover, .op-act:focus-visible { color: #a8894e; }
+.op-act:focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }
+.op-act:disabled { opacity: 0.5; cursor: default; }
+.op-fine { margin-top: clamp(48px, 8vh, 80px); font-size: 14px; color: var(--cream-2); }
+.op-fine a { color: var(--cream); }
