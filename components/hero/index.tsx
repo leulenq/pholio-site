@@ -12,13 +12,6 @@ import Image from "next/image";
 
 import Intelligence from "@/components/intelligence";
 import SceneCompCard, { CompCardLayers } from "@/components/comp-card";
-import {
-  COPY_LEAVES,
-  FIGURE_RELEASED,
-  TIMELINE_SPRING as CARD_SPRING,
-  V_TOTAL as CARD_V,
-  prologueCamera,
-} from "@/components/comp-card/motion";
 import { StaticStudioSite, StudioSiteLayers } from "@/components/studio-site";
 import {
   ApplicationPrints,
@@ -51,6 +44,7 @@ import {
   FIGURE_RISE,
   FIGURE_SCALE,
   FIGURE_STOPS,
+  FIGURE_HANDOVER,
   APPLY_END_FRACTION,
   APPLY_FRACTION,
   CARD_FRACTION,
@@ -211,29 +205,31 @@ export default function Hero({
     { clamp: true },
   );
 
-  // The comp-card chapter reads one smoothed timeline, and so does the one
-  // thing here that answers to it: her release.
-  const cardTimeline = useSpring(cardProgress, CARD_SPRING);
+  // The comp-card timeline starts a little into its own scroll, so the stage
+  // is clear of her before the first plate is readable. The overlap that
+  // remains is deliberate: one scene leaving as the next arrives.
+  const cardTimeline = useTransform(cardProgress, [0.1, 1], [0, 1], {
+    clamp: true,
+  });
 
-  // The handover: she does not leave. The camera pushes into the black of
-  // her top until it is the whole frame, and only then is she released,
-  // which nobody can see (`lessons.md` §26.1). The push and the release
-  // read the same smoothed timeline the cards do, so neither can run ahead
-  // of the other.
-  const figureShown = useTransform(cardTimeline, (t) =>
-    t * CARD_V >= FIGURE_RELEASED ? "hidden" : "visible",
-  );
-  const prologueTransform = useTransform(
-    cardTimeline,
-    (t) => prologueCamera(t * CARD_V, frame.w, frame.h, isMobile).transform,
-  );
-  const prologueOpacity = useTransform(
-    cardTimeline,
-    (t) => prologueCamera(t * CARD_V, frame.w, frame.h, isMobile).opacity,
+  // The handover: she keeps travelling up out of frame while the first plates
+  // travel in. Same direction, same curve as everything else on the stage.
+  //
+  // Kept as a number so the figure can add it to its own rise, with a vh
+  // string derived for anything that consumes it alone: framer reads a bare
+  // number as pixels, which silently made this a 150px nudge instead of a
+  // 150vh exit.
+  const handoverY = useTransform(
+    cardProgress,
+    [0, 0.13],
+    [0, isMobile ? FIGURE_HANDOVER.mobile : FIGURE_HANDOVER.desktop],
+    { ease: leave },
   );
 
-  // The copy goes first, and faster, up and out ahead of the camera.
-  const copyHandover = useTransform(cardProgress, [...COPY_LEAVES], [0, -130], {
+  // The copy goes first, and faster. Type dying on top of an arriving
+  // photograph is the one thing that made the seam read as collage rather
+  // than as a hand over.
+  const copyHandover = useTransform(cardProgress, [0, 0.06], [0, -130], {
     ease: leave,
   });
 
@@ -290,7 +286,9 @@ export default function Hero({
     [...FIGURE_STOPS],
     isMobile ? [...FIGURE_RISE.mobile] : [...FIGURE_RISE.desktop],
   );
-  const figureY = useTransform(figureRise, (v) => `${v}vh`);
+  const figureY = useTransform(
+    () => `${figureRise.get() + handoverY.get()}vh`,
+  );
 
   // ── The room ─────────────────────────────────────────────────────────────
   //
@@ -530,12 +528,7 @@ export default function Hero({
             willChange: "transform",
           }}
         >
-          <CompCardLayers
-            progress={cardTimeline}
-            assetsArmed={cardAssetsArmed}
-            w={frame.w}
-            h={frame.h}
-          />
+          <CompCardLayers progress={cardTimeline} assetsArmed={cardAssetsArmed} />
         </motion.div>
 
         {/* ── The application beat. Same pinned stage, fourth timeline. Its
@@ -577,44 +570,35 @@ export default function Hero({
           {wordmark}
         </motion.div>
 
-        {/* ── BEAT 2 — the figure, scrubbed from the extracted frames.
-              Wrapped in the comp-card prologue's camera, which pushes into
-              the black of her top until it is the frame (identity until
-              then). See components/comp-card/motion.ts. ── */}
+        {/* ── BEAT 2 — the figure, scrubbed from the extracted frames ── */}
         <motion.div
-          className="pointer-events-none absolute inset-0 z-20"
-          style={{ transform: prologueTransform, transformOrigin: "0 0", opacity: prologueOpacity }}
+          className="pointer-events-none absolute inset-0 z-20 flex items-end justify-center"
+          style={{
+            x: figureX,
+            y: figureY,
+            scale: figureScale,
+            willChange: "transform",
+          }}
         >
-          <motion.div
-            className="pointer-events-none absolute inset-0 flex items-end justify-center"
-            style={{
-              x: figureX,
-              y: figureY,
-              scale: figureScale,
-              visibility: figureShown,
-              willChange: "transform",
-            }}
-          >
-            {/* Poster: a real image for LCP, and cover while the sequence streams. */}
-            <Image
-              src={frameSrc(1)}
-              alt="Editorial portrait, seated pose"
-              width={FRAME_WIDTH}
-              height={FRAME_HEIGHT}
-              priority
-              className="absolute inset-0 h-full w-full object-contain object-bottom transition-opacity duration-300"
-              style={{ opacity: posterReady ? 0 : 1 }}
-              sizes="(max-width: 767px) 100vw, 60dvh"
-            />
-            <canvas
-              ref={canvasRef}
-              width={FRAME_WIDTH}
-              height={FRAME_HEIGHT}
-              aria-hidden
-              className="h-full w-full"
-              style={{ objectFit: "contain", objectPosition: "bottom center" }}
-            />
-          </motion.div>
+          {/* Poster: a real image for LCP, and cover while the sequence streams. */}
+          <Image
+            src={frameSrc(1)}
+            alt="Editorial portrait, seated pose"
+            width={FRAME_WIDTH}
+            height={FRAME_HEIGHT}
+            priority
+            className="absolute inset-0 h-full w-full object-contain object-bottom transition-opacity duration-300"
+            style={{ opacity: posterReady ? 0 : 1 }}
+            sizes="(max-width: 767px) 100vw, 60dvh"
+          />
+          <canvas
+            ref={canvasRef}
+            width={FRAME_WIDTH}
+            height={FRAME_HEIGHT}
+            aria-hidden
+            className="h-full w-full"
+            style={{ objectFit: "contain", objectPosition: "bottom center" }}
+          />
         </motion.div>
 
         {/* ── BEAT 1 — word wheel, clears before the wordmark ── */}

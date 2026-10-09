@@ -81,12 +81,10 @@ export const STAGE_VH = SCRUB_VH + 100;
  * them, so the figure can travel out while the plates travel in
  * (`lessons.md` §20).
  */
-// Six of her cards as one camera: the cover from the edge, taken apart,
-// read close and turned; five more directions passed in the dark; all six
-// into a hand, and the cover set down for the next beat
-// (components/comp-card/motion.ts). The chapter is authored in vh of
-// scroll, so this is its length and not a tuning of it.
-export const CARD_VH = 2160;
+// 520, not 380: the first two beats (the frames arriving, the lead being
+// chosen and becoming the card) read as rushed coming off the push in, and
+// the room they needed was measured in scroll, not in easing.
+export const CARD_VH = 520;
 
 /**
  * The Studio+ beat's scroll: the dark room the card was shown in is lit, then
@@ -326,6 +324,15 @@ export const FIGURE_RISE: { desktop: number[]; mobile: number[] } = {
   desktop: [0, 0, 0, 0, 4, 22, 46],
   mobile: [0, 0, 0, 0, 4, 17, 37],
 };
+
+/**
+ * How far she keeps travelling, in vh, as the comp-card plates arrive.
+ *
+ * Measured against her size at the end of the push in, not guessed: at scale
+ * 1.72 the plate is about 1.7 viewports tall, so anything less than this left
+ * her boots hanging in the top of the comp-card beat.
+ */
+export const FIGURE_HANDOVER = { desktop: -245, mobile: -235 } as const;
 
 /**
  * Stops for all three: hold, her first move, arrival, the wide frame, the pan
