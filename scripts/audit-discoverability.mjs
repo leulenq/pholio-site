@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import sharp from "sharp";
 import http from "node:http";
+import https from "node:https";
+
 
 const base = process.env.SEO_AUDIT_ORIGIN || "http://localhost:3001";
 const canonicalOrigin = "https://www.pholio.studio";
@@ -109,13 +111,26 @@ for (const path of internalLinks) {
   const response = await fetch(new URL(path, base), { method: "HEAD", signal: AbortSignal.timeout(30000) });
   if (response.status !== 200) brokenLinks.push({ path, status: response.status });
 }
-const redirect = await new Promise((resolve, reject) => {
-  const request = http.get(new URL("/talent?utm_source=seo-audit", base), { headers: { host: "pholio.studio" } }, (response) => {
-    resolve({ status: response.statusCode, location: response.headers.location }); response.resume();
-  });
-  request.on("error", reject);
-});
-assert.equal(redirect.status, 308, "Apex host permanently redirects");
+// Live Netlify edge uses 301; Next's local host rule uses 308. Both are permanent.
+// Connect to the real apex over TLS on live audits; Host-header spoofing breaks SNI.
+const auditOrigin = new URL(base);
+const apexUrl = new URL("/talent?utm_source=seo-audit", base);
+const live = auditOrigin.hostname === "www.pholio.studio";
+if (live) apexUrl.hostname = "pholio.studio";
+const redirect = live
+  ? await fetch(apexUrl, { redirect: "manual", signal: AbortSignal.timeout(30000) })
+      .then((response) => ({ status: response.status, location: response.headers.get("location") }))
+  : await new Promise((resolve, reject) => {
+      // Node fetch can normalize Host; use a raw request for the local host-rule test.
+      const transport = apexUrl.protocol === "https:" ? https : http;
+      const request = transport.get(apexUrl, { headers: { host: "pholio.studio" }, timeout: 30000 }, (response) => {
+        resolve({ status: response.statusCode, location: response.headers.location });
+        response.resume();
+      });
+      request.on("timeout", () => request.destroy(new Error("Apex redirect check timed out")));
+      request.on("error", reject);
+    });
+assert.ok([301, 308].includes(redirect.status), "Apex host permanently redirects");
 assert.equal(redirect.location, `${canonicalOrigin}/talent?utm_source=seo-audit`, "Host redirect preserves path and query");
 const { html: robots } = await get("/robots.txt");
 assert.match(robots, /User-Agent: \*/i);
@@ -130,8 +145,12 @@ else {
   }
 }
 for (const path of ["/zofia", "/zofia/index.html", "/talent-experience", "/talent-experience/index.html"]) {
-  const { response, html } = await get(path);
-  assert.equal(response.status, 200); assert.match(response.headers.get("x-robots-tag"), /noindex/);
+  // Netlify's static directory normalization legitimately redirects /demo to /demo/.
+  const response = await fetch(new URL(path, base), { signal: AbortSignal.timeout(30000) });
+  const html = await response.text();
+  assert.equal(new URL(response.url).origin, new URL(base).origin, `${path}: same-origin demo`);
+  assert.equal(response.status, 200, `${path}: final demo available`);
+  assert.match(response.headers.get("x-robots-tag") ?? "", /noindex/, `${path}: static demo must have edge noindex header`);
   assert.match(html, /name="robots" content="noindex, follow"/);
 }
 for (const path of ["/this-page-does-not-exist", "/agencies/not-a-real-agency"]) {

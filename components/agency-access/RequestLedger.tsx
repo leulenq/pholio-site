@@ -398,6 +398,7 @@ export function RequestLedger({
     const result = await submitAgencyAccessRequest(payload);
 
     if (result.ok) {
+      window.dispatchEvent(new CustomEvent("pholio:agency-access-requested"));
       setSent(payload);
       setStatus("sent");
       onSent(payload);

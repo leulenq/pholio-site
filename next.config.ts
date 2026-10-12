@@ -63,12 +63,12 @@ const nextConfig: NextConfig = {
   async headers() {
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.pholio.studio https://images.unsplash.com https://i.pravatar.cc",
+      "img-src 'self' data: blob: https://*.pholio.studio https://images.unsplash.com https://i.pravatar.cc https://*.google-analytics.com",
       "font-src 'self' data:",
-      // Same-origin only: /api/* is a server-side rewrite, not a browser call.
-      "connect-src 'self'",
+      // App API remains same-origin; GA collection requires its own endpoints.
+      "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",

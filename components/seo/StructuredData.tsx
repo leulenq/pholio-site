@@ -1,5 +1,6 @@
 import { absoluteUrl, SEO_PAGES, type SeoPage } from "@/lib/seo";
 import { STUDIO_PLUS_PRICE_MONTHLY, STUDIO_PLUS_PRICE_ANNUAL } from "@/lib/marketing-pricing";
+import { PHOLIO_DESCRIPTION } from "@/lib/brand";
 import type { AgencyDetail, AgencySummary } from "@/lib/agency-registry";
 
 const organization = absoluteUrl("/#organization");
@@ -15,8 +16,8 @@ export function SiteStructuredData() {
   return <JsonLd data={{
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "Organization", "@id": organization, name: "Pholio", url: absoluteUrl("/"), logo: { "@type": "ImageObject", url: absoluteUrl("/press/kit/wordmark/pholio-wordmark-velvet.png"), width: 2400, height: 373 } },
-      { "@type": "WebSite", "@id": website, name: "Pholio", url: absoluteUrl("/"), inLanguage: "en", publisher: { "@id": organization } },
+      { "@type": "Organization", "@id": organization, name: "Pholio", description: PHOLIO_DESCRIPTION, sameAs: ["https://www.instagram.com/pholio.studio/", "https://www.linkedin.com/company/pholio-studio"], url: absoluteUrl("/"), logo: { "@type": "ImageObject", url: absoluteUrl("/press/kit/wordmark/pholio-wordmark-velvet.png"), width: 2400, height: 373 } },
+      { "@type": "WebSite", "@id": website, name: "Pholio", description: PHOLIO_DESCRIPTION, url: absoluteUrl("/"), inLanguage: "en", publisher: { "@id": organization } },
     ],
   }} />;
 }

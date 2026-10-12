@@ -8,3 +8,25 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# Static demos are served by Netlify before Next's headers can run.
+# Apply the same noindex policy at the edge, including directory redirects.
+[[headers]]
+  for = "/zofia"
+  [headers.values]
+    X-Robots-Tag = "noindex, follow"
+
+[[headers]]
+  for = "/zofia/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, follow"
+
+[[headers]]
+  for = "/talent-experience"
+  [headers.values]
+    X-Robots-Tag = "noindex, follow"
+
+[[headers]]
+  for = "/talent-experience/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, follow"
